@@ -157,9 +157,9 @@
 
         public ContainmentType Contains(ref JVector point)
         {
-            return (((Min.X <= point.X) && (point.X <= Max.X) &&
-                ((Min.Y <= point.Y) && (point.Y <= Max.Y)) &&
-                ((Min.Z <= point.Z) && (point.Z <= Max.Z))) ? ContainmentType.Contains : ContainmentType.Disjoint;
+            return ((Min.X <= point.X) && (point.X <= Max.X)
+                && (Min.Y <= point.Y) && (point.Y <= Max.Y)
+                && (Min.Z <= point.Z) && (point.Z <= Max.Z)) ? ContainmentType.Contains : ContainmentType.Disjoint;
         }
 
         public void GetCorners(JVector[] corners)
@@ -206,9 +206,9 @@
         public ContainmentType Contains(ref JBBox box)
         {
             var result = ContainmentType.Disjoint;
-            if (((Max.X >= box.Min.X) && (Min.X <= box.Max.X) && ((Max.Y >= box.Min.Y) && (Min.Y <= box.Max.Y)) && ((Max.Z >= box.Min.Z) && (Min.Z <= box.Max.Z)))
+            if ((Max.X >= box.Min.X) && (Min.X <= box.Max.X) && (Max.Y >= box.Min.Y) && (Min.Y <= box.Max.Y) && (Max.Z >= box.Min.Z) && (Min.Z <= box.Max.Z))
             {
-                result = (((Min.X <= box.Min.X) && (box.Max.X <= Max.X) && ((Min.Y <= box.Min.Y) && (box.Max.Y <= Max.Y)) && ((Min.Z <= box.Min.Z) && (box.Max.Z <= Max.Z))) ? ContainmentType.Contains : ContainmentType.Intersects;
+                result = ((Min.X <= box.Min.X) && (box.Max.X <= Max.X) && (Min.Y <= box.Min.Y) && (box.Max.Y <= Max.Y) && (Min.Z <= box.Min.Z) && (box.Max.Z <= Max.Z)) ? ContainmentType.Contains : ContainmentType.Intersects;
             }
 
             return result;
@@ -230,8 +230,8 @@
 
         public JVector Center => (Min + Max) * (1.0f / 2.0f);
 
-        internal float Perimeter => 2.0f * (((Max.X - Min.X) * (Max.Y - Min.Y)) +
-                    ((Max.X - Min.X) * (Max.Z - Min.Z)) +
-                    ((Max.Z - Min.Z) * (Max.Y - Min.Y)));
+        internal float Perimeter => 2.0f * (((Max.X - Min.X) * (Max.Y - Min.Y))
+                    + ((Max.X - Min.X) * (Max.Z - Min.Z))
+                    + ((Max.Z - Min.Z) * (Max.Y - Min.Y)));
     }
 }

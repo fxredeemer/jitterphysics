@@ -40,8 +40,8 @@ namespace JitterDemo.Scenes
                 int layerCards = (cardHouseLayers - layer) * 2;
 
                 AddCardLayer(
-                    cardHouseStartingPosition +
-                        new JVector(cardSpacing * layer, (layerHeight + (float)(2 * cardThickness)) * layer, 0),
+                    cardHouseStartingPosition
+                        + new JVector(cardSpacing * layer, (layerHeight + (float)(2 * cardThickness)) * layer, 0),
                     layerCards);
             }
         }

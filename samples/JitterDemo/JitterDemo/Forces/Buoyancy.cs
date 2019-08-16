@@ -130,9 +130,9 @@ namespace Jitter.Forces
                 {
                     for (int k = 0; k < subdivisions; k++)
                     {
-                        testVector.X = body.Shape.BoundingBox.Min.X + ((diff.X / (float)(subdivisions - 1)) * ((float)i));
-                        testVector.Y = body.Shape.BoundingBox.Min.Y + ((diff.Y / (float)(subdivisions - 1)) * ((float)e));
-                        testVector.Z = body.Shape.BoundingBox.Min.Z + ((diff.Z / (float)(subdivisions - 1)) * ((float)k));
+                        testVector.X = body.Shape.BoundingBox.Min.X + (diff.X / (float)(subdivisions - 1) * ((float)i));
+                        testVector.Y = body.Shape.BoundingBox.Min.Y + (diff.Y / (float)(subdivisions - 1) * ((float)e));
+                        testVector.Z = body.Shape.BoundingBox.Min.Z + (diff.Z / (float)(subdivisions - 1) * ((float)k));
 
                         var ident = JMatrix.Identity;
                         var zero = JVector.Zero;
@@ -196,7 +196,7 @@ namespace Jitter.Forces
 
                         if (containsCoord)
                         {
-                            body.AddForce((1.0f / positions.Length) * body.Mass * Flow);
+                            body.AddForce(1.0f / positions.Length * body.Mass * Flow);
                             body.AddForce(-(1.0f / positions.Length) * body.Shape.Mass * Density * world.Gravity, currentCoord);
                             frac += 1.0f / positions.Length;
                         }

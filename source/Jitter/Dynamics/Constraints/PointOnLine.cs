@@ -80,10 +80,10 @@ namespace Jitter.Dynamics.Constraints
         public override void Iterate()
         {
             float jv =
-                (body1.linearVelocity * jacobian[0]) +
-                (body1.angularVelocity * jacobian[1]) +
-                (body2.linearVelocity * jacobian[2]) +
-                (body2.angularVelocity * jacobian[3]);
+                (body1.linearVelocity * jacobian[0])
+                + (body1.angularVelocity * jacobian[1])
+                + (body2.linearVelocity * jacobian[2])
+                + (body2.angularVelocity * jacobian[3]);
 
             float softnessScalar = AppliedImpulse * softnessOverDt;
 

@@ -37,7 +37,7 @@ namespace Jitter.Collision.Shapes
 
         public override void CalculateMassInertia()
         {
-            mass = (4.0f / 3.0f) * JMath.Pi * radius * radius * radius;
+            mass = 4.0f / 3.0f * JMath.Pi * radius * radius * radius;
 
             inertia = JMatrix.Identity;
             inertia.M11 = 0.4f * mass * radius * radius;

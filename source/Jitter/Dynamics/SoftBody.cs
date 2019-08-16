@@ -203,8 +203,8 @@ namespace Jitter.Dynamics
 
             public float CalculateArea()
             {
-                return ((Owner.points[indices.I1].position - Owner.points[indices.I0].position) %
-                    (Owner.points[indices.I2].position - Owner.points[indices.I0].position)).Length();
+                return ((Owner.points[indices.I1].position - Owner.points[indices.I0].position)
+                    % (Owner.points[indices.I2].position - Owner.points[indices.I0].position)).Length();
             }
 
             public void SupportMapping(ref JVector direction, out JVector result)
@@ -617,9 +617,9 @@ namespace Jitter.Dynamics
                 var prevCenter = t.boundingBox.Center;
                 t.UpdateBoundingBox();
 
-                var linVel = t.VertexBody1.linearVelocity +
-                    t.VertexBody2.linearVelocity +
-                    t.VertexBody3.linearVelocity;
+                var linVel = t.VertexBody1.linearVelocity
+                    + t.VertexBody2.linearVelocity
+                    + t.VertexBody3.linearVelocity;
 
                 linVel *= 1.0f / 3.0f;
 
@@ -629,8 +629,8 @@ namespace Jitter.Dynamics
                 var v2 = points[t.indices.I1].position;
                 var v3 = points[t.indices.I2].position;
 
-                Volume -= (((v2.Y - v1.Y) * (v3.Z - v1.Z)) -
-                    ((v2.Z - v1.Z) * (v3.Y - v1.Y))) * (v1.X + v2.X + v3.X);
+                Volume -= (((v2.Y - v1.Y) * (v3.Z - v1.Z))
+                    - ((v2.Z - v1.Z) * (v3.Y - v1.Y))) * (v1.X + v2.X + v3.X);
             }
 
             Volume /= 6.0f;

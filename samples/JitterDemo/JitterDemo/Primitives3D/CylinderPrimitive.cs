@@ -89,8 +89,8 @@ namespace JitterDemo.Primitives3D
             // Create cap vertices.
             for (int i = 0; i < tessellation; i++)
             {
-                var position = (GetCircleVector(i, tessellation) * radius) +
-                                   (normal * height);
+                var position = (GetCircleVector(i, tessellation) * radius)
+                                   + (normal * height);
 
                 AddVertex(position, normal);
             }

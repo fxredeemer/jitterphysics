@@ -35,7 +35,7 @@ namespace Jitter.LinearMath
 
                 for (int phiIndex = 0; phiIndex < steps; phiIndex++)
                 {
-                    float phi = ((2.0f * JMath.Pi) / (steps - 0) * phiIndex) - JMath.Pi;
+                    float phi = (2.0f * JMath.Pi / (steps - 0) * phiIndex) - JMath.Pi;
                     float sinPhi = (float)Math.Sin(phi);
                     float cosPhi = (float)Math.Cos(phi);
 

@@ -216,8 +216,8 @@ namespace Jitter.Collision.Shapes
 
                 var tetrahedronInertia = JMatrix.Multiply(A * C * JMatrix.Transpose(A), detA);
 
-                var tetrahedronCOM = (1.0f / 4.0f) * (hullTriangles[i + 0] + hullTriangles[i + 1] + hullTriangles[i + 2]);
-                float tetrahedronMass = (1.0f / 6.0f) * detA;
+                var tetrahedronCOM = 1.0f / 4.0f * (hullTriangles[i + 0] + hullTriangles[i + 1] + hullTriangles[i + 2]);
+                float tetrahedronMass = 1.0f / 6.0f * detA;
 
                 inertia += tetrahedronInertia;
                 centerOfMass += tetrahedronMass * tetrahedronCOM;

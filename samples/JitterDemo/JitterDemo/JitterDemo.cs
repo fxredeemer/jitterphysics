@@ -71,12 +71,7 @@ namespace JitterDemo
             };
             Window.AllowUserResizing = true;
 
-#if(WINDOWS)
-            Window.Title = "Jitter Physics Demo - Jitter "
-                + Assembly.GetAssembly(typeof(World)).GetName().Version.ToString();
-#else
-            this.Window.Title = "Jitter Physics Demo - Jitter";
-#endif
+            Window.Title = "Jitter Physics Demo - Jitter " + Assembly.GetAssembly(typeof(World)).GetName().Version.ToString();
 
             var rr = new Random();
             rndColors = new Color[20];
@@ -215,12 +210,10 @@ namespace JitterDemo
             return keyboard || gamePad;
         }
 
-        // Hold previous input states.
         private KeyboardState keyboardPreviousState = new KeyboardState();
         private GamePadState gamePadPreviousState = new GamePadState();
         private MouseState mousePreviousState = new MouseState();
 
-        // Store information for drag and drop
         private JVector hitPoint, hitNormal;
         private SingleBodyConstraints.PointOnPoint grabConstraint;
         private RigidBody grabBody;
@@ -233,13 +226,11 @@ namespace JitterDemo
             keyState = Keyboard.GetState();
             mouseState = Mouse.GetState();
 
-            // let the user escape the demo
             if (PressedOnce(Keys.Escape, Buttons.Back))
             {
                 Exit();
             }
 
-            // change threading mode
             if (PressedOnce(Keys.M, Buttons.A))
             {
                 multithread = !multithread;
@@ -256,10 +247,10 @@ namespace JitterDemo
                 (e.Current as RigidBody).IsStatic = true;
             }
 
-            if ((mouseState.LeftButton == ButtonState.Pressed &&
-                mousePreviousState.LeftButton == ButtonState.Released) ||
-                (padState.IsButtonDown(Buttons.RightThumbstickDown) &&
-                gamePadPreviousState.IsButtonUp(Buttons.RightThumbstickUp)))
+            if ((mouseState.LeftButton == ButtonState.Pressed
+                && mousePreviousState.LeftButton == ButtonState.Released)
+                || (padState.IsButtonDown(Buttons.RightThumbstickDown)
+                && gamePadPreviousState.IsButtonUp(Buttons.RightThumbstickUp)))
             {
                 var ray = Conversion.ToJitterVector(RayTo(mouseState.X, mouseState.Y));
                 var camp = Conversion.ToJitterVector(Camera.Position);
@@ -380,7 +371,6 @@ namespace JitterDemo
             RigidBody body = null;
             int rndn = rndn = random.Next(7);
 
-            // less of the more advanced objects
             if (rndn == 5 || rndn == 6)
             {
                 rndn = random.Next(7);
@@ -426,8 +416,6 @@ namespace JitterDemo
             }
 
             World.AddBody(body);
-            //body.IsParticle = true;
-            // body.EnableSpeculativeContacts = true;
             body.Position = position;
             body.LinearVelocity = velocity;
             lastBody = body;
@@ -453,11 +441,10 @@ namespace JitterDemo
             Display.DisplayText[1] = World.CollisionSystem.ToString();
 
             Display.DisplayText[0] = "Current Scene: " + PhysicScenes[currentScene].ToString();
-            //
             Display.DisplayText[2] = "Arbitercount: " + World.ArbiterMap.Arbiters.Count.ToString() + ";" + " Contactcount: " + contactCount.ToString();
             Display.DisplayText[3] = "Islandcount: " + World.Islands.Count.ToString();
             Display.DisplayText[4] = "Bodycount: " + World.RigidBodies.Count + " (" + activeBodies.ToString() + ")";
-            Display.DisplayText[5] = (multithread) ? "Multithreaded" : "Single Threaded";
+            Display.DisplayText[5] = multithread ? "Multithreaded" : "Single Threaded";
 
             int entries = (int)Jitter.World.DebugType.Num;
             double total = 0;
@@ -476,12 +463,9 @@ namespace JitterDemo
             Display.DisplayText[9 + entries] = "Total Physics Time: " + total.ToString("0.00");
             Display.DisplayText[10 + entries] = "Physics Framerate: " + (1000.0d / total).ToString("0") + " fps";
 
-#if(WINDOWS)
             Display.DisplayText[6] = "gen0: " + GC.CollectionCount(0).ToString() +
                 "  gen1: " + GC.CollectionCount(1).ToString() +
                 "  gen2: " + GC.CollectionCount(2).ToString();
-#endif
-
         }
 
         private void AddShapeToDrawList(Shape shape, JMatrix ori, JVector pos)
@@ -518,8 +502,8 @@ namespace JitterDemo
                 primitive = primitives[(int)Primitives.cone];
             }
 
-            primitive?.AddWorldMatrix(scaleMatrix * Conversion.ToXNAMatrix(ori) *
-                            Matrix.CreateTranslation(Conversion.ToXNAVector(pos)));
+            primitive?.AddWorldMatrix(scaleMatrix * Conversion.ToXNAMatrix(ori)
+                            * Matrix.CreateTranslation(Conversion.ToXNAVector(pos)));
         }
 
         private void AddBodyToDrawList(RigidBody rb)
@@ -529,7 +513,7 @@ namespace JitterDemo
                 return;
             }
 
-            bool isCompoundShape = (rb.Shape is CompoundShape);
+            bool isCompoundShape = rb.Shape is CompoundShape;
 
             if (!isCompoundShape)
             {
@@ -627,7 +611,6 @@ namespace JitterDemo
                         body.Triangles[i].VertexBody3.Position,
                         new Color(0, 0.95f, 0, 0.5f));
                 }
-                //DrawDynamicTree(body);
             }
         }
 
@@ -641,7 +624,6 @@ namespace JitterDemo
 
             activeBodies = 0;
 
-            // Draw all shapes
             foreach (RigidBody body in World.RigidBodies)
             {
                 if (body.IsActive)
@@ -663,23 +645,10 @@ namespace JitterDemo
 
             PhysicScenes[currentScene].Draw();
 
-            // Draw the debug data provided by Jitter
             DrawIslands();
             DrawJitterDebugInfo();
 
-            //foreach (Arbiter a in World.ArbiterMap)
-            //{
-            //    foreach (Contact c in a.ContactList)
-            //    {
-            //        DebugDrawer.DrawLine(c.Position1 + 0.5f * JVector.Left, c.Position1 + 0.5f * JVector.Right, Color.Green);
-            //        DebugDrawer.DrawLine(c.Position1 + 0.5f * JVector.Up, c.Position1 + 0.5f * JVector.Down, Color.Green);
-            //        DebugDrawer.DrawLine(c.Position1 + 0.5f * JVector.Forward, c.Position1 + 0.5f * JVector.Backward, Color.Green);
 
-            //        DebugDrawer.DrawLine(c.Position2 + 0.5f * JVector.Left, c.Position2 + 0.5f * JVector.Right, Color.Red);
-            //        DebugDrawer.DrawLine(c.Position2 + 0.5f * JVector.Up, c.Position2 + 0.5f * JVector.Down, Color.Red);
-            //        DebugDrawer.DrawLine(c.Position2 + 0.5f * JVector.Forward, c.Position2 + 0.5f * JVector.Backward, Color.Red);
-            //    }
-            //}
 
             foreach (var prim in primitives)
             {

@@ -253,10 +253,10 @@ namespace Jitter.Collision
                 UsedVertices.Reset();
             }
 
-            public bool IsValid => (BarycentricCoords[0] >= 0f) &&
-                            (BarycentricCoords[1] >= 0f) &&
-                            (BarycentricCoords[2] >= 0f) &&
-                            (BarycentricCoords[3] >= 0f);
+            public bool IsValid => (BarycentricCoords[0] >= 0f)
+                            && (BarycentricCoords[1] >= 0f)
+                            && (BarycentricCoords[2] >= 0f)
+                            && (BarycentricCoords[3] >= 0f);
 
             public void SetBarycentricCoordinates()
             {
@@ -494,15 +494,15 @@ namespace Jitter.Collision
                             c = _simplexVectorW[2];
 
                             ClosestPtPointTriangle(p, a, b, c, ref _cachedBC);
-                            _cachedPA = (_simplexPointsP[0] * _cachedBC.BarycentricCoords[0]) +
-                                            (_simplexPointsP[1] * _cachedBC.BarycentricCoords[1]) +
-                                            (_simplexPointsP[2] * _cachedBC.BarycentricCoords[2]) +
-                                            (_simplexPointsP[3] * _cachedBC.BarycentricCoords[3]);
+                            _cachedPA = (_simplexPointsP[0] * _cachedBC.BarycentricCoords[0])
+                                            + (_simplexPointsP[1] * _cachedBC.BarycentricCoords[1])
+                                            + (_simplexPointsP[2] * _cachedBC.BarycentricCoords[2])
+                                            + (_simplexPointsP[3] * _cachedBC.BarycentricCoords[3]);
 
-                            _cachedPB = (_simplexPointsQ[0] * _cachedBC.BarycentricCoords[0]) +
-                                            (_simplexPointsQ[1] * _cachedBC.BarycentricCoords[1]) +
-                                            (_simplexPointsQ[2] * _cachedBC.BarycentricCoords[2]) +
-                                            (_simplexPointsQ[3] * _cachedBC.BarycentricCoords[3]);
+                            _cachedPB = (_simplexPointsQ[0] * _cachedBC.BarycentricCoords[0])
+                                            + (_simplexPointsQ[1] * _cachedBC.BarycentricCoords[1])
+                                            + (_simplexPointsQ[2] * _cachedBC.BarycentricCoords[2])
+                                            + (_simplexPointsQ[3] * _cachedBC.BarycentricCoords[3]);
 
                             _cachedV = _cachedPA - _cachedPB;
 
@@ -520,15 +520,15 @@ namespace Jitter.Collision
 
                             if (hasSeperation)
                             {
-                                _cachedPA = (_simplexPointsP[0] * _cachedBC.BarycentricCoords[0]) +
-                                                (_simplexPointsP[1] * _cachedBC.BarycentricCoords[1]) +
-                                                (_simplexPointsP[2] * _cachedBC.BarycentricCoords[2]) +
-                                                (_simplexPointsP[3] * _cachedBC.BarycentricCoords[3]);
+                                _cachedPA = (_simplexPointsP[0] * _cachedBC.BarycentricCoords[0])
+                                                + (_simplexPointsP[1] * _cachedBC.BarycentricCoords[1])
+                                                + (_simplexPointsP[2] * _cachedBC.BarycentricCoords[2])
+                                                + (_simplexPointsP[3] * _cachedBC.BarycentricCoords[3]);
 
-                                _cachedPB = (_simplexPointsQ[0] * _cachedBC.BarycentricCoords[0]) +
-                                                (_simplexPointsQ[1] * _cachedBC.BarycentricCoords[1]) +
-                                                (_simplexPointsQ[2] * _cachedBC.BarycentricCoords[2]) +
-                                                (_simplexPointsQ[3] * _cachedBC.BarycentricCoords[3]);
+                                _cachedPB = (_simplexPointsQ[0] * _cachedBC.BarycentricCoords[0])
+                                                + (_simplexPointsQ[1] * _cachedBC.BarycentricCoords[1])
+                                                + (_simplexPointsQ[2] * _cachedBC.BarycentricCoords[2])
+                                                + (_simplexPointsQ[3] * _cachedBC.BarycentricCoords[3]);
 
                                 _cachedV = _cachedPA - _cachedPB;
                                 ReduceVertices(_cachedBC.UsedVertices);
@@ -626,7 +626,7 @@ namespace Jitter.Collision
                 float va = (d3 * d6) - (d5 * d4);
                 if (va <= 0f && (d4 - d3) >= 0f && (d5 - d6) >= 0f)
                 {
-                    w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+                    w = (d4 - d3) / (d4 - d3 + (d5 - d6));
 
                     result.ClosestPointOnSimplex = b + (w * (c - b));
                     result.UsedVertices.UsedVertexB = true;
@@ -780,10 +780,10 @@ namespace Jitter.Collision
                     }
                 }
 
-                if (finalResult.UsedVertices.UsedVertexA &&
-                    finalResult.UsedVertices.UsedVertexB &&
-                    finalResult.UsedVertices.UsedVertexC &&
-                    finalResult.UsedVertices.UsedVertexD)
+                if (finalResult.UsedVertices.UsedVertexA
+                    && finalResult.UsedVertices.UsedVertexB
+                    && finalResult.UsedVertices.UsedVertexC
+                    && finalResult.UsedVertices.UsedVertexD)
                 {
                     return true;
                 }

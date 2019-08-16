@@ -52,11 +52,11 @@ namespace JitterDemo.Scenes
 
             for (int i = 0; i < 15; i++)
             {
-                bool even = (i % 2 == 0);
+                bool even = i % 2 == 0;
 
                 for (int e = 0; e < 3; e++)
                 {
-                    var size = (even) ? new JVector(1, 1, 3) : new JVector(3, 1, 1);
+                    var size = even ? new JVector(1, 1, 3) : new JVector(3, 1, 1);
                     var body = new RigidBody(new BoxShape(size))
                     {
                         Position = new JVector(3.0f + (even ? e : 1.0f), i + 0.5f, -5.0f + (even ? 1.0f : e))

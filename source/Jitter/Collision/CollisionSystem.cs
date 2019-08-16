@@ -131,11 +131,11 @@ namespace Jitter.Collision
 
         private void DetectRigidRigid(RigidBody body1, RigidBody body2)
         {
-            bool b1IsMulti = (body1.Shape is Multishape);
-            bool b2IsMulti = (body2.Shape is Multishape);
+            bool b1IsMulti = body1.Shape is Multishape;
+            bool b2IsMulti = body2.Shape is Multishape;
 
-            bool speculative = EnableSpeculativeContacts ||
-                (body1.EnableSpeculativeContacts || body2.EnableSpeculativeContacts);
+            bool speculative = EnableSpeculativeContacts
+                || body1.EnableSpeculativeContacts || body2.EnableSpeculativeContacts;
 
             JVector point, normal;
             float penetration;
@@ -170,8 +170,8 @@ namespace Jitter.Collision
             }
             else if (b1IsMulti && b2IsMulti)
             {
-                var ms1 = (body1.Shape as Multishape);
-                var ms2 = (body2.Shape as Multishape);
+                var ms1 = body1.Shape as Multishape;
+                var ms2 = body2.Shape as Multishape;
 
                 ms1 = ms1.RequestWorkingClone();
                 ms2 = ms2.RequestWorkingClone();
@@ -239,7 +239,7 @@ namespace Jitter.Collision
                 if (body2.Shape is Multishape) { b1 = body2; b2 = body1; }
                 else { b2 = body2; b1 = body1; }
 
-                var ms = (b1.Shape as Multishape);
+                var ms = b1.Shape as Multishape;
 
                 ms = ms.RequestWorkingClone();
 
@@ -305,7 +305,7 @@ namespace Jitter.Collision
         {
             if (rigidBody.Shape is Multishape)
             {
-                var ms = (rigidBody.Shape as Multishape);
+                var ms = rigidBody.Shape as Multishape;
                 ms = ms.RequestWorkingClone();
 
                 var transformedBoundingBox = softBody.BoundingBox;
@@ -458,9 +458,9 @@ namespace Jitter.Collision
             var box1 = entity1.BoundingBox;
             var box2 = entity2.BoundingBox;
 
-            return (((box1.Max.Z >= box2.Min.Z) && (box1.Min.Z <= box2.Max.Z)) &&
-                ((box1.Max.Y >= box2.Min.Y) && (box1.Min.Y <= box2.Max.Y)) &&
-                ((box1.Max.X >= box2.Min.X) && (box1.Min.X <= box2.Max.X));
+            return (box1.Max.Z >= box2.Min.Z) && (box1.Min.Z <= box2.Max.Z)
+                && (box1.Max.Y >= box2.Min.Y) && (box1.Min.Y <= box2.Max.Y)
+                && (box1.Max.X >= box2.Min.X) && (box1.Min.X <= box2.Max.X);
         }
 
         public bool RaisePassedBroadphase(IBroadphaseEntity entity1, IBroadphaseEntity entity2)

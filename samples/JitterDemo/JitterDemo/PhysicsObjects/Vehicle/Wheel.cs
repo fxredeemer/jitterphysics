@@ -152,8 +152,8 @@ namespace JitterDemo
         /// <returns>The position of the wheel in world space.</returns>
         public JVector GetWorldPosition()
         {
-            return car.Position +
-                JVector.Transform(Position + (JVector.Up * displacement), car.Orientation);
+            return car.Position
+                + JVector.Transform(Position + (JVector.Up * displacement), car.Orientation);
         }
 
         /// <summary>
@@ -186,8 +186,8 @@ namespace JitterDemo
 
                 // prevent friction from reversing dir - todo do this better
                 // by limiting the torque
-                if (((origAngVel > angVelForGrip) && (angVel < angVelForGrip)) ||
-                     ((origAngVel < angVelForGrip) && (angVel > angVelForGrip)))
+                if (((origAngVel > angVelForGrip) && (angVel < angVelForGrip))
+                     || ((origAngVel < angVelForGrip) && (angVel > angVelForGrip)))
                     angVel = angVelForGrip;
 
                 angVel += driveTorque * timeStep / Inertia;
@@ -196,7 +196,7 @@ namespace JitterDemo
                 float maxAngVel = MaximumAngularVelocity;
                 angVel = JMath.Clamp(angVel, -maxAngVel, maxAngVel);
 
-                WheelRotation += (timeStep * angVel) / (2*JMath.Pi) * 360.0f;
+                WheelRotation += timeStep * angVel / (2*JMath.Pi) * 360.0f;
             }
         }
 
@@ -224,7 +224,7 @@ namespace JitterDemo
             var wheelDelta = -Radius * worldAxis;
             var wheelRayEnd = worldPos + wheelDelta;
 
-            float deltaFwd = (2.0f * Radius) / (NumberOfRays + 1);
+            float deltaFwd = 2.0f * Radius / (NumberOfRays + 1);
             float deltaFwdStart = deltaFwd;
 
             lastDisplacement = displacement;
@@ -241,7 +241,7 @@ namespace JitterDemo
 
             for (int i = 0; i < NumberOfRays; i++)
             {
-                float distFwd = (deltaFwdStart + (i * deltaFwd)) - Radius;
+                float distFwd = deltaFwdStart + (i * deltaFwd) - Radius;
                 float zOffset = Radius * (1.0f - (float)Math.Cos(Math.PI / 4 * (distFwd / Radius)));
 
                 var newOrigin = wheelRayStart + (distFwd * wheelFwd) + (zOffset * wheelUp);
@@ -295,15 +295,15 @@ namespace JitterDemo
 
             var groundFwd = JVector.Cross(groundLeft, groundUp);
 
-            var wheelPointVel = car.LinearVelocity +
-                    JVector.Cross(car.AngularVelocity, JVector.Transform(Position, car.Orientation));
+            var wheelPointVel = car.LinearVelocity
+                    + JVector.Cross(car.AngularVelocity, JVector.Transform(Position, car.Orientation));
 
             // rimVel=(wxr)*v
             var rimVel = angVel * JVector.Cross(wheelLeft, groundPos - worldPos);
             wheelPointVel += rimVel;
 
-            var worldVel = worldBody.LinearVelocity +
-             JVector.Cross(worldBody.AngularVelocity, groundPos - worldBody.Position);
+            var worldVel = worldBody.LinearVelocity
+             + JVector.Cross(worldBody.AngularVelocity, groundPos - worldBody.Position);
 
             wheelPointVel -= worldVel;
 
@@ -356,8 +356,8 @@ namespace JitterDemo
             force += extraForce;
 
             // fwd force also spins the wheel
-            var wheelCentreVel = car.LinearVelocity +
-             JVector.Cross(car.AngularVelocity, JVector.Transform(Position, car.Orientation));
+            var wheelCentreVel = car.LinearVelocity
+             + JVector.Cross(car.AngularVelocity, JVector.Transform(Position, car.Orientation));
 
             angVelForGrip = JVector.Dot(wheelCentreVel, groundFwd) / Radius;
             torque += -fwdForce * Radius;

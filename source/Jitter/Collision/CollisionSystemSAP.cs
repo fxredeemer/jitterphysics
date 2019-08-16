@@ -94,9 +94,9 @@ namespace Jitter.Collision
                 {
                     bodyBox = body.BoundingBox;
 
-                    if (!(thisInactive && ac.IsStaticOrInactive) &&
-                        ((bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z) &&
-                        ((bodyBox.Max.Y >= acBox.Min.Y) && (bodyBox.Min.Y <= acBox.Max.Y))))
+                    if (!(thisInactive && ac.IsStaticOrInactive)
+                        && (bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z)
+                        && (bodyBox.Max.Y >= acBox.Min.Y) && (bodyBox.Min.Y <= acBox.Max.Y))
                     {
                         if (base.RaisePassedBroadphase(ac, body))
                         {
@@ -143,9 +143,9 @@ namespace Jitter.Collision
                 {
                     bodyBox = body.BoundingBox;
 
-                    if (!(thisInactive && ac.IsStaticOrInactive) &&
-                        ((bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z) &&
-                        ((bodyBox.Max.Y >= acBox.Min.Y) && (bodyBox.Min.Y <= acBox.Max.Y))))
+                    if (!(thisInactive && ac.IsStaticOrInactive)
+                        && (bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z)
+                        && (bodyBox.Max.Y >= acBox.Min.Y) && (bodyBox.Min.Y <= acBox.Max.Y))
                     {
                         if (base.RaisePassedBroadphase(ac, body))
                         {

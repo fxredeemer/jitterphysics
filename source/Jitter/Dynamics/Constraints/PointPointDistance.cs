@@ -76,7 +76,7 @@ namespace Jitter.Dynamics.Constraints
                 jacobian[0] = -1.0f * n;
                 jacobian[1] = -1.0f * (r1 % n);
                 jacobian[2] = 1.0f * n;
-                jacobian[3] = (r2 % n);
+                jacobian[3] = r2 % n;
 
                 effectiveMass = body1.inverseMass + body2.inverseMass
                     + (JVector.Transform(jacobian[1], body1.invInertiaWorld) * jacobian[1])
@@ -108,10 +108,10 @@ namespace Jitter.Dynamics.Constraints
             if (skipConstraint) return;
 
             float jv =
-                (body1.linearVelocity * jacobian[0]) +
-                (body1.angularVelocity * jacobian[1]) +
-                (body2.linearVelocity * jacobian[2]) +
-                (body2.angularVelocity * jacobian[3]);
+                (body1.linearVelocity * jacobian[0])
+                + (body1.angularVelocity * jacobian[1])
+                + (body2.linearVelocity * jacobian[2])
+                + (body2.angularVelocity * jacobian[3]);
 
             float softnessScalar = AppliedImpulse * softnessOverDt;
 

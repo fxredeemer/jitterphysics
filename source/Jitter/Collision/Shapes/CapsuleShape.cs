@@ -20,14 +20,14 @@ namespace Jitter.Collision.Shapes
 
         public override void CalculateMassInertia()
         {
-            float massSphere = (3.0f / 4.0f) * JMath.Pi * radius * radius * radius;
+            float massSphere = 3.0f / 4.0f * JMath.Pi * radius * radius * radius;
             float massCylinder = JMath.Pi * radius * radius * length;
 
             mass = massCylinder + massSphere;
 
-            inertia.M11 = ((1.0f / 4.0f) * massCylinder * radius * radius) + ((1.0f / 12.0f) * massCylinder * length * length) + ((2.0f / 5.0f) * massSphere * radius * radius) + ((1.0f / 4.0f) * length * length * massSphere);
-            inertia.M22 = ((1.0f / 2.0f) * massCylinder * radius * radius) + ((2.0f / 5.0f) * massSphere * radius * radius);
-            inertia.M33 = ((1.0f / 4.0f) * massCylinder * radius * radius) + ((1.0f / 12.0f) * massCylinder * length * length) + ((2.0f / 5.0f) * massSphere * radius * radius) + ((1.0f / 4.0f) * length * length * massSphere);
+            inertia.M11 = (1.0f / 4.0f * massCylinder * radius * radius) + (1.0f / 12.0f * massCylinder * length * length) + (2.0f / 5.0f * massSphere * radius * radius) + (1.0f / 4.0f * length * length * massSphere);
+            inertia.M22 = (1.0f / 2.0f * massCylinder * radius * radius) + (2.0f / 5.0f * massSphere * radius * radius);
+            inertia.M33 = (1.0f / 4.0f * massCylinder * radius * radius) + (1.0f / 12.0f * massCylinder * length * length) + (2.0f / 5.0f * massSphere * radius * radius) + (1.0f / 4.0f * length * length * massSphere);
         }
 
         public override void SupportMapping(ref JVector direction, out JVector result)

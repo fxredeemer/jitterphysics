@@ -117,7 +117,7 @@ namespace Jitter.Collision.Shapes
                 shifted += Shapes[i].position;
             }
 
-            shifted *= (1.0f / Shapes.Length);
+            shifted *= 1.0f / Shapes.Length;
 
             for (int i = 0; i < Shapes.Length; i++)
             {

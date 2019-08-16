@@ -823,8 +823,8 @@ namespace Jitter
                 {
                     foreach (var body in island.bodies)
                     {
-                        if (body.AllowDeactivation && (body.angularVelocity.LengthSquared() < inactiveAngularThresholdSq
-                            && (body.linearVelocity.LengthSquared() < inactiveLinearThresholdSq)))
+                        if (body.AllowDeactivation && body.angularVelocity.LengthSquared() < inactiveAngularThresholdSq
+                            && (body.linearVelocity.LengthSquared() < inactiveLinearThresholdSq))
                         {
                             body.inactiveTime += timestep;
                             if (body.inactiveTime < deactivationTime)

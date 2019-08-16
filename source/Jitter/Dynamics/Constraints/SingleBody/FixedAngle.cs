@@ -50,7 +50,7 @@ namespace Jitter.Dynamics.Constraints.SingleBody
 
             if (r != 0.0f)
             {
-                axis *= (1.0f / r);
+                axis *= 1.0f / r;
             }
 
             bias = axis * BiasFactor * (-1.0f / timestep);

@@ -169,9 +169,9 @@ namespace Jitter.Dynamics
 
             if (!treatBody1AsStatic)
             {
-                body1.linearVelocity.X -= (impulse.X * body1.inverseMass);
-                body1.linearVelocity.Y -= (impulse.Y * body1.inverseMass);
-                body1.linearVelocity.Z -= (impulse.Z * body1.inverseMass);
+                body1.linearVelocity.X -= impulse.X * body1.inverseMass;
+                body1.linearVelocity.Y -= impulse.Y * body1.inverseMass;
+                body1.linearVelocity.Z -= impulse.Z * body1.inverseMass;
 
                 if (!body1IsMassPoint)
                 {
@@ -181,17 +181,17 @@ namespace Jitter.Dynamics
                     num2 = (relativePos1.X * impulse.Y) - (relativePos1.Y * impulse.X);
 
                     float num3 =
-                        ((num0 * body1.invInertiaWorld.M11) +
-                        (num1 * body1.invInertiaWorld.M21) +
-                        (num2 * body1.invInertiaWorld.M31));
+                        (num0 * body1.invInertiaWorld.M11)
+                        + (num1 * body1.invInertiaWorld.M21)
+                        + (num2 * body1.invInertiaWorld.M31);
                     float num4 =
-                        ((num0 * body1.invInertiaWorld.M12) +
-                        (num1 * body1.invInertiaWorld.M22) +
-                        (num2 * body1.invInertiaWorld.M32));
+                        (num0 * body1.invInertiaWorld.M12)
+                        + (num1 * body1.invInertiaWorld.M22)
+                        + (num2 * body1.invInertiaWorld.M32);
                     float num5 =
-                        ((num0 * body1.invInertiaWorld.M13) +
-                        (num1 * body1.invInertiaWorld.M23) +
-                        (num2 * body1.invInertiaWorld.M33));
+                        (num0 * body1.invInertiaWorld.M13)
+                        + (num1 * body1.invInertiaWorld.M23)
+                        + (num2 * body1.invInertiaWorld.M33);
 
                     body1.angularVelocity.X -= num3;
                     body1.angularVelocity.Y -= num4;
@@ -201,9 +201,9 @@ namespace Jitter.Dynamics
 
             if (!treatBody2AsStatic)
             {
-                body2.linearVelocity.X += (impulse.X * body2.inverseMass);
-                body2.linearVelocity.Y += (impulse.Y * body2.inverseMass);
-                body2.linearVelocity.Z += (impulse.Z * body2.inverseMass);
+                body2.linearVelocity.X += impulse.X * body2.inverseMass;
+                body2.linearVelocity.Y += impulse.Y * body2.inverseMass;
+                body2.linearVelocity.Z += impulse.Z * body2.inverseMass;
 
                 if (!body2IsMassPoint)
                 {
@@ -213,17 +213,17 @@ namespace Jitter.Dynamics
                     num2 = (relativePos2.X * impulse.Y) - (relativePos2.Y * impulse.X);
 
                     float num3 =
-                        ((num0 * body2.invInertiaWorld.M11) +
-                        (num1 * body2.invInertiaWorld.M21) +
-                        (num2 * body2.invInertiaWorld.M31));
+                        (num0 * body2.invInertiaWorld.M11)
+                        + (num1 * body2.invInertiaWorld.M21)
+                        + (num2 * body2.invInertiaWorld.M31);
                     float num4 =
-                        ((num0 * body2.invInertiaWorld.M12) +
-                        (num1 * body2.invInertiaWorld.M22) +
-                        (num2 * body2.invInertiaWorld.M32));
+                        (num0 * body2.invInertiaWorld.M12)
+                        + (num1 * body2.invInertiaWorld.M22)
+                        + (num2 * body2.invInertiaWorld.M32);
                     float num5 =
-                        ((num0 * body2.invInertiaWorld.M13) +
-                        (num1 * body2.invInertiaWorld.M23) +
-                        (num2 * body2.invInertiaWorld.M33));
+                        (num0 * body2.invInertiaWorld.M13)
+                        + (num1 * body2.invInertiaWorld.M23)
+                        + (num2 * body2.invInertiaWorld.M33);
 
                     body2.angularVelocity.X += num3;
                     body2.angularVelocity.Y += num4;
@@ -266,9 +266,9 @@ namespace Jitter.Dynamics
 
             if (!treatBody1AsStatic)
             {
-                body1.linearVelocity.X -= (impulse.X * body1.inverseMass);
-                body1.linearVelocity.Y -= (impulse.Y * body1.inverseMass);
-                body1.linearVelocity.Z -= (impulse.Z * body1.inverseMass);
+                body1.linearVelocity.X -= impulse.X * body1.inverseMass;
+                body1.linearVelocity.Y -= impulse.Y * body1.inverseMass;
+                body1.linearVelocity.Z -= impulse.Z * body1.inverseMass;
 
                 float num0, num1, num2;
                 num0 = (relativePos1.Y * impulse.Z) - (relativePos1.Z * impulse.Y);
@@ -276,17 +276,17 @@ namespace Jitter.Dynamics
                 num2 = (relativePos1.X * impulse.Y) - (relativePos1.Y * impulse.X);
 
                 float num3 =
-                    ((num0 * body1.invInertiaWorld.M11) +
-                    (num1 * body1.invInertiaWorld.M21) +
-                    (num2 * body1.invInertiaWorld.M31));
+                    (num0 * body1.invInertiaWorld.M11)
+                    + (num1 * body1.invInertiaWorld.M21)
+                    + (num2 * body1.invInertiaWorld.M31);
                 float num4 =
-                    ((num0 * body1.invInertiaWorld.M12) +
-                    (num1 * body1.invInertiaWorld.M22) +
-                    (num2 * body1.invInertiaWorld.M32));
+                    (num0 * body1.invInertiaWorld.M12)
+                    + (num1 * body1.invInertiaWorld.M22)
+                    + (num2 * body1.invInertiaWorld.M32);
                 float num5 =
-                    ((num0 * body1.invInertiaWorld.M13) +
-                    (num1 * body1.invInertiaWorld.M23) +
-                    (num2 * body1.invInertiaWorld.M33));
+                    (num0 * body1.invInertiaWorld.M13)
+                    + (num1 * body1.invInertiaWorld.M23)
+                    + (num2 * body1.invInertiaWorld.M33);
 
                 body1.angularVelocity.X -= num3;
                 body1.angularVelocity.Y -= num4;
@@ -295,9 +295,9 @@ namespace Jitter.Dynamics
 
             if (!treatBody2AsStatic)
             {
-                body2.linearVelocity.X += (impulse.X * body2.inverseMass);
-                body2.linearVelocity.Y += (impulse.Y * body2.inverseMass);
-                body2.linearVelocity.Z += (impulse.Z * body2.inverseMass);
+                body2.linearVelocity.X += impulse.X * body2.inverseMass;
+                body2.linearVelocity.Y += impulse.Y * body2.inverseMass;
+                body2.linearVelocity.Z += impulse.Z * body2.inverseMass;
 
                 float num0, num1, num2;
                 num0 = (relativePos2.Y * impulse.Z) - (relativePos2.Z * impulse.Y);
@@ -305,17 +305,17 @@ namespace Jitter.Dynamics
                 num2 = (relativePos2.X * impulse.Y) - (relativePos2.Y * impulse.X);
 
                 float num3 =
-                    ((num0 * body2.invInertiaWorld.M11) +
-                    (num1 * body2.invInertiaWorld.M21) +
-                    (num2 * body2.invInertiaWorld.M31));
+                    (num0 * body2.invInertiaWorld.M11)
+                    + (num1 * body2.invInertiaWorld.M21)
+                    + (num2 * body2.invInertiaWorld.M31);
                 float num4 =
-                    ((num0 * body2.invInertiaWorld.M12) +
-                    (num1 * body2.invInertiaWorld.M22) +
-                    (num2 * body2.invInertiaWorld.M32));
+                    (num0 * body2.invInertiaWorld.M12)
+                    + (num1 * body2.invInertiaWorld.M22)
+                    + (num2 * body2.invInertiaWorld.M32);
                 float num5 =
-                    ((num0 * body2.invInertiaWorld.M13) +
-                    (num1 * body2.invInertiaWorld.M23) +
-                    (num2 * body2.invInertiaWorld.M33));
+                    (num0 * body2.invInertiaWorld.M13)
+                    + (num1 * body2.invInertiaWorld.M23)
+                    + (num2 * body2.invInertiaWorld.M33);
 
                 body2.angularVelocity.X += num3;
                 body2.angularVelocity.Y += num4;
@@ -328,9 +328,9 @@ namespace Jitter.Dynamics
 
             if (!treatBody1AsStatic)
             {
-                body1.linearVelocity.X -= (impulse.X * body1.inverseMass);
-                body1.linearVelocity.Y -= (impulse.Y * body1.inverseMass);
-                body1.linearVelocity.Z -= (impulse.Z * body1.inverseMass);
+                body1.linearVelocity.X -= impulse.X * body1.inverseMass;
+                body1.linearVelocity.Y -= impulse.Y * body1.inverseMass;
+                body1.linearVelocity.Z -= impulse.Z * body1.inverseMass;
 
                 float num0, num1, num2;
                 num0 = (relativePos1.Y * impulse.Z) - (relativePos1.Z * impulse.Y);
@@ -338,17 +338,17 @@ namespace Jitter.Dynamics
                 num2 = (relativePos1.X * impulse.Y) - (relativePos1.Y * impulse.X);
 
                 float num3 =
-                    ((num0 * body1.invInertiaWorld.M11) +
-                    (num1 * body1.invInertiaWorld.M21) +
-                    (num2 * body1.invInertiaWorld.M31));
+                    (num0 * body1.invInertiaWorld.M11)
+                    + (num1 * body1.invInertiaWorld.M21)
+                    + (num2 * body1.invInertiaWorld.M31);
                 float num4 =
-                    ((num0 * body1.invInertiaWorld.M12) +
-                    (num1 * body1.invInertiaWorld.M22) +
-                    (num2 * body1.invInertiaWorld.M32));
+                    (num0 * body1.invInertiaWorld.M12)
+                    + (num1 * body1.invInertiaWorld.M22)
+                    + (num2 * body1.invInertiaWorld.M32);
                 float num5 =
-                    ((num0 * body1.invInertiaWorld.M13) +
-                    (num1 * body1.invInertiaWorld.M23) +
-                    (num2 * body1.invInertiaWorld.M33));
+                    (num0 * body1.invInertiaWorld.M13)
+                    + (num1 * body1.invInertiaWorld.M23)
+                    + (num2 * body1.invInertiaWorld.M33);
 
                 body1.angularVelocity.X -= num3;
                 body1.angularVelocity.Y -= num4;
@@ -357,9 +357,9 @@ namespace Jitter.Dynamics
 
             if (!treatBody2AsStatic)
             {
-                body2.linearVelocity.X += (impulse.X * body2.inverseMass);
-                body2.linearVelocity.Y += (impulse.Y * body2.inverseMass);
-                body2.linearVelocity.Z += (impulse.Z * body2.inverseMass);
+                body2.linearVelocity.X += impulse.X * body2.inverseMass;
+                body2.linearVelocity.Y += impulse.Y * body2.inverseMass;
+                body2.linearVelocity.Z += impulse.Z * body2.inverseMass;
 
                 float num0, num1, num2;
                 num0 = (relativePos2.Y * impulse.Z) - (relativePos2.Z * impulse.Y);
@@ -367,17 +367,17 @@ namespace Jitter.Dynamics
                 num2 = (relativePos2.X * impulse.Y) - (relativePos2.Y * impulse.X);
 
                 float num3 =
-                    ((num0 * body2.invInertiaWorld.M11) +
-                    (num1 * body2.invInertiaWorld.M21) +
-                    (num2 * body2.invInertiaWorld.M31));
+                    (num0 * body2.invInertiaWorld.M11)
+                    + (num1 * body2.invInertiaWorld.M21)
+                    + (num2 * body2.invInertiaWorld.M31);
                 float num4 =
-                    ((num0 * body2.invInertiaWorld.M12) +
-                    (num1 * body2.invInertiaWorld.M22) +
-                    (num2 * body2.invInertiaWorld.M32));
+                    (num0 * body2.invInertiaWorld.M12)
+                    + (num1 * body2.invInertiaWorld.M22)
+                    + (num2 * body2.invInertiaWorld.M32);
                 float num5 =
-                    ((num0 * body2.invInertiaWorld.M13) +
-                    (num1 * body2.invInertiaWorld.M23) +
-                    (num2 * body2.invInertiaWorld.M33));
+                    (num0 * body2.invInertiaWorld.M13)
+                    + (num1 * body2.invInertiaWorld.M23)
+                    + (num2 * body2.invInertiaWorld.M33);
 
                 body2.angularVelocity.X += num3;
                 body2.angularVelocity.Y += num4;
@@ -603,9 +603,9 @@ namespace Jitter.Dynamics
 
             if (!treatBody1AsStatic)
             {
-                body1.linearVelocity.X -= (impulse.X * body1.inverseMass);
-                body1.linearVelocity.Y -= (impulse.Y * body1.inverseMass);
-                body1.linearVelocity.Z -= (impulse.Z * body1.inverseMass);
+                body1.linearVelocity.X -= impulse.X * body1.inverseMass;
+                body1.linearVelocity.Y -= impulse.Y * body1.inverseMass;
+                body1.linearVelocity.Z -= impulse.Z * body1.inverseMass;
 
                 if (!body1IsMassPoint)
                 {
@@ -615,17 +615,17 @@ namespace Jitter.Dynamics
                     num2 = (relativePos1.X * impulse.Y) - (relativePos1.Y * impulse.X);
 
                     float num3 =
-                        ((num0 * body1.invInertiaWorld.M11) +
-                        (num1 * body1.invInertiaWorld.M21) +
-                        (num2 * body1.invInertiaWorld.M31));
+                        (num0 * body1.invInertiaWorld.M11)
+                        + (num1 * body1.invInertiaWorld.M21)
+                        + (num2 * body1.invInertiaWorld.M31);
                     float num4 =
-                        ((num0 * body1.invInertiaWorld.M12) +
-                        (num1 * body1.invInertiaWorld.M22) +
-                        (num2 * body1.invInertiaWorld.M32));
+                        (num0 * body1.invInertiaWorld.M12)
+                        + (num1 * body1.invInertiaWorld.M22)
+                        + (num2 * body1.invInertiaWorld.M32);
                     float num5 =
-                        ((num0 * body1.invInertiaWorld.M13) +
-                        (num1 * body1.invInertiaWorld.M23) +
-                        (num2 * body1.invInertiaWorld.M33));
+                        (num0 * body1.invInertiaWorld.M13)
+                        + (num1 * body1.invInertiaWorld.M23)
+                        + (num2 * body1.invInertiaWorld.M33);
 
                     body1.angularVelocity.X -= num3;
                     body1.angularVelocity.Y -= num4;
@@ -635,9 +635,9 @@ namespace Jitter.Dynamics
 
             if (!treatBody2AsStatic)
             {
-                body2.linearVelocity.X += (impulse.X * body2.inverseMass);
-                body2.linearVelocity.Y += (impulse.Y * body2.inverseMass);
-                body2.linearVelocity.Z += (impulse.Z * body2.inverseMass);
+                body2.linearVelocity.X += impulse.X * body2.inverseMass;
+                body2.linearVelocity.Y += impulse.Y * body2.inverseMass;
+                body2.linearVelocity.Z += impulse.Z * body2.inverseMass;
 
                 if (!body2IsMassPoint)
                 {
@@ -647,17 +647,17 @@ namespace Jitter.Dynamics
                     num2 = (relativePos2.X * impulse.Y) - (relativePos2.Y * impulse.X);
 
                     float num3 =
-                        ((num0 * body2.invInertiaWorld.M11) +
-                        (num1 * body2.invInertiaWorld.M21) +
-                        (num2 * body2.invInertiaWorld.M31));
+                        (num0 * body2.invInertiaWorld.M11)
+                        + (num1 * body2.invInertiaWorld.M21)
+                        + (num2 * body2.invInertiaWorld.M31);
                     float num4 =
-                        ((num0 * body2.invInertiaWorld.M12) +
-                        (num1 * body2.invInertiaWorld.M22) +
-                        (num2 * body2.invInertiaWorld.M32));
+                        (num0 * body2.invInertiaWorld.M12)
+                        + (num1 * body2.invInertiaWorld.M22)
+                        + (num2 * body2.invInertiaWorld.M32);
                     float num5 =
-                        ((num0 * body2.invInertiaWorld.M13) +
-                        (num1 * body2.invInertiaWorld.M23) +
-                        (num2 * body2.invInertiaWorld.M33));
+                        (num0 * body2.invInertiaWorld.M13)
+                        + (num1 * body2.invInertiaWorld.M23)
+                        + (num2 * body2.invInertiaWorld.M33);
 
                     body2.angularVelocity.X += num3;
                     body2.angularVelocity.Y += num4;

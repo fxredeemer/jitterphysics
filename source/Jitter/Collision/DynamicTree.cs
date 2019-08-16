@@ -404,7 +404,7 @@ namespace Jitter.Collision
 
                     float oldArea = Nodes[child1].AABB.Perimeter;
                     float newArea = aabb.Perimeter;
-                    cost2 = (newArea - oldArea) + inheritanceCost;
+                    cost2 = newArea - oldArea + inheritanceCost;
                 }
 
                 float cost3;

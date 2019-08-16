@@ -29,12 +29,12 @@ namespace Jitter.Collision.Shapes
 
         public override void CalculateMassInertia()
         {
-            mass = (1.0f / 3.0f) * JMath.Pi * radius * radius * height;
+            mass = 1.0f / 3.0f * JMath.Pi * radius * radius * height;
 
             inertia = JMatrix.Identity;
-            inertia.M11 = (3.0f / 80.0f) * mass * ((radius * radius) + (4 * height * height));
-            inertia.M22 = (3.0f / 10.0f) * mass * radius * radius;
-            inertia.M33 = (3.0f / 80.0f) * mass * ((radius * radius) + (4 * height * height));
+            inertia.M11 = 3.0f / 80.0f * mass * ((radius * radius) + (4 * height * height));
+            inertia.M22 = 3.0f / 10.0f * mass * radius * radius;
+            inertia.M33 = 3.0f / 80.0f * mass * ((radius * radius) + (4 * height * height));
 
             geomCen = JVector.Zero;
         }
@@ -46,7 +46,7 @@ namespace Jitter.Collision.Shapes
             if (direction.Y > direction.Length() * sina)
             {
                 result.X = 0.0f;
-                result.Y = (2.0f / 3.0f) * height;
+                result.Y = 2.0f / 3.0f * height;
                 result.Z = 0.0f;
             }
             else if (sigma > 0.0f)

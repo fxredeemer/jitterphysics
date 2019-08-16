@@ -374,12 +374,12 @@ namespace Jitter.LinearMath
             float num7 = x * z;
             float num6 = y * z;
             result.M11 = num11 + (num * (1f - num11));
-            result.M12 = (num8 - (num * num8)) + (num2 * z);
+            result.M12 = num8 - (num * num8) + (num2 * z);
             result.M13 = num7 - (num * num7) - (num2 * y);
             result.M21 = num8 - (num * num8) - (num2 * z);
             result.M22 = num10 + (num * (1f - num10));
-            result.M23 = (num6 - (num * num6)) + (num2 * x);
-            result.M31 = (num7 - (num * num7)) + (num2 * y);
+            result.M23 = num6 - (num * num6) + (num2 * x);
+            result.M31 = num7 - (num * num7) + (num2 * y);
             result.M32 = num6 - (num * num6) - (num2 * x);
             result.M33 = num9 + (num * (1f - num9));
         }

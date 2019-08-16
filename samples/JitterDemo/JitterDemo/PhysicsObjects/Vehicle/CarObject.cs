@@ -99,12 +99,12 @@ namespace JitterDemo.Vehicle
                         else addOrienation = Matrix.Identity;
 
                         effect.World =
-                            addOrienation *
-                            Matrix.CreateRotationZ(MathHelper.PiOver2) *
-                            Matrix.CreateRotationX(MathHelper.ToRadians(-wheel.WheelRotation)) *
-                            Matrix.CreateRotationY(MathHelper.ToRadians(wheel.SteerAngle)) *
-                            Conversion.ToXNAMatrix(carBody.Orientation) *
-                            Matrix.CreateTranslation(position);
+                            addOrienation
+                            * Matrix.CreateRotationZ(MathHelper.PiOver2)
+                            * Matrix.CreateRotationX(MathHelper.ToRadians(-wheel.WheelRotation))
+                            * Matrix.CreateRotationY(MathHelper.ToRadians(wheel.SteerAngle))
+                            * Conversion.ToXNAMatrix(carBody.Orientation)
+                            * Matrix.CreateTranslation(position);
 
                         effect.EnableDefaultLighting();
                         effect.View = demo.Camera.View;
@@ -125,8 +125,8 @@ namespace JitterDemo.Vehicle
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     var matrix = Conversion.ToXNAMatrix(carBody.Orientation);
-                    matrix.Translation = Conversion.ToXNAVector(carBody.Position) -
-                        Vector3.Transform(new Vector3(0,1.0f,0),matrix);
+                    matrix.Translation = Conversion.ToXNAVector(carBody.Position)
+                        - Vector3.Transform(new Vector3(0, 1.0f, 0), matrix);
 
                     effect.EnableDefaultLighting();
                     effect.World = matrix;

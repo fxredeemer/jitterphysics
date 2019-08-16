@@ -103,16 +103,16 @@ namespace JitterDemo.PhysicsObjects
                 {
                     var pos = vertices[(i * sqrt) + e].Position;
 
-                    if (i > 0) neighbour[0] = vertices[((i - 1) * sqrt) + (e + 0)].Position;
+                    if (i > 0) neighbour[0] = vertices[((i - 1) * sqrt) + e + 0].Position;
                     else neighbour[0] = pos;
 
                     if (e > 0) neighbour[1] = vertices[((i + 0) * sqrt) + (e - 1)].Position;
                     else neighbour[1] = pos;
 
-                    if (i < sqrt - 1) neighbour[2] = vertices[((i + 1) * sqrt) + (e + 0)].Position;
+                    if (i < sqrt - 1) neighbour[2] = vertices[((i + 1) * sqrt) + e + 0].Position;
                     else neighbour[2] = pos;
 
-                    if (e < sqrt - 1) neighbour[3] = vertices[((i + 0) * sqrt) + (e + 1)].Position;
+                    if (e < sqrt - 1) neighbour[3] = vertices[((i + 0) * sqrt) + e + 1].Position;
                     else neighbour[3] = pos;
 
                     var normal = Vector3.Zero;

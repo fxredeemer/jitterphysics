@@ -49,8 +49,8 @@ namespace JitterDemo.Primitives3D
             // Create rings of vertices at progressively higher latitudes.
             for (int i = 0; i < verticalSegments - 1; i++)
             {
-                float latitude = ((i + 1) * MathHelper.Pi /
-                                            verticalSegments) - MathHelper.PiOver2;
+                float latitude = ((i + 1) * MathHelper.Pi
+                                            / verticalSegments) - MathHelper.PiOver2;
                 float dy = (float)Math.Sin(latitude);
                 float dxz = (float)Math.Cos(latitude);
 

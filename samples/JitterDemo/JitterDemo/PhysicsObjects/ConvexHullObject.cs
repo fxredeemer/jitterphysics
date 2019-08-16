@@ -41,8 +41,8 @@ namespace JitterDemo
                     var vertexPosition = new VertexElement();
                     foreach (var vert in vertexElements)
                     {
-                        if (vert.VertexElementUsage == VertexElementUsage.Position &&
-                        vert.VertexElementFormat == VertexElementFormat.Vector3)
+                        if (vert.VertexElementUsage == VertexElementUsage.Position
+                        && vert.VertexElementFormat == VertexElementFormat.Vector3)
                         {
                             vertexPosition = vert;
                             // There should only be one 
@@ -50,9 +50,9 @@ namespace JitterDemo
                         }
                     }
                     // Check the position element found is valid 
-                    if (vertexPosition == null ||
-                    vertexPosition.VertexElementUsage != VertexElementUsage.Position ||
-                    vertexPosition.VertexElementFormat != VertexElementFormat.Vector3)
+                    if (vertexPosition == null
+                    || vertexPosition.VertexElementUsage != VertexElementUsage.Position
+                    || vertexPosition.VertexElementFormat != VertexElementFormat.Vector3)
                     {
                         throw new Exception("Model uses unsupported vertex format!");
                     }
@@ -141,8 +141,8 @@ namespace JitterDemo
             // RigidBody.Position gives you the position of the center of mass of the shape.
             // But this is not the center of our graphical represantion, use the
             // "shift" property of the more complex shapes to deal with this.
-            world.Translation = Conversion.ToXNAVector(body.Position +
-                JVector.Transform(hullShape.Shift, body.Orientation));
+            world.Translation = Conversion.ToXNAVector(body.Position
+                + JVector.Transform(hullShape.Shift, body.Orientation));
 
             var boneTransforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(boneTransforms);
