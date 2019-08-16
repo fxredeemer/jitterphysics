@@ -89,12 +89,12 @@ namespace Jitter.Dynamics
             /// </summary>
             public float BiasFactor { get; set; } = 0.1f;
 
-            float effectiveMass = 0.0f;
-            float bias;
-            float softnessOverDt;
-            readonly JVector[] jacobian = new JVector[2];
+            private float effectiveMass = 0.0f;
+            private float bias;
+            private float softnessOverDt;
+            private readonly JVector[] jacobian = new JVector[2];
 
-            bool skipConstraint = false;
+            private bool skipConstraint = false;
 
             /// <summary>
             /// Called once before iteration starts.
@@ -320,9 +320,9 @@ namespace Jitter.Dynamics
 
         public Material Material { get; } = new Material();
 
-        JBBox box = new JBBox();
+        private JBBox box = new JBBox();
 
-        bool active = true;
+        private bool active = true;
 
         /// <summary>
         /// Does create an empty body. Derive from SoftBody and fill 
@@ -358,15 +358,15 @@ namespace Jitter.Dynamics
                 {
                     var index = new TriangleVertexIndices();
                     {
-                        index.I0 = (e + 0) * sizeX + i + 0;
-                        index.I1 = (e + 0) * sizeX + i + 1;
-                        index.I2 = (e + 1) * sizeX + i + 1;
+                        index.I0 = ((e + 0) * sizeX) + i + 0;
+                        index.I1 = ((e + 0) * sizeX) + i + 1;
+                        index.I2 = ((e + 1) * sizeX) + i + 1;
 
                         indices.Add(index);
 
-                        index.I0 = (e + 0) * sizeX + i + 0;
-                        index.I1 = (e + 1) * sizeX + i + 1;
-                        index.I2 = (e + 1) * sizeX + i + 0;
+                        index.I0 = ((e + 0) * sizeX) + i + 0;
+                        index.I1 = ((e + 1) * sizeX) + i + 1;
+                        index.I2 = ((e + 1) * sizeX) + i + 0;
 
                         indices.Add(index);    
                     }
@@ -383,7 +383,7 @@ namespace Jitter.Dynamics
             {
                 for (int e = 0; e < sizeY - 1; e++)
                 {
-                    var spring = new Spring(points[(e + 0) * sizeX + i + 1], points[(e + 1) * sizeX + i + 0])
+                    var spring = new Spring(points[((e + 0) * sizeX) + i + 1], points[((e + 1) * sizeX) + i + 0])
                     {
                         Softness = 0.01f,
                         BiasFactor = 0.1f
@@ -404,13 +404,13 @@ namespace Jitter.Dynamics
             {
                 for (int e = 0; e < sizeY - 2; e++)
                 {
-                    var spring1 = new Spring(points[(e + 0) * sizeX + i + 0], points[(e + 0) * sizeX + i + 2])
+                    var spring1 = new Spring(points[((e + 0) * sizeX) + i + 0], points[((e + 0) * sizeX) + i + 2])
                     {
                         Softness = 0.01f,
                         BiasFactor = 0.1f
                     };
 
-                    var spring2 = new Spring(points[(e + 0) * sizeX + i + 0], points[(e + 2) * sizeX + i + 0])
+                    var spring2 = new Spring(points[((e + 0) * sizeX) + i + 0], points[((e + 2) * sizeX) + i + 0])
                     {
                         Softness = 0.01f,
                         BiasFactor = 0.1f
@@ -455,7 +455,7 @@ namespace Jitter.Dynamics
             public override bool Equals(object obj)
             {
                 var e = (Edge)obj;
-                return (e.Index1 == Index1 && e.Index2 == Index2 || e.Index1 == Index2 && e.Index2 == Index1);
+                return ((e.Index1 == Index1 && e.Index2 == Index2) || (e.Index1 == Index2 && e.Index2 == Index1));
             }
         }
 
@@ -530,7 +530,7 @@ namespace Jitter.Dynamics
             return edges;
         }
 
-        readonly List<int> queryList = new List<int>();
+        private readonly List<int> queryList = new List<int>();
 
         public virtual void DoSelfCollision(CollisionDetectedHandler collision)
         {
@@ -671,8 +671,8 @@ namespace Jitter.Dynamics
                 var v2 = points[t.indices.I1].position;
                 var v3 = points[t.indices.I2].position;
 
-                Volume -= ((v2.Y - v1.Y) * (v3.Z - v1.Z) -
-                    (v2.Z - v1.Z) * (v3.Y - v1.Y)) * (v1.X + v2.X + v3.X);
+                Volume -= (((v2.Y - v1.Y) * (v3.Z - v1.Z)) -
+                    ((v2.Z - v1.Z) * (v3.Y - v1.Y))) * (v1.X + v2.X + v3.X);
             }
 
             Volume /= 6.0f;

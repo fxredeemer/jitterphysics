@@ -256,10 +256,10 @@ namespace JitterDemo
                 (e.Current as RigidBody).IsStatic = true;
             }
 
-            if (mouseState.LeftButton == ButtonState.Pressed &&
-                mousePreviousState.LeftButton == ButtonState.Released ||
-                padState.IsButtonDown(Buttons.RightThumbstickDown) &&
-                gamePadPreviousState.IsButtonUp(Buttons.RightThumbstickUp))
+            if ((mouseState.LeftButton == ButtonState.Pressed &&
+                mousePreviousState.LeftButton == ButtonState.Released) ||
+                (padState.IsButtonDown(Buttons.RightThumbstickDown) &&
+                gamePadPreviousState.IsButtonUp(Buttons.RightThumbstickUp)))
             {
                 var ray = Conversion.ToJitterVector(RayTo(mouseState.X, mouseState.Y));
                 var camp = Conversion.ToJitterVector(Camera.Position);
@@ -270,7 +270,7 @@ namespace JitterDemo
 
                 if (result)
                 {
-                    hitPoint = camp + fraction * ray;
+                    hitPoint = camp + (fraction * ray);
 
                     if (grabConstraint != null)
                     {
@@ -301,7 +301,7 @@ namespace JitterDemo
                 if (grabBody != null)
                 {
                     var ray = RayTo(mouseState.X, mouseState.Y); ray.Normalize();
-                    grabConstraint.Anchor = Conversion.ToJitterVector(Camera.Position + ray * hitDistance);
+                    grabConstraint.Anchor = Conversion.ToJitterVector(Camera.Position + (ray * hitDistance));
                     grabBody.IsActive = true;
                     if (!grabBody.IsStatic)
                     {

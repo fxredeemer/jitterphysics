@@ -153,7 +153,7 @@ namespace JitterDemo
         public JVector GetWorldPosition()
         {
             return car.Position +
-                JVector.Transform(Position + JVector.Up * displacement, car.Orientation);
+                JVector.Transform(Position + (JVector.Up * displacement), car.Orientation);
         }
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace JitterDemo
             var wheelLeft = JVector.Cross(JVector.Up, wheelFwd); wheelLeft.Normalize();
             var wheelUp = JVector.Cross(wheelFwd, wheelLeft);
 
-            float rayLen = 2.0f * Radius + WheelTravel;
+            float rayLen = (2.0f * Radius) + WheelTravel;
             
             var wheelRayStart = worldPos;
             var wheelDelta = -Radius * worldAxis;
@@ -241,10 +241,10 @@ namespace JitterDemo
 
             for (int i = 0; i < NumberOfRays; i++)
             {
-                float distFwd = (deltaFwdStart + i * deltaFwd) - Radius;
+                float distFwd = (deltaFwdStart + (i * deltaFwd)) - Radius;
                 float zOffset = Radius * (1.0f - (float)Math.Cos(Math.PI / 4 * (distFwd / Radius)));
 
-                var newOrigin = wheelRayStart + distFwd * wheelFwd + zOffset * wheelUp;
+                var newOrigin = wheelRayStart + (distFwd * wheelFwd) + (zOffset * wheelUp);
 
                 bool result = world.CollisionSystem.Raycast(newOrigin, wheelDelta,
                     raycast, out var body, out var normal, out float frac);
@@ -254,7 +254,7 @@ namespace JitterDemo
                     if (frac < deepestFrac)
                     {
                         deepestFrac = frac;
-                        groundPos = rayOrigin + frac * wheelDelta;
+                        groundPos = rayOrigin + (frac * wheelDelta);
                         worldBody = body;
                         groundNormal = normal;
                     }
@@ -321,7 +321,7 @@ namespace JitterDemo
                 friction *= slipFactor;
             else
                 if ((sideVel > noslipVel) || (sideVel < -noslipVel))
-                    friction *= 1.0f - (1.0f - slipFactor) * (System.Math.Abs(sideVel) - noslipVel) / (slipVel - noslipVel);
+                    friction *= 1.0f - ((1.0f - slipFactor) * (System.Math.Abs(sideVel) - noslipVel) / (slipVel - noslipVel));
 
             if (sideVel < 0.0f)
                 friction *= -1.0f;
@@ -342,7 +342,7 @@ namespace JitterDemo
                 friction *= slipFactor;
             else
                 if ((fwdVel > noslipVel) || (fwdVel < -noslipVel))
-                    friction *= 1.0f - (1.0f - slipFactor) * (System.Math.Abs(fwdVel) - noslipVel) / (slipVel - noslipVel);
+                    friction *= 1.0f - ((1.0f - slipFactor) * (System.Math.Abs(fwdVel) - noslipVel) / (slipVel - noslipVel));
 
             if (fwdVel < 0.0f)
                 friction *= -1.0f;
@@ -363,7 +363,7 @@ namespace JitterDemo
             torque += -fwdForce * Radius;
 
             // add force to car
-            car.AddForce(force, groundPos + 0.5f * JVector.Up);
+            car.AddForce(force, groundPos + (0.5f * JVector.Up));
 
             // add force to the world
             if (!worldBody.IsStatic)

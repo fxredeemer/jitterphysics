@@ -119,7 +119,6 @@ namespace Jitter.Collision.Shapes
 
         public override int Prepare(ref JBBox box)
         {
-
             if (box.Min.X < boundings.Min.X) minX = 0;
             else
             {
@@ -222,7 +221,7 @@ namespace Jitter.Collision.Shapes
 
             #region RayEnd + Expand Spherical
             JVector.Normalize(ref rayDelta, out var rayEnd);
-            rayEnd = rayOrigin + rayDelta + rayEnd * SphericalExpansion;
+            rayEnd = rayOrigin + rayDelta + (rayEnd * SphericalExpansion);
             #endregion
 
             box.AddPoint(ref rayOrigin);

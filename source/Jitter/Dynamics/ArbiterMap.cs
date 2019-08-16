@@ -66,8 +66,8 @@ namespace Jitter.Dynamics
         public override bool Equals(object obj)
         {
             var other = (ArbiterKey)obj;
-            return (other.body1.Equals(body1) && other.body2.Equals(body2) ||
-                other.body1.Equals(body2) && other.body2.Equals(body1));
+            return ((other.body1.Equals(body1) && other.body2.Equals(body2)) ||
+                (other.body1.Equals(body2) && other.body2.Equals(body1)));
         }
         #endregion
 
@@ -89,8 +89,8 @@ namespace Jitter.Dynamics
     {
         public bool Equals(ArbiterKey x, ArbiterKey y)
         {
-            return (x.body1.Equals(y.body1) && x.body2.Equals(y.body2) ||
-                x.body1.Equals(y.body2) && x.body2.Equals(y.body1));
+            return ((x.body1.Equals(y.body1) && x.body2.Equals(y.body2)) ||
+                (x.body1.Equals(y.body2) && x.body2.Equals(y.body1)));
         }
 
         public int GetHashCode(ArbiterKey obj)

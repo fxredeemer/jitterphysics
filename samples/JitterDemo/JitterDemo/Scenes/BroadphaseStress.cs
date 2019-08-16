@@ -4,7 +4,7 @@ using Jitter.LinearMath;
 
 namespace JitterDemo.Scenes
 {
-    class BroadphaseStress : Scene
+    internal class BroadphaseStress : Scene
     {
         public BroadphaseStress(JitterDemo demo)
             : base(demo)

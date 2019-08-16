@@ -154,27 +154,27 @@ namespace Jitter.Collision.Shapes
 
             vec.Set(orientation.M11, orientation.M21, orientation.M31);
             SupportMapping(ref vec, out vec);
-            box.Max.X = orientation.M11 * vec.X + orientation.M21 * vec.Y + orientation.M31 * vec.Z;
+            box.Max.X = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
 
             vec.Set(orientation.M12, orientation.M22, orientation.M32);
             SupportMapping(ref vec, out vec);
-            box.Max.Y = orientation.M12 * vec.X + orientation.M22 * vec.Y + orientation.M32 * vec.Z;
+            box.Max.Y = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
 
             vec.Set(orientation.M13, orientation.M23, orientation.M33);
             SupportMapping(ref vec, out vec);
-            box.Max.Z = orientation.M13 * vec.X + orientation.M23 * vec.Y + orientation.M33 * vec.Z;
+            box.Max.Z = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
 
             vec.Set(-orientation.M11, -orientation.M21, -orientation.M31);
             SupportMapping(ref vec, out vec);
-            box.Min.X = orientation.M11 * vec.X + orientation.M21 * vec.Y + orientation.M31 * vec.Z;
+            box.Min.X = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
 
             vec.Set(-orientation.M12, -orientation.M22, -orientation.M32);
             SupportMapping(ref vec, out vec);
-            box.Min.Y = orientation.M12 * vec.X + orientation.M22 * vec.Y + orientation.M32 * vec.Z;
+            box.Min.Y = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
 
             vec.Set(-orientation.M13, -orientation.M23, -orientation.M33);
             SupportMapping(ref vec, out vec);
-            box.Min.Z = orientation.M13 * vec.X + orientation.M23 * vec.Y + orientation.M33 * vec.Z;
+            box.Min.Z = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
         }
 
         public virtual void UpdateShape()
@@ -232,9 +232,9 @@ namespace Jitter.Collision.Shapes
             float z = centerOfMass.Z;
 
             var t = new JMatrix(
-    -mass * (y * y + z * z), mass * x * y, mass * x * z,
-    mass * y * x, -mass * (z * z + x * x), mass * y * z,
-    mass * z * x, mass * z * y, -mass * (x * x + y * y));
+    -mass * ((y * y) + (z * z)), mass * x * y, mass * x * z,
+    mass * y * x, -mass * ((z * z) + (x * x)), mass * y * z,
+    mass * z * x, mass * z * y, -mass * ((x * x) + (y * y)));
 
             JMatrix.Add(ref inertia, ref t, out inertia);
 

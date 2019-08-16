@@ -80,10 +80,10 @@ namespace JitterDemo
             SteerRate = 5.0f;
 
             // create default wheels
-            Wheels[(int)WheelPosition.FrontLeft] = new Wheel(world, this, JVector.Left + 1.8f * JVector.Forward + 0.8f * JVector.Down,0.4f);
-            Wheels[(int)WheelPosition.FrontRight] = new Wheel(world, this, JVector.Right + 1.8f * JVector.Forward + 0.8f * JVector.Down, 0.4f);
-            Wheels[(int)WheelPosition.BackLeft] = new Wheel(world, this, JVector.Left + 1.8f * JVector.Backward + 0.8f * JVector.Down, 0.4f);
-            Wheels[(int)WheelPosition.BackRight] = new Wheel(world, this, JVector.Right + 1.8f * JVector.Backward + 0.8f * JVector.Down, 0.4f);
+            Wheels[(int)WheelPosition.FrontLeft] = new Wheel(world, this, JVector.Left + (1.8f * JVector.Forward) + (0.8f * JVector.Down), 0.4f);
+            Wheels[(int)WheelPosition.FrontRight] = new Wheel(world, this, JVector.Right + (1.8f * JVector.Forward) + (0.8f * JVector.Down), 0.4f);
+            Wheels[(int)WheelPosition.BackLeft] = new Wheel(world, this, JVector.Left + (1.8f * JVector.Backward) + (0.8f * JVector.Down), 0.4f);
+            Wheels[(int)WheelPosition.BackRight] = new Wheel(world, this, JVector.Right + (1.8f * JVector.Backward) + (0.8f * JVector.Down), 0.4f);
 
             AdjustWheelValues();
         }
@@ -159,6 +159,5 @@ namespace JitterDemo
 
             foreach (var w in Wheels) w.PostStep(timestep);
         }
-
     }
 }

@@ -25,14 +25,14 @@ namespace Jitter.Collision.Shapes
 
             mass = massCylinder + massSphere;
 
-            inertia.M11 = (1.0f / 4.0f) * massCylinder * radius * radius + (1.0f / 12.0f) * massCylinder * length * length + (2.0f / 5.0f) * massSphere * radius * radius + (1.0f / 4.0f) * length * length * massSphere;
-            inertia.M22 = (1.0f / 2.0f) * massCylinder * radius * radius + (2.0f / 5.0f) * massSphere * radius * radius;
-            inertia.M33 = (1.0f / 4.0f) * massCylinder * radius * radius + (1.0f / 12.0f) * massCylinder * length * length + (2.0f / 5.0f) * massSphere * radius * radius + (1.0f / 4.0f) * length * length * massSphere;
+            inertia.M11 = ((1.0f / 4.0f) * massCylinder * radius * radius) + ((1.0f / 12.0f) * massCylinder * length * length) + ((2.0f / 5.0f) * massSphere * radius * radius) + ((1.0f / 4.0f) * length * length * massSphere);
+            inertia.M22 = ((1.0f / 2.0f) * massCylinder * radius * radius) + ((2.0f / 5.0f) * massSphere * radius * radius);
+            inertia.M33 = ((1.0f / 4.0f) * massCylinder * radius * radius) + ((1.0f / 12.0f) * massCylinder * length * length) + ((2.0f / 5.0f) * massSphere * radius * radius) + ((1.0f / 4.0f) * length * length * massSphere);
         }
 
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            float r = (float)Math.Sqrt(direction.X * direction.X + direction.Z * direction.Z);
+            float r = (float)Math.Sqrt((direction.X * direction.X) + (direction.Z * direction.Z));
 
             if (Math.Abs(direction.Y) > 0.0f)
             {

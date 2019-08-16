@@ -1,36 +1,11 @@
-﻿/* Copyright (C) <2009-2011> <Thorben Linneweber, Jitter Physics>
-* 
-*  This software is provided 'as-is', without any express or implied
-*  warranty.  In no event will the authors be held liable for any damages
-*  arising from the use of this software.
-*
-*  Permission is granted to anyone to use this software for any purpose,
-*  including commercial applications, and to alter it and redistribute it
-*  freely, subject to the following restrictions:
-*
-*  1. The origin of this software must not be misrepresented; you must not
-*      claim that you wrote the original software. If you use this software
-*      in a product, an acknowledgment in the product documentation would be
-*      appreciated but is not required.
-*  2. Altered source versions must be plainly marked as such, and must not be
-*      misrepresented as being the original software.
-*  3. This notice may not be removed or altered from any source distribution. 
-*/
-
-#region Using Statements
+﻿using Jitter.Collision.Shapes;
+using Jitter.Dynamics;
+using Jitter.LinearMath;
 using System;
 using System.Collections.Generic;
 
-using Jitter.Dynamics;
-using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
-#endregion
-
 namespace Jitter.Collision
 {
-    /// <summary>
-    /// Uses single axis sweep and prune broadphase collision detection.
-    /// </summary>
     public class CollisionSystemSAP : CollisionSystem
     {
         private readonly List<IBroadphaseEntity> bodyList = new List<IBroadphaseEntity>();
@@ -49,47 +24,29 @@ namespace Jitter.Collision
 
         private bool swapOrder = false;
 
-        /// <summary>
-        /// Creates a new instance of the CollisionSystemSAP class.
-        /// </summary>
         public CollisionSystemSAP()
         {
             xComparer = new IBroadphaseEntityXCompare();
             detectCallback = new Action<object>(DetectCallback);
         }
 
-        /// <summary>
-        /// Remove a body from the collision system. Removing a body from the world
-        /// does automatically remove it from the collision system.
-        /// </summary>
-        /// <param name="body">The body to remove.</param>
-        /// <returns>Returns true if the body was successfully removed, otherwise false.</returns>
         public override bool RemoveEntity(IBroadphaseEntity body)
         {
             return bodyList.Remove(body);
         }
 
-        /// <summary>
-        /// Add a body to the collision system. Adding a body to the world
-        /// does automatically add it to the collision system.
-        /// </summary>
-        /// <param name="body">The body to remove.</param>
         public override void AddEntity(IBroadphaseEntity body)
         {
             if (bodyList.Contains(body))
+            {
                 throw new ArgumentException("The body was already added to the collision system.", "body");
+            }
 
             bodyList.Add(body);
         }
 
-        readonly Action<object> detectCallback;
+        private readonly Action<object> detectCallback;
 
-        /// <summary>
-        /// Tells the collisionsystem to check all bodies for collisions. Hook into the
-        /// <see cref="CollisionSystem.PassedBroadphase"/>
-        /// and <see cref="CollisionSystem.CollisionDetected"/> events to get the results.
-        /// </summary>
-        /// <param name="multiThreaded">If true internal multithreading is used.</param>
         public override void Detect(bool multiThreaded)
         {
             bodyList.Sort(xComparer);
@@ -99,18 +56,21 @@ namespace Jitter.Collision
             if (multiThreaded)
             {
                 for (int i = 0; i < bodyList.Count; i++)
+                {
                     AddToActiveMultithreaded(bodyList[i], false);
+                }
 
                 threadManager.Execute();
             }
             else
             {
                 for (int i = 0; i < bodyList.Count; i++)
+                {
                     AddToActive(bodyList[i], false);
+                }
             }
         }
 
-        #region private void AddToActiveSingleThreaded(IBroadphaseEntity body, bool addToList)
         private void AddToActive(IBroadphaseEntity body, bool addToList)
         {
             float xmin = body.BoundingBox.Min.X;
@@ -120,7 +80,7 @@ namespace Jitter.Collision
 
             JBBox acBox, bodyBox;
 
-            for (int i = 0; i != n; )
+            for (int i = 0; i != n;)
             {
                 var ac = active[i];
                 acBox = ac.BoundingBox;
@@ -140,8 +100,15 @@ namespace Jitter.Collision
                     {
                         if (base.RaisePassedBroadphase(ac, body))
                         {
-                            if (swapOrder) Detect(body, ac);
-                            else Detect(ac, body);
+                            if (swapOrder)
+                            {
+                                Detect(body, ac);
+                            }
+                            else
+                            {
+                                Detect(ac, body);
+                            }
+
                             swapOrder = !swapOrder;
                         }
                     }
@@ -152,9 +119,7 @@ namespace Jitter.Collision
 
             active.Add(body);
         }
-        #endregion
 
-        #region private void AddToActiveMultithreaded(IBroadphaseEntity body, bool addToList)
         private void AddToActiveMultithreaded(IBroadphaseEntity body, bool addToList)
         {
             float xmin = body.BoundingBox.Min.X;
@@ -164,7 +129,7 @@ namespace Jitter.Collision
 
             JBBox acBox, bodyBox;
 
-            for (int i = 0; i != n; )
+            for (int i = 0; i != n;)
             {
                 var ac = active[i];
                 acBox = ac.BoundingBox;
@@ -200,7 +165,6 @@ namespace Jitter.Collision
 
             active.Add(body);
         }
-        #endregion
 
         private void DetectCallback(object obj)
         {
@@ -215,13 +179,6 @@ namespace Jitter.Collision
             return (f < 0) ? -1 : (f > 0) ? 1 : 0;
         }
 
-        /// <summary>
-        /// Sends a ray (definied by start and direction) through the scene (all bodies added).
-        /// NOTE: For performance reasons terrain and trianglemeshshape aren't checked
-        /// against rays (rays are of infinite length). They are checked against segments
-        /// which start at rayOrigin and end in rayOrigin + rayDirection.
-        /// </summary>
-        #region public override bool Raycast(JVector rayOrigin, JVector rayDirection, out JVector normal,out float fraction)
         public override bool Raycast(JVector rayOrigin, JVector rayDirection, RaycastCallback raycast, out RigidBody body, out JVector normal, out float fraction)
         {
             body = null; normal = JVector.Zero; fraction = float.MaxValue;
@@ -229,7 +186,6 @@ namespace Jitter.Collision
             JVector tempNormal; float tempFraction;
             bool result = false;
 
-            // TODO: This can be done better in CollisionSystemPersistenSAP
             foreach (var e in bodyList)
             {
                 if (e is SoftBody)
@@ -268,19 +224,15 @@ namespace Jitter.Collision
 
             return result;
         }
-        #endregion
 
-        /// <summary>
-        /// Raycasts a single body. NOTE: For performance reasons terrain and trianglemeshshape aren't checked
-        /// against rays (rays are of infinite length). They are checked against segments
-        /// which start at rayOrigin and end in rayOrigin + rayDirection.
-        /// </summary>
-        #region public override bool Raycast(RigidBody body, JVector rayOrigin, JVector rayDirection, out JVector normal, out float fraction)
         public override bool Raycast(RigidBody body, JVector rayOrigin, JVector rayDirection, out JVector normal, out float fraction)
         {
             fraction = float.MaxValue; normal = JVector.Zero;
 
-            if (!body.BoundingBox.RayIntersect(ref rayOrigin, ref rayDirection)) return false;
+            if (!body.BoundingBox.RayIntersect(ref rayOrigin, ref rayDirection))
+            {
+                return false;
+            }
 
             if (body.Shape is Multishape)
             {
@@ -332,7 +284,5 @@ namespace Jitter.Collision
                     ref rayOrigin, ref rayDirection, out fraction, out normal));
             }
         }
-        #endregion
-
     }
 }

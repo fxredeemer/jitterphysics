@@ -74,7 +74,7 @@ namespace JitterDemo.Primitives3D
             for (int i = 0; i < horizontalSegments; i++)
             {
                 AddIndex(0);
-                AddIndex(1 + (i + 1) % horizontalSegments);
+                AddIndex(1 + ((i + 1) % horizontalSegments));
                 AddIndex(1 + i);
             }
 
@@ -86,13 +86,13 @@ namespace JitterDemo.Primitives3D
                     int nextI = i + 1;
                     int nextJ = (j + 1) % horizontalSegments;
 
-                    AddIndex(1 + i * horizontalSegments + j);
-                    AddIndex(1 + i * horizontalSegments + nextJ);
-                    AddIndex(1 + nextI * horizontalSegments + j);
+                    AddIndex(1 + (i * horizontalSegments) + j);
+                    AddIndex(1 + (i * horizontalSegments) + nextJ);
+                    AddIndex(1 + (nextI * horizontalSegments) + j);
 
-                    AddIndex(1 + i * horizontalSegments + nextJ);
-                    AddIndex(1 + nextI * horizontalSegments + nextJ);
-                    AddIndex(1 + nextI * horizontalSegments + j);
+                    AddIndex(1 + (i * horizontalSegments) + nextJ);
+                    AddIndex(1 + (nextI * horizontalSegments) + nextJ);
+                    AddIndex(1 + (nextI * horizontalSegments) + j);
                 }
             }
 
@@ -100,7 +100,7 @@ namespace JitterDemo.Primitives3D
             for (int i = 0; i < horizontalSegments; i++)
             {
                 AddIndex(CurrentVertex - 1);
-                AddIndex(CurrentVertex - 2 - (i + 1) % horizontalSegments);
+                AddIndex(CurrentVertex - 2 - ((i + 1) % horizontalSegments));
                 AddIndex(CurrentVertex - 2 - i);
             }
 

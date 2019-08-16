@@ -11,7 +11,7 @@ namespace JitterDemo.Scenes
 {
     public class TriangleMesh : Scene
     {
-        Model model;
+        private Model model;
 
         public TriangleMesh(JitterDemo demo)
             : base(demo)
@@ -49,9 +49,9 @@ namespace JitterDemo.Scenes
                     var tvi = new TriangleVertexIndices[mmp.PrimitiveCount];
                     for (int i = 0; i != tvi.Length; ++i)
                     {
-                        tvi[i].I0 = s[i * 3 + 0] + offset;
-                        tvi[i].I1 = s[i * 3 + 1] + offset;
-                        tvi[i].I2 = s[i * 3 + 2] + offset;
+                        tvi[i].I0 = s[(i * 3) + 0] + offset;
+                        tvi[i].I1 = s[(i * 3) + 1] + offset;
+                        tvi[i].I2 = s[(i * 3) + 2] + offset;
                     }
                     indices.AddRange(tvi);
                 }
@@ -77,7 +77,7 @@ namespace JitterDemo.Scenes
             }
         }
 
-        Matrix[] boneTransforms;
+        private Matrix[] boneTransforms;
 
         public override void Build()
         {

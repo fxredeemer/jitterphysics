@@ -10,7 +10,7 @@ using Jitter.Dynamics;
 
 namespace JitterDemo.Scenes
 {
-    class ConvexDecomposition : Scene
+    internal class ConvexDecomposition : Scene
     {
         public ConvexDecomposition(JitterDemo demo)
             : base(demo)
@@ -44,7 +44,7 @@ namespace JitterDemo.Scenes
                 var compoundBody = new RigidBody(cs)
                 {
                     EnableDebugDraw = true,
-                    Position = new JVector(0, 5 + i * 10, 0) - cs.Shift
+                    Position = new JVector(0, 5 + (i * 10), 0) - cs.Shift
                 };
                 Demo.World.AddBody(compoundBody);
             }
@@ -54,7 +54,7 @@ namespace JitterDemo.Scenes
             {
                 var body = new RigidBody(shapes[i])
                 {
-                    Position = -1.0f * shapes[i].Shift + new JVector(-10, 5, 0),
+                    Position = (-1.0f * shapes[i].Shift) + new JVector(-10, 5, 0),
                     EnableDebugDraw = true
                 };
                 Demo.World.AddBody(body);
@@ -64,7 +64,7 @@ namespace JitterDemo.Scenes
             {
                 var body = new RigidBody(shapes[i])
                 {
-                    Position = -1.0f * shapes[i].Shift + new JVector(-20, 5, 0),
+                    Position = (-1.0f * shapes[i].Shift) + new JVector(-20, 5, 0),
                     EnableDebugDraw = true,
                     IsStatic = true
                 };

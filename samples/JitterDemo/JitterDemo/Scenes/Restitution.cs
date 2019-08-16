@@ -4,7 +4,7 @@ using Jitter.LinearMath;
 
 namespace JitterDemo.Scenes
 {
-    class Restitution : Scene
+    internal class Restitution : Scene
     {
         public Restitution(JitterDemo demo)
             : base(demo)
@@ -19,7 +19,7 @@ namespace JitterDemo.Scenes
             {
                 var box = new RigidBody(new BoxShape(1,0.01f,1));
                 Demo.World.AddBody(box);
-                var boxPos = new JVector(-15 + i * 3 + 1, 5, 0);
+                var boxPos = new JVector(-15 + (i * 3) + 1, 5, 0);
 
                 box.Position = boxPos;
                 box.IsStatic = true;
@@ -27,7 +27,7 @@ namespace JitterDemo.Scenes
                 var sphere = new RigidBody(new SphereShape(0.5f));
                 Demo.World.AddBody(sphere);
 
-                sphere.Position = boxPos + JVector.Up * 30;
+                sphere.Position = boxPos + (JVector.Up * 30);
                 sphere.EnableSpeculativeContacts = true;
 
                 // set restitution

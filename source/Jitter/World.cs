@@ -497,7 +497,7 @@ namespace Jitter
         private float currentAngularDampFactor = 1.0f;
 
 #if (!WINDOWS_PHONE)
-        readonly Stopwatch sw = new Stopwatch();
+        private readonly Stopwatch sw = new Stopwatch();
 
         public enum DebugType
         {
@@ -672,7 +672,7 @@ namespace Jitter
                     JVector.Subtract(ref c.p1, ref c.p2, out var diff);
                     float distance = JVector.Dot(ref diff, ref c.normal);
 
-                    diff = diff - distance * c.normal;
+                    diff = diff - (distance * c.normal);
                     distance = diff.LengthSquared();
 
                     // hack (multiplication by factor 100) in the
@@ -808,7 +808,7 @@ namespace Jitter
                 {
                     // use Taylor's expansions of sync function
                     // axis = body.angularVelocity * (0.5f * timestep - (timestep * timestep * timestep) * (0.020833333333f) * angle * angle);
-                    JVector.Multiply(ref body.angularVelocity, (0.5f * timestep - (timestep * timestep * timestep) * (0.020833333333f) * angle * angle), out axis);
+                    JVector.Multiply(ref body.angularVelocity, ((0.5f * timestep) - ((timestep * timestep * timestep) * (0.020833333333f) * angle * angle)), out axis);
                 }
                 else
                 {

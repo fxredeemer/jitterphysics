@@ -83,10 +83,11 @@ namespace Jitter.Dynamics
         private bool treatBody1AsStatic = false;
         private bool treatBody2AsStatic = false;
 
-        bool body1IsMassPoint; bool body2IsMassPoint;
+        private bool body1IsMassPoint;
+        private bool body2IsMassPoint;
 
-        float lostSpeculativeBounce = 0.0f;
-        float speculativeVelocity = 0.0f;
+        private float lostSpeculativeBounce = 0.0f;
+        private float speculativeVelocity = 0.0f;
 
         /// <summary>
         /// A contact resource pool.
@@ -195,10 +196,10 @@ namespace Jitter.Dynamics
             }
 
             // this gets us some performance
-            if (dvx * dvx + dvy * dvy + dvz * dvz < settings.minVelocity * settings.minVelocity)
+            if ((dvx * dvx) + (dvy * dvy) + (dvz * dvz) < settings.minVelocity * settings.minVelocity)
             { return; }
 
-            float vn = normal.X * dvx + normal.Y * dvy + normal.Z * dvz;
+            float vn = (normal.X * dvx) + (normal.Y * dvy) + (normal.Z * dvz);
             float normalImpulse = massNormal * (-vn + restitutionBias + speculativeVelocity);
 
             float oldNormalImpulse = accumulatedNormalImpulse;
@@ -206,7 +207,7 @@ namespace Jitter.Dynamics
             if (accumulatedNormalImpulse < 0.0f) accumulatedNormalImpulse = 0.0f;
             normalImpulse = accumulatedNormalImpulse - oldNormalImpulse;
 
-            float vt = dvx * tangent.X + dvy * tangent.Y + dvz * tangent.Z;
+            float vt = (dvx * tangent.X) + (dvy * tangent.Y) + (dvz * tangent.Z);
             float maxTangentImpulse = friction * accumulatedNormalImpulse;
             float tangentImpulse = massTangent * (-vt);
 
@@ -219,9 +220,9 @@ namespace Jitter.Dynamics
 
             // Apply contact impulse
             JVector impulse;
-            impulse.X = normal.X * normalImpulse + tangent.X * tangentImpulse;
-            impulse.Y = normal.Y * normalImpulse + tangent.Y * tangentImpulse;
-            impulse.Z = normal.Z * normalImpulse + tangent.Z * tangentImpulse;
+            impulse.X = (normal.X * normalImpulse) + (tangent.X * tangentImpulse);
+            impulse.Y = (normal.Y * normalImpulse) + (tangent.Y * tangentImpulse);
+            impulse.Z = (normal.Z * normalImpulse) + (tangent.Z * tangentImpulse);
 
             if (!treatBody1AsStatic)
             {
@@ -232,9 +233,9 @@ namespace Jitter.Dynamics
                 if (!body1IsMassPoint)
                 {
                     float num0, num1, num2;
-                    num0 = relativePos1.Y * impulse.Z - relativePos1.Z * impulse.Y;
-                    num1 = relativePos1.Z * impulse.X - relativePos1.X * impulse.Z;
-                    num2 = relativePos1.X * impulse.Y - relativePos1.Y * impulse.X;
+                    num0 = (relativePos1.Y * impulse.Z) - (relativePos1.Z * impulse.Y);
+                    num1 = (relativePos1.Z * impulse.X) - (relativePos1.X * impulse.Z);
+                    num2 = (relativePos1.X * impulse.Y) - (relativePos1.Y * impulse.X);
 
                     float num3 =
                         (((num0 * body1.invInertiaWorld.M11) +
@@ -264,9 +265,9 @@ namespace Jitter.Dynamics
                 if (!body2IsMassPoint)
                 {
                     float num0, num1, num2;
-                    num0 = relativePos2.Y * impulse.Z - relativePos2.Z * impulse.Y;
-                    num1 = relativePos2.Z * impulse.X - relativePos2.X * impulse.Z;
-                    num2 = relativePos2.X * impulse.Y - relativePos2.Y * impulse.X;
+                    num0 = (relativePos2.Y * impulse.Z) - (relativePos2.Z * impulse.Y);
+                    num1 = (relativePos2.Z * impulse.X) - (relativePos2.X * impulse.Z);
+                    num2 = (relativePos2.X * impulse.Y) - (relativePos2.Y * impulse.X);
 
                     float num3 =
                         (((num0 * body2.invInertiaWorld.M11) +
@@ -337,9 +338,9 @@ namespace Jitter.Dynamics
                 body1.linearVelocity.Z -= (impulse.Z * body1.inverseMass);
 
                 float num0, num1, num2;
-                num0 = relativePos1.Y * impulse.Z - relativePos1.Z * impulse.Y;
-                num1 = relativePos1.Z * impulse.X - relativePos1.X * impulse.Z;
-                num2 = relativePos1.X * impulse.Y - relativePos1.Y * impulse.X;
+                num0 = (relativePos1.Y * impulse.Z) - (relativePos1.Z * impulse.Y);
+                num1 = (relativePos1.Z * impulse.X) - (relativePos1.X * impulse.Z);
+                num2 = (relativePos1.X * impulse.Y) - (relativePos1.Y * impulse.X);
 
                 float num3 =
                     (((num0 * body1.invInertiaWorld.M11) +
@@ -366,9 +367,9 @@ namespace Jitter.Dynamics
                 body2.linearVelocity.Z += (impulse.Z * body2.inverseMass);
 
                 float num0, num1, num2;
-                num0 = relativePos2.Y * impulse.Z - relativePos2.Z * impulse.Y;
-                num1 = relativePos2.Z * impulse.X - relativePos2.X * impulse.Z;
-                num2 = relativePos2.X * impulse.Y - relativePos2.Y * impulse.X;
+                num0 = (relativePos2.Y * impulse.Z) - (relativePos2.Z * impulse.Y);
+                num1 = (relativePos2.Z * impulse.X) - (relativePos2.X * impulse.Z);
+                num2 = (relativePos2.X * impulse.Y) - (relativePos2.Y * impulse.X);
 
                 float num3 =
                     (((num0 * body2.invInertiaWorld.M11) +
@@ -403,9 +404,9 @@ namespace Jitter.Dynamics
                 body1.linearVelocity.Z -= (impulse.Z * body1.inverseMass);
 
                 float num0, num1, num2;
-                num0 = relativePos1.Y * impulse.Z - relativePos1.Z * impulse.Y;
-                num1 = relativePos1.Z * impulse.X - relativePos1.X * impulse.Z;
-                num2 = relativePos1.X * impulse.Y - relativePos1.Y * impulse.X;
+                num0 = (relativePos1.Y * impulse.Z) - (relativePos1.Z * impulse.Y);
+                num1 = (relativePos1.Z * impulse.X) - (relativePos1.X * impulse.Z);
+                num2 = (relativePos1.X * impulse.Y) - (relativePos1.Y * impulse.X);
 
                 float num3 =
                     (((num0 * body1.invInertiaWorld.M11) +
@@ -432,9 +433,9 @@ namespace Jitter.Dynamics
                 body2.linearVelocity.Z += (impulse.Z * body2.inverseMass);
 
                 float num0, num1, num2;
-                num0 = relativePos2.Y * impulse.Z - relativePos2.Z * impulse.Y;
-                num1 = relativePos2.Z * impulse.X - relativePos2.X * impulse.Z;
-                num2 = relativePos2.X * impulse.Y - relativePos2.Y * impulse.X;
+                num0 = (relativePos2.Y * impulse.Z) - (relativePos2.Z * impulse.Y);
+                num1 = (relativePos2.Z * impulse.X) - (relativePos2.X * impulse.Z);
+                num2 = (relativePos2.X * impulse.Y) - (relativePos2.Y * impulse.X);
 
                 float num3 =
                     (((num0 * body2.invInertiaWorld.M11) +
@@ -531,18 +532,18 @@ namespace Jitter.Dynamics
                 }
             }
 
-            if (!treatBody1AsStatic) kNormal += rantra.X * normal.X + rantra.Y * normal.Y + rantra.Z * normal.Z;
-            if (!treatBody2AsStatic) kNormal += rbntrb.X * normal.X + rbntrb.Y * normal.Y + rbntrb.Z * normal.Z;
+            if (!treatBody1AsStatic) kNormal += (rantra.X * normal.X) + (rantra.Y * normal.Y) + (rantra.Z * normal.Z);
+            if (!treatBody2AsStatic) kNormal += (rbntrb.X * normal.X) + (rbntrb.Y * normal.Y) + (rbntrb.Z * normal.Z);
 
             massNormal = 1.0f / kNormal;
 
-            float num = dvx * normal.X + dvy * normal.Y + dvz * normal.Z;
+            float num = (dvx * normal.X) + (dvy * normal.Y) + (dvz * normal.Z);
 
-            tangent.X = dvx - normal.X * num;
-            tangent.Y = dvy - normal.Y * num;
-            tangent.Z = dvz - normal.Z * num;
+            tangent.X = dvx - (normal.X * num);
+            tangent.Y = dvy - (normal.Y * num);
+            tangent.Z = dvz - (normal.Z * num);
 
-            num = tangent.X * tangent.X + tangent.Y * tangent.Y + tangent.Z * tangent.Z;
+            num = (tangent.X * tangent.X) + (tangent.Y * tangent.Y) + (tangent.Z * tangent.Z);
 
             if (num != 0.0f)
             {
@@ -618,7 +619,7 @@ namespace Jitter.Dynamics
 
             speculativeVelocity = 0.0f;
 
-            float relNormalVel = normal.X * dvx + normal.Y * dvy + normal.Z * dvz; //JVector.Dot(ref normal, ref dv);
+            float relNormalVel = (normal.X * dvx) + (normal.Y * dvy) + (normal.Z * dvz); //JVector.Dot(ref normal, ref dv);
 
             if (Penetration > settings.allowedPenetration)
             {
@@ -634,7 +635,7 @@ namespace Jitter.Dynamics
 
             {
                 // Static/Dynamic friction
-                float relTangentVel = -(tangent.X * dvx + tangent.Y * dvy + tangent.Z * dvz);
+                float relTangentVel = -((tangent.X * dvx) + (tangent.Y * dvy) + (tangent.Z * dvz));
                 float tangentImpulse = massTangent * relTangentVel;
                 float maxTangentImpulse = -StaticFriction * accumulatedNormalImpulse;
 
@@ -668,9 +669,9 @@ namespace Jitter.Dynamics
                 lostSpeculativeBounce = 0.0f;
             }
 
-            impulse.X = normal.X * accumulatedNormalImpulse + tangent.X * accumulatedTangentImpulse;
-            impulse.Y = normal.Y * accumulatedNormalImpulse + tangent.Y * accumulatedTangentImpulse;
-            impulse.Z = normal.Z * accumulatedNormalImpulse + tangent.Z * accumulatedTangentImpulse;
+            impulse.X = (normal.X * accumulatedNormalImpulse) + (tangent.X * accumulatedTangentImpulse);
+            impulse.Y = (normal.Y * accumulatedNormalImpulse) + (tangent.Y * accumulatedTangentImpulse);
+            impulse.Z = (normal.Z * accumulatedNormalImpulse) + (tangent.Z * accumulatedTangentImpulse);
 
             if (!treatBody1AsStatic)
             {
@@ -681,9 +682,9 @@ namespace Jitter.Dynamics
                 if (!body1IsMassPoint)
                 {
                     float num0, num1, num2;
-                    num0 = relativePos1.Y * impulse.Z - relativePos1.Z * impulse.Y;
-                    num1 = relativePos1.Z * impulse.X - relativePos1.X * impulse.Z;
-                    num2 = relativePos1.X * impulse.Y - relativePos1.Y * impulse.X;
+                    num0 = (relativePos1.Y * impulse.Z) - (relativePos1.Z * impulse.Y);
+                    num1 = (relativePos1.Z * impulse.X) - (relativePos1.X * impulse.Z);
+                    num2 = (relativePos1.X * impulse.Y) - (relativePos1.Y * impulse.X);
 
                     float num3 =
                         (((num0 * body1.invInertiaWorld.M11) +
@@ -713,9 +714,9 @@ namespace Jitter.Dynamics
                 if (!body2IsMassPoint)
                 {
                     float num0, num1, num2;
-                    num0 = relativePos2.Y * impulse.Z - relativePos2.Z * impulse.Y;
-                    num1 = relativePos2.Z * impulse.X - relativePos2.X * impulse.Z;
-                    num2 = relativePos2.X * impulse.Y - relativePos2.Y * impulse.X;
+                    num0 = (relativePos2.Y * impulse.Z) - (relativePos2.Z * impulse.Y);
+                    num1 = (relativePos2.Z * impulse.X) - (relativePos2.X * impulse.Z);
+                    num2 = (relativePos2.X * impulse.Y) - (relativePos2.Y * impulse.X);
 
                     float num3 =
                         (((num0 * body2.invInertiaWorld.M11) +

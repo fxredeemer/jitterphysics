@@ -29,14 +29,14 @@ namespace JitterDemo.Primitives3D
 
         // During the process of constructing a primitive model, vertex
         // and index data is stored on the CPU in these managed lists.
-        readonly List<VertexPositionNormal> vertices = new List<VertexPositionNormal>();
-        readonly List<ushort> indices = new List<ushort>();
+        private readonly List<VertexPositionNormal> vertices = new List<VertexPositionNormal>();
+        private readonly List<ushort> indices = new List<ushort>();
 
         // Once all the geometry has been specified, the InitializePrimitive
         // method copies the vertex and index data into these buffers, which
         // store it on the GPU ready for efficient rendering.
-        VertexBuffer vertexBuffer;
-        IndexBuffer indexBuffer;
+        private VertexBuffer vertexBuffer;
+        private IndexBuffer indexBuffer;
 
         #endregion
 
@@ -130,8 +130,8 @@ namespace JitterDemo.Primitives3D
 
         #region Draw
 
-        Matrix[] worlds = new Matrix[1];
-        int index = 0;
+        private Matrix[] worlds = new Matrix[1];
+        private int index = 0;
 
         public void AddWorldMatrix(Matrix matrix)
         {

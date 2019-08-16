@@ -5,7 +5,7 @@ using Jitter.Dynamics;
 
 namespace JitterDemo.Scenes
 {
-    class Tower : Scene
+    internal class Tower : Scene
     {
         public Tower(JitterDemo demo)
             : base(demo)

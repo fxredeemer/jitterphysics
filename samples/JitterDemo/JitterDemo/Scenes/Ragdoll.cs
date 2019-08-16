@@ -7,7 +7,7 @@ using Jitter.Dynamics.Joints;
 
 namespace JitterDemo.Scenes
 {
-    class Ragdoll : Scene
+    internal class Ragdoll : Scene
     {
         public Ragdoll(JitterDemo demo)
             : base(demo)
@@ -27,7 +27,7 @@ namespace JitterDemo.Scenes
             {
                 for (int e = 3; e < 8; e++)
                 {
-                    BuildRagdoll(Demo.World, new JVector(i * 6 - 25, 5, e * 6 - 25));
+                    BuildRagdoll(Demo.World, new JVector((i * 6) - 25, 5, (e * 6) - 25));
                 }
             }
         }

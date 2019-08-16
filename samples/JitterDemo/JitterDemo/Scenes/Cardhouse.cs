@@ -8,24 +8,24 @@ using System.Diagnostics;
 
 namespace JitterDemo.Scenes
 {
-    class CardHouse : Scene
+    internal class CardHouse : Scene
     {
         public CardHouse(JitterDemo demo) : base(demo) { }
 
-        static JVector cardHouseStartingPosition = new JVector(0, 0, 0);
-        const int cardHouseLayers = 10; // starting from 1
+        private static JVector cardHouseStartingPosition = new JVector(0, 0, 0);
+        private const int cardHouseLayers = 10; // starting from 1
 
-        const double cardThickness = 0.05;
-        const double cardHeight = 3;
-        const double cardWidth = 2;
-        const float degree = 75;
+        private const double cardThickness = 0.05;
+        private const double cardHeight = 3;
+        private const double cardWidth = 2;
+        private const float degree = 75;
 
-        const float angle = degree * (float)Math.PI / 180f;
-        const float oppositeAngle = (float)Math.PI - angle;
-        static readonly double cardThicknessVerticalMargin = cardThickness / 2 * Math.Sin(MathHelper.PiOver2 - angle);
-        static readonly double cardThicknessHorizontalMargin = cardThickness / 2 * Math.Cos(MathHelper.PiOver2 - angle);
-        static readonly float layerHeight = (float)(cardHeight * Math.Sin(angle) + 2 * cardThicknessVerticalMargin);
-        static readonly float cardSpacing = (float)(cardHeight * Math.Cos(angle) + 2 * cardThicknessHorizontalMargin);
+        private const float angle = degree * (float)Math.PI / 180f;
+        private const float oppositeAngle = (float)Math.PI - angle;
+        private static readonly double cardThicknessVerticalMargin = cardThickness / 2 * Math.Sin(MathHelper.PiOver2 - angle);
+        private static readonly double cardThicknessHorizontalMargin = cardThickness / 2 * Math.Cos(MathHelper.PiOver2 - angle);
+        private static readonly float layerHeight = (float)((cardHeight * Math.Sin(angle)) + (2 * cardThicknessVerticalMargin));
+        private static readonly float cardSpacing = (float)((cardHeight * Math.Cos(angle)) + (2 * cardThicknessHorizontalMargin));
 
         public override void Build()
         {

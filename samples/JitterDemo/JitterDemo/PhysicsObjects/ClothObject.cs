@@ -5,14 +5,14 @@ using Jitter.Dynamics;
 
 namespace JitterDemo.PhysicsObjects
 {
-    class ClothObject : DrawableGameComponent
+    internal class ClothObject : DrawableGameComponent
     {
         private Texture2D texture;
         private BasicEffect effect;
 
         private VertexPositionNormalTexture[] vertices;
         private int[] indices;
-        readonly SoftBody cloth = null;
+        private readonly SoftBody cloth = null;
 
         public ClothObject(Game game, SoftBody cloth)
             : base(game)
@@ -34,9 +34,9 @@ namespace JitterDemo.PhysicsObjects
             for (int i = 0; i < cloth.Triangles.Count;i++ )
             {
                 var t = cloth.Triangles[i];
-                indices[3 * i + 0] = t.Indices.I0;
-                indices[3 * i + 1] = t.Indices.I1;
-                indices[3 * i + 2] = t.Indices.I2;
+                indices[(3 * i) + 0] = t.Indices.I0;
+                indices[(3 * i) + 1] = t.Indices.I1;
+                indices[(3 * i) + 2] = t.Indices.I2;
             }
 
             UpdatePositionAndNormal();
@@ -47,7 +47,7 @@ namespace JitterDemo.PhysicsObjects
             {
                 for (int e = 0; e < sqrt; e++)
                 {
-                    vertices[i * sqrt + e].TextureCoordinate = new Vector2(1.0f / (float)(sqrt - 1) * (float)i, 1.0f / (float)(sqrt-1) * (float)e);
+                    vertices[(i * sqrt) + e].TextureCoordinate = new Vector2(1.0f / (float)(sqrt - 1) * (float)i, 1.0f / (float)(sqrt-1) * (float)e);
                 }
             }
             
@@ -101,18 +101,18 @@ namespace JitterDemo.PhysicsObjects
             {
                 for (int e = 0; e < sqrt; e++)
                 {
-                    var pos = vertices[i * sqrt + e].Position;
+                    var pos = vertices[(i * sqrt) + e].Position;
 
-                    if (i > 0) neighbour[0] = vertices[(i - 1) * sqrt + (e + 0)].Position;
+                    if (i > 0) neighbour[0] = vertices[((i - 1) * sqrt) + (e + 0)].Position;
                     else neighbour[0] = pos;
 
-                    if (e > 0) neighbour[1] = vertices[(i + 0) * sqrt + (e - 1)].Position;
+                    if (e > 0) neighbour[1] = vertices[((i + 0) * sqrt) + (e - 1)].Position;
                     else neighbour[1] = pos;
 
-                    if (i < sqrt - 1) neighbour[2] = vertices[(i + 1) * sqrt + (e + 0)].Position;
+                    if (i < sqrt - 1) neighbour[2] = vertices[((i + 1) * sqrt) + (e + 0)].Position;
                     else neighbour[2] = pos;
 
-                    if (e < sqrt - 1) neighbour[3] = vertices[(i + 0) * sqrt + (e + 1)].Position;
+                    if (e < sqrt - 1) neighbour[3] = vertices[((i + 0) * sqrt) + (e + 1)].Position;
                     else neighbour[3] = pos;
 
                     var normal = Vector3.Zero;
@@ -123,7 +123,7 @@ namespace JitterDemo.PhysicsObjects
                     normal += Vector3.Cross(neighbour[0] - pos, neighbour[3] - pos);
                     normal.Normalize();
 
-                    vertices[i * sqrt + e].Normal = normal;
+                    vertices[(i * sqrt) + e].Normal = normal;
                 }
             }
         }

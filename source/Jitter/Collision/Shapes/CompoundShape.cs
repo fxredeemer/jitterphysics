@@ -136,9 +136,9 @@ namespace Jitter.Collision.Shapes
                 var p = Shapes[i].Position * -1.0f;
                 float m = Shapes[i].Shape.Mass;
 
-                currentInertia.M11 += m * (p.Y * p.Y + p.Z * p.Z);
-                currentInertia.M22 += m * (p.X * p.X + p.Z * p.Z);
-                currentInertia.M33 += m * (p.X * p.X + p.Y * p.Y);
+                currentInertia.M11 += m * ((p.Y * p.Y) + (p.Z * p.Z));
+                currentInertia.M22 += m * ((p.X * p.X) + (p.Z * p.Z));
+                currentInertia.M33 += m * ((p.X * p.X) + (p.Y * p.Y));
 
                 currentInertia.M12 += -p.X * p.Y * m;
                 currentInertia.M21 += -p.X * p.Y * m;

@@ -31,7 +31,7 @@ namespace JitterDemo.Vehicle
                 new BoxShape(2.5f, 1f, 6.0f), JMatrix.Identity, JVector.Zero);
 
             var upper = new CompoundShape.TransformedShape(
-                new BoxShape(2.0f, 0.5f, 3.0f), JMatrix.Identity, JVector.Up * 0.75f + JVector.Backward * 1.0f);
+                new BoxShape(2.0f, 0.5f, 3.0f), JMatrix.Identity, (JVector.Up * 0.75f) + (JVector.Backward * 1.0f));
 
             CompoundShape.TransformedShape[] subShapes = { lower, upper };
 

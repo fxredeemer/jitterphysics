@@ -26,7 +26,7 @@ namespace Jitter.Dynamics.Joints
 {
     public class PrismaticJoint : Joint
     {
-        readonly PointPointDistance minDistance = null;
+        private readonly PointPointDistance minDistance = null;
 
         public PointPointDistance MaximumDistanceConstraint { get; } = null;
         public PointPointDistance MinimumDistanceConstraint { get { return minDistance; } }

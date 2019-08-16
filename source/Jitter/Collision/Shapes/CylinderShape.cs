@@ -21,14 +21,14 @@ namespace Jitter.Collision.Shapes
         public override void CalculateMassInertia()
         {
             mass = JMath.Pi * radius * radius * height;
-            inertia.M11 = (1.0f / 4.0f) * mass * radius * radius + (1.0f / 12.0f) * mass * height * height;
+            inertia.M11 = ((1.0f / 4.0f) * mass * radius * radius) + ((1.0f / 12.0f) * mass * height * height);
             inertia.M22 = (1.0f / 2.0f) * mass * radius * radius;
-            inertia.M33 = (1.0f / 4.0f) * mass * radius * radius + (1.0f / 12.0f) * mass * height * height;
+            inertia.M33 = ((1.0f / 4.0f) * mass * radius * radius) + ((1.0f / 12.0f) * mass * height * height);
         }
 
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            float sigma = (float)Math.Sqrt((float)(direction.X * direction.X + direction.Z * direction.Z));
+            float sigma = (float)Math.Sqrt((float)((direction.X * direction.X) + (direction.Z * direction.Z)));
 
             if (sigma > 0.0f)
             {

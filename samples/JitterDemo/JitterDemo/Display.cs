@@ -83,7 +83,7 @@ namespace JitterDemo
             {
                 if (!string.IsNullOrEmpty(DisplayText[i]))
                 {
-                    spriteBatch.DrawString(font2, DisplayText[i], new Vector2(11, 40 + i * 20), Color.White);
+                    spriteBatch.DrawString(font2, DisplayText[i], new Vector2(11, 40 + (i * 20)), Color.White);
                 }
             }
 

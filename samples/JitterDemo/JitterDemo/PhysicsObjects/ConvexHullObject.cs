@@ -15,7 +15,7 @@ namespace JitterDemo
 
         public RigidBody body;
 
-        Model model;
+        private Model model;
 
         public ConvexHullObject(Game game)
             : base(game)
@@ -60,7 +60,7 @@ namespace JitterDemo
                     var allVertex = new JVector[meshPart.NumVertices];
                     // Read the vertices from the buffer in to the array 
                     meshPart.VertexBuffer.GetData<JVector>(
-                        meshPart.VertexOffset * declaration.VertexStride + vertexPosition.Offset,
+                        (meshPart.VertexOffset * declaration.VertexStride) + vertexPosition.Offset,
                         allVertex,
                         0,
                         meshPart.NumVertices,
@@ -92,9 +92,9 @@ namespace JitterDemo
                     {
                         // The offset is because we are storing them all in the one array and the 
                         // vertices were added to the end of the array. 
-                        tvi[i].I0 = indexElements[i * 3 + 0] + offset;
-                        tvi[i].I1 = indexElements[i * 3 + 1] + offset;
-                        tvi[i].I2 = indexElements[i * 3 + 2] + offset;
+                        tvi[i].I0 = indexElements[(i * 3) + 0] + offset;
+                        tvi[i].I1 = indexElements[(i * 3) + 1] + offset;
+                        tvi[i].I2 = indexElements[(i * 3) + 2] + offset;
                     }
                     // Store our triangles 
                     indices.AddRange(tvi);
@@ -102,7 +102,7 @@ namespace JitterDemo
             }
         }
 
-        static ConvexHullShape cvhs = null;
+        private static ConvexHullShape cvhs = null;
 
         protected override void LoadContent()
         {

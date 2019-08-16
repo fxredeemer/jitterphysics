@@ -8,7 +8,7 @@ namespace JitterDemo.Scenes
 {
     public class Terrain : Scene
     {
-        Primitives3D.TerrainPrimitive terrain;
+        private Primitives3D.TerrainPrimitive terrain;
 
         public Terrain(JitterDemo demo)
             : base(demo)

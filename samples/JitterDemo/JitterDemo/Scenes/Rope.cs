@@ -5,7 +5,7 @@ using Jitter.Dynamics.Constraints;
 
 namespace JitterDemo.Scenes
 {
-    class Rope : Scene
+    internal class Rope : Scene
     {
         public Rope(JitterDemo demo)
             : base(demo)
@@ -22,7 +22,7 @@ namespace JitterDemo.Scenes
             {
                 var body = new RigidBody(new BoxShape(JVector.One))
                 {
-                    Position = new JVector(i * 1.5f - 20, 0.5f, 0)
+                    Position = new JVector((i * 1.5f) - 20, 0.5f, 0)
                 };
 
                 var jpos2 = body.Position;

@@ -4,7 +4,7 @@ using Jitter.LinearMath;
 
 namespace JitterDemo.Scenes
 {
-    class Jenga : Scene
+    internal class Jenga : Scene
     {
         public Jenga(JitterDemo demo)
             : base(demo)

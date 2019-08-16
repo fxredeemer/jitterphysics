@@ -57,13 +57,13 @@ namespace JitterDemo.Primitives3D
             {
                 for (int e = 1; e < 100; e++)
                 {
-                    AddIndex((i - 1) * 100 + e);
-                    AddIndex(i * 100 + (e - 1));
-                    AddIndex(i * 100 + e);
+                    AddIndex(((i - 1) * 100) + e);
+                    AddIndex((i * 100) + (e - 1));
+                    AddIndex((i * 100) + e);
 
-                    AddIndex(i * 100 + (e - 1));
-                    AddIndex((i - 1) * 100 + e);
-                    AddIndex((i - 1) * 100 + (e - 1));
+                    AddIndex((i * 100) + (e - 1));
+                    AddIndex(((i - 1) * 100) + e);
+                    AddIndex(((i - 1) * 100) + (e - 1));
                 }
             }
             

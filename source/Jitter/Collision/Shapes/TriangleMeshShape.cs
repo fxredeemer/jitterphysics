@@ -65,14 +65,14 @@ namespace Jitter.Collision.Shapes
             potentialTriangles.Clear();
 
             JVector.Normalize(ref rayDelta, out var expDelta);
-            expDelta = rayDelta + expDelta * SphericalExpansion;
+            expDelta = rayDelta + (expDelta * SphericalExpansion);
 
             octree.GetTrianglesIntersectingRay(potentialTriangles, rayOrigin, expDelta);
 
             return potentialTriangles.Count;
         }
 
-        readonly JVector[] vecs = new JVector[3];
+        private readonly JVector[] vecs = new JVector[3];
 
         public override void SupportMapping(ref JVector direction, out JVector result)
         {

@@ -7,7 +7,7 @@ using Jitter.Collision;
 
 namespace JitterDemo.Scenes
 {
-    class SoftBodyJenga : Scene
+    internal class SoftBodyJenga : Scene
     {
         public SoftBodyJenga(JitterDemo demo)
             : base(demo)

@@ -4,7 +4,7 @@ using Jitter.LinearMath;
 
 namespace JitterDemo.Scenes
 {
-    class Wall : Scene
+    internal class Wall : Scene
     {
         public Wall(JitterDemo demo)
             : base(demo)
@@ -23,7 +23,7 @@ namespace JitterDemo.Scenes
                     {
                         var body = new RigidBody(new BoxShape(2, 1, 1))
                         {
-                            Position = new JVector(e * 2.01f + ((i % 2 == 0) ? 1f : 0.0f), 0.5f + i * 1.0f, k * 5)
+                            Position = new JVector((e * 2.01f) + ((i % 2 == 0) ? 1f : 0.0f), 0.5f + (i * 1.0f), k * 5)
                         };
                         Demo.World.AddBody(body);
                     }
