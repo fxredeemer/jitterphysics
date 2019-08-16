@@ -6,19 +6,12 @@ using System.Diagnostics;
 
 namespace Jitter.Collision
 {
-    public interface IBroadphaseEntity
-    {
-        JBBox BoundingBox { get; }
-        bool IsStaticOrInactive { get; }
-    }
 
-    public delegate void CollisionDetectedHandler(RigidBody body1, RigidBody body2,
-                JVector point1, JVector point2, JVector normal, float penetration);
+    public delegate void CollisionDetectedHandler(RigidBody body1, RigidBody body2, JVector point1, JVector point2, JVector normal, float penetration);
 
     public delegate bool PassedBroadphaseHandler(IBroadphaseEntity entity1, IBroadphaseEntity entity2);
 
-    public delegate bool PassedNarrowphaseHandler(RigidBody body1, RigidBody body2,
-                ref JVector point, ref JVector normal, float penetration);
+    public delegate bool PassedNarrowphaseHandler(RigidBody body1, RigidBody body2, ref JVector point, ref JVector normal, float penetration);
 
     public delegate bool RaycastCallback(RigidBody body, JVector normal, float fraction);
 
@@ -42,7 +35,7 @@ namespace Jitter.Collision
 
         protected ThreadManager threadManager = ThreadManager.Instance;
 
-        public bool EnableSpeculativeContacts { get; set; } = false;
+        public bool EnableSpeculativeContacts { get; set; }
 
         internal bool useTerrainNormal = true;
         internal bool useTriangleMeshNormal = true;
@@ -55,10 +48,9 @@ namespace Jitter.Collision
         {
             Debug.Assert(entity1 != entity2, "CollisionSystem reports selfcollision. Something is wrong.");
 
-            var rigidBody1 = entity1 as RigidBody;
             var rigidBody2 = entity2 as RigidBody;
 
-            if (rigidBody1 != null)
+            if (entity1 is RigidBody rigidBody1)
             {
                 if (rigidBody2 != null)
                 {
@@ -66,8 +58,7 @@ namespace Jitter.Collision
                 }
                 else
                 {
-                    var softBody2 = entity2 as SoftBody;
-                    if (softBody2 != null)
+                    if (entity2 is SoftBody softBody2)
                     {
                         DetectSoftRigid(rigidBody1, softBody2);
                     }
@@ -86,8 +77,7 @@ namespace Jitter.Collision
                 }
                 else
                 {
-                    var softBody2 = entity2 as SoftBody;
-                    if (softBody1 != null && softBody2 != null)
+                    if (softBody1 != null && entity2 is SoftBody softBody2)
                     {
                         DetectSoftSoft(softBody1, softBody2);
                     }
@@ -109,10 +99,16 @@ namespace Jitter.Collision
                 var myTriangle = body1.dynamicTree.GetUserData(my[i]);
                 var otherTriangle = body2.dynamicTree.GetUserData(other[i]);
 
-                bool result;
-
-                result = XenoCollide.Detect(myTriangle, otherTriangle, ref JMatrix.InternalIdentity, ref JMatrix.InternalIdentity,
-                    ref JVector.InternalZero, ref JVector.InternalZero, out var point, out var normal, out float penetration);
+                bool result = XenoCollide.Detect(
+                    myTriangle,
+                    otherTriangle,
+                    ref JMatrix.InternalIdentity,
+                    ref JMatrix.InternalIdentity,
+                    ref JVector.InternalZero,
+                    ref JVector.InternalZero,
+                    out var point,
+                    out var normal,
+                    out float penetration);
 
                 if (result)
                 {
@@ -134,17 +130,15 @@ namespace Jitter.Collision
             bool b1IsMulti = body1.Shape is Multishape;
             bool b2IsMulti = body2.Shape is Multishape;
 
-            bool speculative = EnableSpeculativeContacts
-                || body1.EnableSpeculativeContacts || body2.EnableSpeculativeContacts;
+            bool speculative = EnableSpeculativeContacts || body1.EnableSpeculativeContacts || body2.EnableSpeculativeContacts;
 
             JVector point, normal;
             float penetration;
 
             if (!b1IsMulti && !b2IsMulti)
             {
-                if (XenoCollide.Detect(body1.Shape, body2.Shape, ref body1.orientation,
-                    ref body2.orientation, ref body1.position, ref body2.position,
-                    out point, out normal, out penetration))
+                if (XenoCollide.Detect(body1.Shape, body2.Shape, ref body1.orientation, ref body2.orientation,
+                                       ref body1.position, ref body2.position, out point, out normal, out penetration))
                 {
                     FindSupportPoints(body1, body2, body1.Shape, body2.Shape, ref point, ref normal, out var point1, out var point2);
                     RaiseCollisionDetected(body1, body2, ref point1, ref point2, ref normal, penetration);

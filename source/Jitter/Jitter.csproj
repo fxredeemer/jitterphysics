@@ -20,11 +20,11 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <IntermediateOutputPath>obj\net4\Debug\</IntermediateOutputPath>
-    <OutputPath>bin\net4\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\net4\Debug\Jitter.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Jitter.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -37,7 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\net4\Release\Jitter.XML</DocumentationFile>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
@@ -50,7 +50,9 @@
     <Compile Include="Collision\CollisionSystemBrute.cs" />
     <Compile Include="Collision\CollisionSystemSAP.cs" />
     <Compile Include="Collision\CollisionSystemPersistentSAP.cs" />
+    <Compile Include="Collision\DynamicTreeNode`1.cs" />
     <Compile Include="Collision\GJKCollide.cs" />
+    <Compile Include="Collision\IBroadphaseEntity.cs" />
     <Compile Include="Collision\IslandManager.cs" />
     <Compile Include="Collision\Shapes\BoxShape.cs" />
     <Compile Include="Collision\Shapes\CapsuleShape.cs" />

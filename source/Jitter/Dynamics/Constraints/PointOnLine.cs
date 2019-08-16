@@ -20,9 +20,9 @@ namespace Jitter.Dynamics.Constraints
             lineNormal = JVector.Normalize(lineStartPointBody1 - pointBody2);
         }
 
-        public float AppliedImpulse { get; private set; } = 0.0f;
+        public float AppliedImpulse { get; private set; }
 
-        public float Softness { get; set; } = 0.0f;
+        public float Softness { get; set; }
 
         public float BiasFactor { get; set; } = 0.5f;
 

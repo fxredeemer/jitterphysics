@@ -25,11 +25,11 @@ namespace Jitter.Dynamics.Constraints
             Distance = (anchor1 - anchor2).Length();
         }
 
-        public float AppliedImpulse { get; private set; } = 0.0f;
+        public float AppliedImpulse { get; private set; }
 
         public float Distance { get; set; }
 
-        public DistanceBehavior Behavior { get; set; } = DistanceBehavior.LimitDistance;
+        public DistanceBehavior Behavior { get; set; }
 
         public JVector LocalAnchor1 { get { return localAnchor1; } set { localAnchor1 = value; } }
 

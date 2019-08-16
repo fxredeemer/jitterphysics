@@ -27,7 +27,7 @@ namespace Jitter.Dynamics.Constraints.SingleBody
 
         public JVector Axis { get { return lineNormal; } set { lineNormal = value; lineNormal.Normalize(); } }
 
-        public float Softness { get; set; } = 0.0f;
+        public float Softness { get; set; }
 
         public float BiasFactor { get; set; } = 0.5f;
 

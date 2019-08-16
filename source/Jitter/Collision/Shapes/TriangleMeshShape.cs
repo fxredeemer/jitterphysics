@@ -111,7 +111,7 @@ namespace Jitter.Collision.Shapes
             box.Transform(ref orientation);
         }
 
-        public bool FlipNormals { get; set; } = false;
+        public bool FlipNormals { get; set; }
 
         public override void SetCurrentShape(int index)
         {

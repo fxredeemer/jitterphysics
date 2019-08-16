@@ -33,11 +33,11 @@ namespace Jitter.Dynamics
                 Distance = (body1.position - body2.position).Length();
             }
 
-            public float AppliedImpulse { get; private set; } = 0.0f;
+            public float AppliedImpulse { get; private set; }
 
             public float Distance { get; set; }
 
-            public DistanceBehavior Behavior { get; set; } = DistanceBehavior.LimitDistance;
+            public DistanceBehavior Behavior { get; set; }
 
             public float Softness { get; set; } = 0.01f;
 
@@ -252,7 +252,7 @@ namespace Jitter.Dynamics
 
         protected float triangleExpansion = 0.1f;
 
-        public bool SelfCollision { get; set; } = false;
+        public bool SelfCollision { get; set; }
 
         public float TriangleExpansion
         {
@@ -378,7 +378,7 @@ namespace Jitter.Dynamics
             Triangles = new ReadOnlyCollection<Triangle>(triangles);
         }
 
-        public float Pressure { get; set; } = 0.0f;
+        public float Pressure { get; set; }
 
         private struct Edge
         {

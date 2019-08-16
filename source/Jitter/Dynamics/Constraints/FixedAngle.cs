@@ -20,7 +20,7 @@ namespace Jitter.Dynamics.Constraints
         public JMatrix InitialOrientationBody1 { get => initialOrientation1; set => initialOrientation1 = value; }
         public JMatrix InitialOrientationBody2 { get => initialOrientation2; set => initialOrientation2 = value; }
 
-        public float Softness { get; set; } = 0.0f;
+        public float Softness { get; set; }
 
         public float BiasFactor { get; set; } = 0.05f;
 

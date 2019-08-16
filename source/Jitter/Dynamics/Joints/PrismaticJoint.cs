@@ -6,8 +6,8 @@ namespace Jitter.Dynamics.Joints
 {
     public class PrismaticJoint : Joint
     {
-        public PointPointDistance MaximumDistanceConstraint { get; } = null;
-        public PointPointDistance MinimumDistanceConstraint { get; } = null;
+        public PointPointDistance MaximumDistanceConstraint { get; }
+        public PointPointDistance MinimumDistanceConstraint { get; }
 
         public FixedAngle FixedAngleConstraint { get; }
         public PointOnLine PointOnLineConstraint { get; }

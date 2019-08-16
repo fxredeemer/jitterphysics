@@ -187,7 +187,7 @@ namespace Jitter.Collision
                     }
 
                     axis[i + 1] = swapper;
-                    i = i - 1;
+                    i--;
                 }
                 axis[i + 1] = keyelement;
             }
@@ -208,19 +208,35 @@ namespace Jitter.Collision
         private readonly Stack<OverlapPair> depricated = new Stack<OverlapPair>();
         public override bool RemoveEntity(IBroadphaseEntity body)
         {
-            int count;
-
-            count = 0;
+            int count = 0;
             for (int i = 0; i < axis1.Count; i++)
-            { if (axis1[i].Body == body) { count++; axis1.RemoveAt(i); if (count == 2) { break; } i--; } }
+            {
+                if (axis1[i].Body == body)
+                {
+                    count++; axis1.RemoveAt(i); if (count == 2) { break; }
+                    i--;
+                }
+            }
 
             count = 0;
             for (int i = 0; i < axis2.Count; i++)
-            { if (axis2[i].Body == body) { count++; axis2.RemoveAt(i); if (count == 2) { break; } i--; } }
+            {
+                if (axis2[i].Body == body)
+                {
+                    count++; axis2.RemoveAt(i); if (count == 2) { break; }
+                    i--;
+                }
+            }
 
             count = 0;
             for (int i = 0; i < axis3.Count; i++)
-            { if (axis3[i].Body == body) { count++; axis3.RemoveAt(i); if (count == 2) { break; } i--; } }
+            {
+                if (axis3[i].Body == body)
+                {
+                    count++; axis3.RemoveAt(i); if (count == 2) { break; }
+                    i--;
+                }
+            }
 
             foreach (var pair in fullOverlaps)
             {
@@ -284,13 +300,22 @@ namespace Jitter.Collision
                     if (multiThreaded)
                     {
                         var pair = BroadphasePair.Pool.GetNew();
-                        if (swapOrder) { pair.Entity1 = key.Entity1; pair.Entity2 = key.Entity2; }
-                        else { pair.Entity2 = key.Entity2; pair.Entity1 = key.Entity1; }
+                        if (swapOrder)
+                        {
+                            pair.Entity1 = key.Entity1; pair.Entity2 = key.Entity2;
+                        }
+                        else
+                        {
+                            pair.Entity2 = key.Entity2; pair.Entity1 = key.Entity1;
+                        }
                         threadManager.AddTask(detectCallback, pair);
                     }
                     else
                     {
-                        if (swapOrder) { Detect(key.Entity1, key.Entity2); }
+                        if (swapOrder)
+                        {
+                            Detect(key.Entity1, key.Entity2);
+                        }
                         else
                         {
                             Detect(key.Entity2, key.Entity1);

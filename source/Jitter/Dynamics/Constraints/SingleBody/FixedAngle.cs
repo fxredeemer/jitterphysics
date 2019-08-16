@@ -13,7 +13,7 @@ namespace Jitter.Dynamics.Constraints.SingleBody
             orientation = body1.orientation;
         }
 
-        public float Softness { get; set; } = 0.0f;
+        public float Softness { get; set; }
 
         public float BiasFactor { get; set; } = 0.05f;
 

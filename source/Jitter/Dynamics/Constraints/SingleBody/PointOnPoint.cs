@@ -16,7 +16,7 @@ namespace Jitter.Dynamics.Constraints.SingleBody
             anchor = body.position + JVector.Transform(localAnchor, body.orientation);
         }
 
-        public float AppliedImpulse { get; private set; } = 0.0f;
+        public float AppliedImpulse { get; private set; }
 
         public float Softness { get; set; } = 0.01f;
 
