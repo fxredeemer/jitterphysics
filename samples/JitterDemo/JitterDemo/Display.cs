@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace JitterDemo
 {
     public class Display : DrawableGameComponent
     {
-        private ContentManager content;
+        private readonly ContentManager content;
         private SpriteBatch spriteBatch;
         private SpriteFont font1, font2;
         private Texture2D texture;
@@ -24,7 +24,10 @@ namespace JitterDemo
         {
             content = new ContentManager(game.Services);
             DisplayText = new List<string>();
-            for(int i = 0;i<25;i++)DisplayText.Add(string.Empty);
+            for (int i = 0; i < 25; i++)
+            {
+                DisplayText.Add(string.Empty);
+            }
         }
 
         private void GraphicsDevice_DeviceReset(object sender, EventArgs e)
@@ -35,7 +38,7 @@ namespace JitterDemo
 
         protected override void LoadContent()
         {
-            this.GraphicsDevice.DeviceReset +=new EventHandler<EventArgs>(GraphicsDevice_DeviceReset);
+            GraphicsDevice.DeviceReset += new EventHandler<EventArgs>(GraphicsDevice_DeviceReset);
             GraphicsDevice_DeviceReset(null, null);
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -72,14 +75,16 @@ namespace JitterDemo
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(texture, new Rectangle(bbWidth - 105,5, 100, 91), Color.White);
+            spriteBatch.Draw(texture, new Rectangle(bbWidth - 105, 5, 100, 91), Color.White);
             spriteBatch.DrawString(font1, fps, new Vector2(11, 6), Color.Black);
             spriteBatch.DrawString(font1, fps, new Vector2(12, 7), Color.Yellow);
 
             for (int i = 0; i < DisplayText.Count; i++)
             {
-                if(!string.IsNullOrEmpty(DisplayText[i]))
-                spriteBatch.DrawString(font2, DisplayText[i], new Vector2(11, 40 + i*20), Color.White);
+                if (!string.IsNullOrEmpty(DisplayText[i]))
+                {
+                    spriteBatch.DrawString(font2, DisplayText[i], new Vector2(11, 40 + i * 20), Color.White);
+                }
             }
 
             spriteBatch.End();

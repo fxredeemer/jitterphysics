@@ -24,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -91,9 +92,6 @@
     <Compile Include="Dynamics\SoftBody.cs" />
     <Compile Include="ThreadManager.cs" />
     <Compile Include="World.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ToDo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!--

@@ -1,19 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29001.49
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{5FC265FF-3CD8-4120-905C-B0548A8E1EF4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jitter", "source\Jitter\Jitter.csproj", "{AA03EF1A-94F7-4D30-AB14-2092863FF923}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jitter.Portable", "source\Jitter\Jitter.Portable.csproj", "{AA03EF1A-94F7-4D30-AB14-2092863FF92A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JitterDemo", "samples\JitterDemo\JitterDemo\JitterDemo.csproj", "{6D78166B-77BC-4BAF-97CC-A946D013145B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JitterOpenGLDemo", "samples\JitterOpenGLDemo\JitterOpenGLDemo\JitterOpenGLDemo.csproj", "{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleJitterPhoneDemo", "samples\JitterPhoneDemo\SimpleJitterPhoneDemo\SimpleJitterPhoneDemo.csproj", "{CC9CEF02-82BB-426D-B46A-DF26A152B794}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,43 +55,11 @@ Global
 		{6D78166B-77BC-4BAF-97CC-A946D013145B}.Release|ARM.Build.0 = Release|Any CPU
 		{6D78166B-77BC-4BAF-97CC-A946D013145B}.Release|x86.ActiveCfg = Release|Any CPU
 		{6D78166B-77BC-4BAF-97CC-A946D013145B}.Release|x86.Build.0 = Release|Any CPU
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}.Debug|ARM.Build.0 = Debug|Any CPU
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}.Debug|x86.Build.0 = Debug|Any CPU
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}.Release|ARM.ActiveCfg = Release|Any CPU
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}.Release|ARM.Build.0 = Release|Any CPU
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}.Release|x86.ActiveCfg = Release|Any CPU
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7}.Release|x86.Build.0 = Release|Any CPU
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Debug|ARM.ActiveCfg = Debug|ARM
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Debug|ARM.Build.0 = Debug|ARM
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Debug|ARM.Deploy.0 = Debug|ARM
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Debug|x86.ActiveCfg = Debug|x86
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Debug|x86.Build.0 = Debug|x86
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Debug|x86.Deploy.0 = Debug|x86
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Release|Any CPU.ActiveCfg = Release|x86
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Release|Any CPU.Build.0 = Release|x86
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Release|Any CPU.Deploy.0 = Release|x86
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Release|ARM.ActiveCfg = Release|ARM
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Release|ARM.Build.0 = Release|ARM
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Release|ARM.Deploy.0 = Release|ARM
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Release|x86.ActiveCfg = Release|x86
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Release|x86.Build.0 = Release|x86
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{6D78166B-77BC-4BAF-97CC-A946D013145B} = {5FC265FF-3CD8-4120-905C-B0548A8E1EF4}
-		{5EB96E05-373F-4278-929A-5ADCCEC1F9C7} = {5FC265FF-3CD8-4120-905C-B0548A8E1EF4}
-		{CC9CEF02-82BB-426D-B46A-DF26A152B794} = {5FC265FF-3CD8-4120-905C-B0548A8E1EF4}
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9C7BED84-7617-412B-A88A-9E106EBAD5FA}
 	EndGlobalSection
 EndGlobal

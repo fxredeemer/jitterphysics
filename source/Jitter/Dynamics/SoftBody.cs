@@ -104,8 +104,6 @@ namespace Jitter.Dynamics
 
             bool skipConstraint = false;
 
-            float myCounter = 0.0f;
-
             /// <summary>
             /// Called once before iteration starts.
             /// </summary>

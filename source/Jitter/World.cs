@@ -71,67 +71,67 @@ namespace Jitter
 
             internal void RaiseWorldPreStep(float timestep)
             {
-                if (PreStep != null) PreStep(timestep);
+                PreStep?.Invoke(timestep);
             }
 
             internal void RaiseWorldPostStep(float timestep)
             {
-                if (PostStep != null) PostStep(timestep);
+                PostStep?.Invoke(timestep);
             }
 
             internal void RaiseAddedRigidBody(RigidBody body)
             {
-                if (AddedRigidBody != null) AddedRigidBody(body);
+                AddedRigidBody?.Invoke(body);
             }
 
             internal void RaiseRemovedRigidBody(RigidBody body)
             {
-                if (RemovedRigidBody != null) RemovedRigidBody(body);
+                RemovedRigidBody?.Invoke(body);
             }
 
             internal void RaiseAddedConstraint(Constraint constraint)
             {
-                if (AddedConstraint != null) AddedConstraint(constraint);
+                AddedConstraint?.Invoke(constraint);
             }
 
             internal void RaiseRemovedConstraint(Constraint constraint)
             {
-                if (RemovedConstraint != null) RemovedConstraint(constraint);
+                RemovedConstraint?.Invoke(constraint);
             }
 
             internal void RaiseAddedSoftBody(SoftBody body)
             {
-                if (AddedSoftBody != null) AddedSoftBody(body);
+                AddedSoftBody?.Invoke(body);
             }
 
             internal void RaiseRemovedSoftBody(SoftBody body)
             {
-                if (RemovedSoftBody != null) RemovedSoftBody(body);
+                RemovedSoftBody?.Invoke(body);
             }
 
             internal void RaiseBodiesBeginCollide(RigidBody body1,RigidBody body2)
             {
-                if (BodiesBeginCollide != null) BodiesBeginCollide(body1,body2);
+                BodiesBeginCollide?.Invoke(body1, body2);
             }
 
             internal void RaiseBodiesEndCollide(RigidBody body1, RigidBody body2)
             {
-                if (BodiesEndCollide != null) BodiesEndCollide(body1,body2);
+                BodiesEndCollide?.Invoke(body1, body2);
             }
 
             internal void RaiseActivatedBody(RigidBody body)
             {
-                if (ActivatedBody != null) ActivatedBody(body);
+                ActivatedBody?.Invoke(body);
             }
 
             internal void RaiseDeactivatedBody(RigidBody body)
             {
-                if (DeactivatedBody != null) DeactivatedBody(body);
+                DeactivatedBody?.Invoke(body);
             }
 
             internal void RaiseContactCreated(Contact contact)
             {
-                if (ContactCreated != null) ContactCreated(contact);
+                ContactCreated?.Invoke(contact);
             }
 
             #endregion

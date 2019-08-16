@@ -17,18 +17,10 @@
 *  3. This notice may not be removed or altered from any source distribution. 
 */
 
-#region Using Statements
-using System;
-using System.Collections.Generic;
-using System.Threading;
-
-using Jitter.Dynamics;
-using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
-using Jitter.Dynamics.Constraints;
-using System.Collections.ObjectModel;
 using Jitter.DataStructures;
-#endregion
+using Jitter.Dynamics;
+using Jitter.Dynamics.Constraints;
+using System.Collections.Generic;
 
 namespace Jitter.Collision
 {
@@ -47,29 +39,23 @@ namespace Jitter.Collision
         /// <summary>
         /// Gets a read only list of <see cref="RigidBody"/> which are in contact with each other.
         /// </summary>
-        public ReadOnlyHashset<RigidBody> Bodies { get { return readOnlyBodies; } }
+        public ReadOnlyHashset<RigidBody> Bodies { get; private set; }
 
         /// <summary>
         /// Gets a read only list of <see cref="Arbiter"/> which are involved in this island.
         /// </summary>
-        public ReadOnlyHashset<Arbiter> Arbiter { get { return readOnlyArbiter; } }
+        public ReadOnlyHashset<Arbiter> Arbiter { get; private set; }
 
         /// <summary>
         /// Gets a read only list of <see cref="Constraint"/> which are involved in this island.
         /// </summary>
-        public ReadOnlyHashset<Constraint> Constraints { get { return readOnlyConstraints; } }
+        public ReadOnlyHashset<Constraint> Constraints { get; private set; }
 
-        private ReadOnlyHashset<RigidBody> readOnlyBodies;
-        private ReadOnlyHashset<Arbiter> readOnlyArbiter;
-        private ReadOnlyHashset<Constraint> readOnlyConstraints;
-
-        /// Constructor of CollisionIsland class.
-        /// </summary>
         public CollisionIsland()
         {
-            readOnlyBodies = new ReadOnlyHashset<RigidBody>(bodies);
-            readOnlyArbiter = new ReadOnlyHashset<Arbiter>(arbiter);
-            readOnlyConstraints = new ReadOnlyHashset<Constraint>(constraints);
+            Bodies = new ReadOnlyHashset<RigidBody>(bodies);
+            Arbiter = new ReadOnlyHashset<Arbiter>(arbiter);
+            Constraints = new ReadOnlyHashset<Constraint>(constraints);
         }
 
         /// <summary>
@@ -82,8 +68,14 @@ namespace Jitter.Collision
             var enumerator = bodies.GetEnumerator();
             enumerator.MoveNext();
 
-            if (enumerator.Current == null) return false;
-            else return enumerator.Current.isActive;
+            if (enumerator.Current == null)
+            {
+                return false;
+            }
+            else
+            {
+                return enumerator.Current.isActive;
+            }
         }
 
         /// <summary>
@@ -94,18 +86,22 @@ namespace Jitter.Collision
         /// <seealso cref="RigidBody.IsActive"/>
         public void SetStatus(bool active)
         {
-            foreach (RigidBody body in bodies)
+            foreach (var body in bodies)
             {
                 body.IsActive = active;
-                if (active && !body.IsActive) body.inactiveTime = 0.0f;
+                if (active && !body.IsActive)
+                {
+                    body.inactiveTime = 0.0f;
+                }
             }
 
         }
 
         internal void ClearLists()
         {
-            arbiter.Clear(); bodies.Clear(); constraints.Clear();
+            arbiter.Clear();
+            bodies.Clear();
+            constraints.Clear();
         }
-
     }
 }

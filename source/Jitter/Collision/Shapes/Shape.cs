@@ -80,7 +80,7 @@ namespace Jitter.Collision.Shapes
         /// </summary>
         protected void RaiseShapeUpdated()
         {
-            if (ShapeUpdated != null) ShapeUpdated();
+            ShapeUpdated?.Invoke();
         }
 
         /// <summary>
