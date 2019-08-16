@@ -35,7 +35,7 @@ namespace JitterDemo.Scenes
                 {
                     int offset = vertices.Count;
                     var a = new Vector3[mmp.NumVertices];
-                    mmp.VertexBuffer.GetData<Vector3>(mmp.VertexOffset * mmp.VertexBuffer.VertexDeclaration.VertexStride,
+                    mmp.VertexBuffer.GetData(mmp.VertexOffset * mmp.VertexBuffer.VertexDeclaration.VertexStride,
                         a, 0, mmp.NumVertices, mmp.VertexBuffer.VertexDeclaration.VertexStride);
                     for (int i = 0; i != a.Length; ++i)
                         Vector3.Transform(ref a[i], ref xform, out a[i]);
@@ -45,7 +45,7 @@ namespace JitterDemo.Scenes
                         throw new Exception(
                             String.Format("Model uses 32-bit indices, which are not supported."));
                     short[] s = new short[mmp.PrimitiveCount * 3];
-                    mmp.IndexBuffer.GetData<short>(mmp.StartIndex * 2, s, 0, mmp.PrimitiveCount * 3);
+                    mmp.IndexBuffer.GetData(mmp.StartIndex * 2, s, 0, mmp.PrimitiveCount * 3);
                     var tvi = new TriangleVertexIndices[mmp.PrimitiveCount];
                     for (int i = 0; i != tvi.Length; ++i)
                     {

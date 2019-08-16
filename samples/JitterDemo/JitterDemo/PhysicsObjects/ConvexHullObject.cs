@@ -59,7 +59,7 @@ namespace JitterDemo
                     // This where we store the vertices until transformed 
                     var allVertex = new JVector[meshPart.NumVertices];
                     // Read the vertices from the buffer in to the array 
-                    meshPart.VertexBuffer.GetData<JVector>(
+                    meshPart.VertexBuffer.GetData(
                         (meshPart.VertexOffset * declaration.VertexStride) + vertexPosition.Offset,
                         allVertex,
                         0,
@@ -81,7 +81,7 @@ namespace JitterDemo
                     }
                     // Each primitive is a triangle 
                     short[] indexElements = new short[meshPart.PrimitiveCount * 3];
-                    meshPart.IndexBuffer.GetData<short>(
+                    meshPart.IndexBuffer.GetData(
                     meshPart.StartIndex * 2,
                     indexElements,
                     0,

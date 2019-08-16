@@ -193,7 +193,7 @@ namespace Jitter.Collision.Shapes
 
             if (shape is Multishape)
             {
-                throw new ArgumentException("Can't calculate inertia of multishapes.", "shape");
+                throw new ArgumentException("Can't calculate inertia of multishapes.", nameof(shape));
             }
 
             var hullTriangles = new List<JVector>();

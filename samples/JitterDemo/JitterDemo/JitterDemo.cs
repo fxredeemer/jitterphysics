@@ -73,7 +73,7 @@ namespace JitterDemo
 
 #if(WINDOWS)
             Window.Title = "Jitter Physics Demo - Jitter "
-                + Assembly.GetAssembly(typeof(Jitter.World)).GetName().Version.ToString();
+                + Assembly.GetAssembly(typeof(World)).GetName().Version.ToString();
 #else
             this.Window.Title = "Jitter Physics Demo - Jitter";
 #endif
@@ -518,11 +518,8 @@ namespace JitterDemo
                 primitive = primitives[(int)Primitives.cone];
             }
 
-            if (primitive != null)
-            {
-                primitive.AddWorldMatrix(scaleMatrix * Conversion.ToXNAMatrix(ori) *
+            primitive?.AddWorldMatrix(scaleMatrix * Conversion.ToXNAMatrix(ori) *
                             Matrix.CreateTranslation(Conversion.ToXNAVector(pos)));
-            }
         }
 
         private void AddBodyToDrawList(RigidBody rb)

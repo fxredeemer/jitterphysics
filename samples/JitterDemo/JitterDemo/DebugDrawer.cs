@@ -80,7 +80,7 @@ namespace JitterDemo
             }
             else
             {
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
         }
 
@@ -101,7 +101,7 @@ namespace JitterDemo
                 return v.Z;
             }
 
-            throw new ArgumentOutOfRangeException("index");
+            throw new ArgumentOutOfRangeException(nameof(index));
         }
 
         public void DrawAabb(JVector from, JVector to, Color color)
@@ -153,13 +153,13 @@ namespace JitterDemo
 
                 if (lineIndex > 0)
                 {
-                    GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(
+                    GraphicsDevice.DrawUserPrimitives(
                         PrimitiveType.LineList, LineList, 0, lineIndex / 2);
                 }
 
                 if (triangleIndex > 0)
                 {
-                    GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(
+                    GraphicsDevice.DrawUserPrimitives(
                         PrimitiveType.TriangleList, TriangleList, 0, triangleIndex / 3);
                 }
             }

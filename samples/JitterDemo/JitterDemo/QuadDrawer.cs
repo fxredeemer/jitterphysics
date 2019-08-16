@@ -84,8 +84,7 @@ namespace JitterDemo
             {
                 pass.Apply();
 
-                GraphicsDevice.DrawUserIndexedPrimitives
-                    <VertexPositionNormalTexture>(PrimitiveType.TriangleList,
+                GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,
                     vertices, 0, 4, indices, 0, 2);
             }
 

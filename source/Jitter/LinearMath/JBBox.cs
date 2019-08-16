@@ -70,7 +70,7 @@
         {
             if (dir * dir < JMath.Epsilon * JMath.Epsilon)
             {
-                return (start >= min && start <= max);
+                return start >= min && start <= max;
             }
 
             float t0 = (min - start) / dir;
@@ -157,8 +157,8 @@
 
         public ContainmentType Contains(ref JVector point)
         {
-            return ((((Min.X <= point.X) && (point.X <= Max.X)) &&
-                ((Min.Y <= point.Y) && (point.Y <= Max.Y))) &&
+            return (((Min.X <= point.X) && (point.X <= Max.X) &&
+                ((Min.Y <= point.Y) && (point.Y <= Max.Y)) &&
                 ((Min.Z <= point.Z) && (point.Z <= Max.Z))) ? ContainmentType.Contains : ContainmentType.Disjoint;
         }
 
@@ -206,9 +206,9 @@
         public ContainmentType Contains(ref JBBox box)
         {
             var result = ContainmentType.Disjoint;
-            if ((((Max.X >= box.Min.X) && (Min.X <= box.Max.X)) && ((Max.Y >= box.Min.Y) && (Min.Y <= box.Max.Y))) && ((Max.Z >= box.Min.Z) && (Min.Z <= box.Max.Z)))
+            if (((Max.X >= box.Min.X) && (Min.X <= box.Max.X) && ((Max.Y >= box.Min.Y) && (Min.Y <= box.Max.Y)) && ((Max.Z >= box.Min.Z) && (Min.Z <= box.Max.Z)))
             {
-                result = ((((Min.X <= box.Min.X) && (box.Max.X <= Max.X)) && ((Min.Y <= box.Min.Y) && (box.Max.Y <= Max.Y))) && ((Min.Z <= box.Min.Z) && (box.Max.Z <= Max.Z))) ? ContainmentType.Contains : ContainmentType.Intersects;
+                result = (((Min.X <= box.Min.X) && (box.Max.X <= Max.X) && ((Min.Y <= box.Min.Y) && (box.Max.Y <= Max.Y)) && ((Min.Z <= box.Min.Z) && (box.Max.Z <= Max.Z))) ? ContainmentType.Contains : ContainmentType.Intersects;
             }
 
             return result;

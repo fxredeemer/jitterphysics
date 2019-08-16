@@ -374,7 +374,7 @@ namespace JitterDemo
 
         private bool RaycastCallback(RigidBody body, JVector normal, float frac)
         {
-            return (body != car);
+            return body != car;
         }
     }
 }

@@ -399,7 +399,7 @@ namespace Jitter.Dynamics
             public override bool Equals(object obj)
             {
                 var e = (Edge)obj;
-                return ((e.Index1 == Index1 && e.Index2 == Index2) || (e.Index1 == Index2 && e.Index2 == Index1));
+                return (e.Index1 == Index1 && e.Index2 == Index2) || (e.Index1 == Index2 && e.Index2 == Index1);
             }
         }
 

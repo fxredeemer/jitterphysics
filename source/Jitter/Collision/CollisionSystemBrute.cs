@@ -25,7 +25,7 @@ namespace Jitter.Collision
         {
             if (bodyList.Contains(body))
             {
-                throw new ArgumentException("The body was already added to the collision system.", "body");
+                throw new ArgumentException("The body was already added to the collision system.", nameof(body));
             }
 
             bodyList.Add(body);
@@ -196,8 +196,8 @@ namespace Jitter.Collision
             }
             else
             {
-                return (GJKCollide.Raycast(body.Shape, ref body.orientation, ref body.invOrientation, ref body.position,
-                    ref rayOrigin, ref rayDirection, out fraction, out normal));
+                return GJKCollide.Raycast(body.Shape, ref body.orientation, ref body.invOrientation, ref body.position,
+                    ref rayOrigin, ref rayDirection, out fraction, out normal);
             }
         }
     }

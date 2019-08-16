@@ -17,15 +17,15 @@ namespace Jitter.Collision
         private static void SupportMapTransformed(ISupportMappable support,
             ref JMatrix orientation, ref JVector position, ref JVector direction, out JVector result)
         {
-            result.X = ((direction.X * orientation.M11) + (direction.Y * orientation.M12)) + (direction.Z * orientation.M13);
-            result.Y = ((direction.X * orientation.M21) + (direction.Y * orientation.M22)) + (direction.Z * orientation.M23);
-            result.Z = ((direction.X * orientation.M31) + (direction.Y * orientation.M32)) + (direction.Z * orientation.M33);
+            result.X = (direction.X * orientation.M11) + (direction.Y * orientation.M12) + (direction.Z * orientation.M13);
+            result.Y = (direction.X * orientation.M21) + (direction.Y * orientation.M22) + (direction.Z * orientation.M23);
+            result.Z = (direction.X * orientation.M31) + (direction.Y * orientation.M32) + (direction.Z * orientation.M33);
 
             support.SupportMapping(ref result, out result);
 
-            float x = ((result.X * orientation.M11) + (result.Y * orientation.M21)) + (result.Z * orientation.M31);
-            float y = ((result.X * orientation.M12) + (result.Y * orientation.M22)) + (result.Z * orientation.M32);
-            float z = ((result.X * orientation.M13) + (result.Y * orientation.M23)) + (result.Z * orientation.M33);
+            float x = (result.X * orientation.M11) + (result.Y * orientation.M21) + (result.Z * orientation.M31);
+            float y = (result.X * orientation.M12) + (result.Y * orientation.M22) + (result.Z * orientation.M32);
+            float z = (result.X * orientation.M13) + (result.Y * orientation.M23) + (result.Z * orientation.M33);
 
             result.X = position.X + x;
             result.Y = position.Y + y;

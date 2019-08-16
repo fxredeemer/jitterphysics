@@ -150,7 +150,7 @@ namespace Jitter.Dynamics
 
         private int CalculateHash(int a)
         {
-            a = (a ^ 61) ^ (a >> 16);
+            a = a ^ 61 ^ (a >> 16);
             a = a + (a << 3);
             a = a ^ (a >> 4);
             a = a * 0x27d4eb2d;
@@ -448,7 +448,7 @@ namespace Jitter.Dynamics
 
         public bool Equals(RigidBody other)
         {
-            return (other.instance == instance);
+            return other.instance == instance;
         }
 
         public int CompareTo(RigidBody other)
@@ -477,7 +477,7 @@ namespace Jitter.Dynamics
         {
         }
 
-        public bool IsStaticOrInactive => (!isActive || isStatic);
+        public bool IsStaticOrInactive => !isActive || isStatic;
 
         private bool enableDebugDraw = false;
         public bool EnableDebugDraw

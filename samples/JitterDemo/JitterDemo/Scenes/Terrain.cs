@@ -18,10 +18,10 @@ namespace JitterDemo.Scenes
         public override void Build()
         {
             terrain = new Primitives3D.TerrainPrimitive(Demo.GraphicsDevice,
-                ((a,b)=>
+                (a, b) =>
             {
                 return (float)(Math.Cos(a * 0.2f) * Math.Sin(b * 0.2f) * 2.0f);
-            }));
+            });
 
             var shape = new TerrainShape(terrain.heights, 1.0f, 1.0f);
             

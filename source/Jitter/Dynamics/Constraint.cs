@@ -32,15 +32,9 @@ namespace Jitter.Dynamics.Constraints
 
             instance = Interlocked.Increment(ref instanceCount);
 
-            if (body1 != null)
-            {
-                body1.Update();
-            }
+            body1?.Update();
 
-            if (body2 != null)
-            {
-                body2.Update();
-            }
+            body2?.Update();
         }
 
         public abstract void PrepareForIteration(float timestep);

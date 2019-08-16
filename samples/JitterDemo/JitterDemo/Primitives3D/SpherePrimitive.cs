@@ -36,7 +36,7 @@ namespace JitterDemo.Primitives3D
                                float radius, int tessellation)
         {
             if (tessellation < 3)
-                throw new ArgumentOutOfRangeException("tessellation");
+                throw new ArgumentOutOfRangeException(nameof(tessellation));
 
             int verticalSegments = tessellation;
             int horizontalSegments = tessellation * 2;

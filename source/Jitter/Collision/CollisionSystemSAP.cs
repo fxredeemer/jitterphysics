@@ -39,7 +39,7 @@ namespace Jitter.Collision
         {
             if (bodyList.Contains(body))
             {
-                throw new ArgumentException("The body was already added to the collision system.", "body");
+                throw new ArgumentException("The body was already added to the collision system.", nameof(body));
             }
 
             bodyList.Add(body);
@@ -95,7 +95,7 @@ namespace Jitter.Collision
                     bodyBox = body.BoundingBox;
 
                     if (!(thisInactive && ac.IsStaticOrInactive) &&
-                        (((bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z)) &&
+                        ((bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z) &&
                         ((bodyBox.Max.Y >= acBox.Min.Y) && (bodyBox.Min.Y <= acBox.Max.Y))))
                     {
                         if (base.RaisePassedBroadphase(ac, body))
@@ -144,7 +144,7 @@ namespace Jitter.Collision
                     bodyBox = body.BoundingBox;
 
                     if (!(thisInactive && ac.IsStaticOrInactive) &&
-                        (((bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z)) &&
+                        ((bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z) &&
                         ((bodyBox.Max.Y >= acBox.Min.Y) && (bodyBox.Min.Y <= acBox.Max.Y))))
                     {
                         if (base.RaisePassedBroadphase(ac, body))
@@ -280,8 +280,8 @@ namespace Jitter.Collision
             }
             else
             {
-                return (GJKCollide.Raycast(body.Shape, ref body.orientation, ref body.invOrientation, ref body.position,
-                    ref rayOrigin, ref rayDirection, out fraction, out normal));
+                return GJKCollide.Raycast(body.Shape, ref body.orientation, ref body.invOrientation, ref body.position,
+                    ref rayOrigin, ref rayDirection, out fraction, out normal);
             }
         }
     }

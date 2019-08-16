@@ -450,7 +450,7 @@ namespace Jitter.Collision
 
         public bool CheckBothStaticOrInactive(IBroadphaseEntity entity1, IBroadphaseEntity entity2)
         {
-            return (entity1.IsStaticOrInactive && entity2.IsStaticOrInactive);
+            return entity1.IsStaticOrInactive && entity2.IsStaticOrInactive;
         }
 
         public bool CheckBoundingBoxes(IBroadphaseEntity entity1, IBroadphaseEntity entity2)
@@ -458,9 +458,9 @@ namespace Jitter.Collision
             var box1 = entity1.BoundingBox;
             var box2 = entity2.BoundingBox;
 
-            return ((((box1.Max.Z >= box2.Min.Z) && (box1.Min.Z <= box2.Max.Z)) &&
-                ((box1.Max.Y >= box2.Min.Y) && (box1.Min.Y <= box2.Max.Y))) &&
-                ((box1.Max.X >= box2.Min.X) && (box1.Min.X <= box2.Max.X)));
+            return (((box1.Max.Z >= box2.Min.Z) && (box1.Min.Z <= box2.Max.Z)) &&
+                ((box1.Max.Y >= box2.Min.Y) && (box1.Min.Y <= box2.Max.Y)) &&
+                ((box1.Max.X >= box2.Min.X) && (box1.Min.X <= box2.Max.X));
         }
 
         public bool RaisePassedBroadphase(IBroadphaseEntity entity1, IBroadphaseEntity entity2)

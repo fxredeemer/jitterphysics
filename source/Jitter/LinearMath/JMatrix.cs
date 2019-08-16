@@ -157,15 +157,15 @@ namespace Jitter.LinearMath
 
         public static void Multiply(ref JMatrix matrix1, ref JMatrix matrix2, out JMatrix result)
         {
-            float num0 = ((matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21)) + (matrix1.M13 * matrix2.M31);
-            float num1 = ((matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22)) + (matrix1.M13 * matrix2.M32);
-            float num2 = ((matrix1.M11 * matrix2.M13) + (matrix1.M12 * matrix2.M23)) + (matrix1.M13 * matrix2.M33);
-            float num3 = ((matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21)) + (matrix1.M23 * matrix2.M31);
-            float num4 = ((matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22)) + (matrix1.M23 * matrix2.M32);
-            float num5 = ((matrix1.M21 * matrix2.M13) + (matrix1.M22 * matrix2.M23)) + (matrix1.M23 * matrix2.M33);
-            float num6 = ((matrix1.M31 * matrix2.M11) + (matrix1.M32 * matrix2.M21)) + (matrix1.M33 * matrix2.M31);
-            float num7 = ((matrix1.M31 * matrix2.M12) + (matrix1.M32 * matrix2.M22)) + (matrix1.M33 * matrix2.M32);
-            float num8 = ((matrix1.M31 * matrix2.M13) + (matrix1.M32 * matrix2.M23)) + (matrix1.M33 * matrix2.M33);
+            float num0 = (matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21) + (matrix1.M13 * matrix2.M31);
+            float num1 = (matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22) + (matrix1.M13 * matrix2.M32);
+            float num2 = (matrix1.M11 * matrix2.M13) + (matrix1.M12 * matrix2.M23) + (matrix1.M13 * matrix2.M33);
+            float num3 = (matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21) + (matrix1.M23 * matrix2.M31);
+            float num4 = (matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22) + (matrix1.M23 * matrix2.M32);
+            float num5 = (matrix1.M21 * matrix2.M13) + (matrix1.M22 * matrix2.M23) + (matrix1.M23 * matrix2.M33);
+            float num6 = (matrix1.M31 * matrix2.M11) + (matrix1.M32 * matrix2.M21) + (matrix1.M33 * matrix2.M31);
+            float num7 = (matrix1.M31 * matrix2.M12) + (matrix1.M32 * matrix2.M22) + (matrix1.M33 * matrix2.M32);
+            float num8 = (matrix1.M31 * matrix2.M13) + (matrix1.M32 * matrix2.M23) + (matrix1.M33 * matrix2.M33);
 
             result.M11 = num0;
             result.M12 = num1;
@@ -375,12 +375,12 @@ namespace Jitter.LinearMath
             float num6 = y * z;
             result.M11 = num11 + (num * (1f - num11));
             result.M12 = (num8 - (num * num8)) + (num2 * z);
-            result.M13 = (num7 - (num * num7)) - (num2 * y);
-            result.M21 = (num8 - (num * num8)) - (num2 * z);
+            result.M13 = num7 - (num * num7) - (num2 * y);
+            result.M21 = num8 - (num * num8) - (num2 * z);
             result.M22 = num10 + (num * (1f - num10));
             result.M23 = (num6 - (num * num6)) + (num2 * x);
             result.M31 = (num7 - (num * num7)) + (num2 * y);
-            result.M32 = (num6 - (num * num6)) - (num2 * x);
+            result.M32 = num6 - (num * num6) - (num2 * x);
             result.M33 = num9 + (num * (1f - num9));
         }
 

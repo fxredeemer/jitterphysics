@@ -65,7 +65,7 @@ namespace Jitter.Collision
             {
                 constraint.body1.island.constraints.Add(constraint);
             }
-            else if (constraint.body2 != null && constraint.body2.island != null)
+            else if (constraint.body2?.island != null)
             {
                 constraint.body2.island.constraints.Add(constraint);
             }
@@ -84,7 +84,7 @@ namespace Jitter.Collision
             {
                 constraint.body1.island.constraints.Remove(constraint);
             }
-            else if (constraint.body2 != null && constraint.body2.island != null)
+            else if (constraint.body2?.island != null)
             {
                 constraint.body2.island.constraints.Remove(constraint);
             }
@@ -199,7 +199,7 @@ namespace Jitter.Collision
                     islands.Add(newIsland);
                 }
             }
-            else if (body2 == null || body2.isStatic)
+            else if (body2?.isStatic != false)
             {
                 if (body1.island == null)
                 {
@@ -229,7 +229,7 @@ namespace Jitter.Collision
             {
                 body2.connections.Remove(body1);
             }
-            else if (body2 == null || body2.isStatic)
+            else if (body2?.isStatic != false)
             {
                 body1.connections.Remove(body2);
             }

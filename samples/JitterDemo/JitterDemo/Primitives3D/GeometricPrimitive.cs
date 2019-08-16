@@ -58,7 +58,7 @@ namespace JitterDemo.Primitives3D
         protected void AddIndex(int index)
         {
             if (index > ushort.MaxValue)
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             indices.Add((ushort)index);
         }
@@ -118,11 +118,9 @@ namespace JitterDemo.Primitives3D
         {
             if (disposing)
             {
-                if (vertexBuffer != null)
-                    vertexBuffer.Dispose();
+                vertexBuffer?.Dispose();
 
-                if (indexBuffer != null)
-                    indexBuffer.Dispose();
+                indexBuffer?.Dispose();
             }
         }
 

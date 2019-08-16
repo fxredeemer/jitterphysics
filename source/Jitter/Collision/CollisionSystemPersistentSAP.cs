@@ -80,8 +80,8 @@ namespace Jitter.Collision
             public override bool Equals(object obj)
             {
                 var other = (OverlapPair)obj;
-                return ((other.Entity1.Equals(Entity1) && other.Entity2.Equals(Entity2)) ||
-                    (other.Entity1.Equals(Entity2) && other.Entity2.Equals(Entity1)));
+                return (other.Entity1.Equals(Entity1) && other.Entity2.Equals(Entity2)) ||
+                    (other.Entity1.Equals(Entity2) && other.Entity2.Equals(Entity1));
             }
 
             public override int GetHashCode()
@@ -417,8 +417,8 @@ namespace Jitter.Collision
             }
             else
             {
-                return (GJKCollide.Raycast(body.Shape, ref body.orientation, ref body.invOrientation, ref body.position,
-                    ref rayOrigin, ref rayDirection, out fraction, out normal));
+                return GJKCollide.Raycast(body.Shape, ref body.orientation, ref body.invOrientation, ref body.position,
+                    ref rayOrigin, ref rayDirection, out fraction, out normal);
             }
         }
     }
