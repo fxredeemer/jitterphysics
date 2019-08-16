@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Jitter;
-using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework.Graphics;
 using Jitter.Collision;
-using JitterDemo.PhysicsObjects;
 
 namespace JitterDemo.Scenes
 {
@@ -73,7 +67,7 @@ namespace JitterDemo.Scenes
             }
 
 
-            Model model = this.Demo.Content.Load<Model>("torus");
+            Model model = Demo.Content.Load<Model>("torus");
 
             List<TriangleVertexIndices> indices = new List<TriangleVertexIndices>();
             List<JVector> vertices = new List<JVector>();

@@ -1,8 +1,4 @@
 ﻿#region Using Statements
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Jitter.Collision.Shapes;
 using Jitter;
@@ -28,7 +24,7 @@ namespace JitterDemo.Vehicle
 
         private void BuildCar()
         {
-            JitterDemo demo = this.Game as JitterDemo;
+            JitterDemo demo = Game as JitterDemo;
             World world = demo.World;
 
             CompoundShape.TransformedShape lower = new CompoundShape.TransformedShape(
@@ -83,7 +79,7 @@ namespace JitterDemo.Vehicle
         #region Draw Wheels
         private void DrawWheels()
         {
-            JitterDemo demo = this.Game as JitterDemo;
+            JitterDemo demo = Game as JitterDemo;
 
             for(int i = 0;i<carBody.Wheels.Length;i++)
             {
@@ -122,7 +118,7 @@ namespace JitterDemo.Vehicle
 
         private void DrawChassis()
         {
-            JitterDemo demo = this.Game as JitterDemo;
+            JitterDemo demo = Game as JitterDemo;
 
             foreach (ModelMesh mesh in chassisModel.Meshes)
             {
@@ -143,8 +139,8 @@ namespace JitterDemo.Vehicle
 
         protected override void LoadContent()
         {
-            chassisModel = this.Game.Content.Load<Model>("car");
-            tireModel = this.Game.Content.Load<Model>("wheel");
+            chassisModel = Game.Content.Load<Model>("car");
+            tireModel = Game.Content.Load<Model>("wheel");
 
             base.LoadContent();
         }

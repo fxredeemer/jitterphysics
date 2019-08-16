@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using Jitter.LinearMath;
 #if WINDOWS
 
-using Jitter.Collision;
 using System.Globalization;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;

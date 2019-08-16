@@ -19,11 +19,7 @@
 
 #region Using Statements
 using System;
-using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Collision.Shapes
@@ -56,7 +52,7 @@ namespace Jitter.Collision.Shapes
             this.height = height;
             this.radius = radius;
 
-            this.UpdateShape();
+            UpdateShape();
         }
 
         public override void UpdateShape()

@@ -19,11 +19,7 @@
 
 #region Using Statements
 using System;
-using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Collision.Shapes
@@ -63,10 +59,10 @@ namespace Jitter.Collision.Shapes
         /// </summary>
         public override void CalculateMassInertia()
         {
-            this.mass = JMath.Pi * radius * radius * height;
-            this.inertia.M11 = (1.0f / 4.0f) * mass * radius * radius + (1.0f / 12.0f) * mass * height * height;
-            this.inertia.M22 = (1.0f / 2.0f) * mass * radius * radius;
-            this.inertia.M33 = (1.0f / 4.0f) * mass * radius * radius + (1.0f / 12.0f) * mass * height * height;
+            mass = JMath.Pi * radius * radius * height;
+            inertia.M11 = (1.0f / 4.0f) * mass * radius * radius + (1.0f / 12.0f) * mass * height * height;
+            inertia.M22 = (1.0f / 2.0f) * mass * radius * radius;
+            inertia.M33 = (1.0f / 4.0f) * mass * radius * radius + (1.0f / 12.0f) * mass * height * height;
         }
 
         /// <summary>

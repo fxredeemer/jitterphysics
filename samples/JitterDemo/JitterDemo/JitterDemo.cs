@@ -40,7 +40,7 @@ namespace JitterDemo
         public DebugDrawer DebugDrawer { private set; get; }
         public BasicEffect BasicEffect { private set; get; }
         public List<Scenes.Scene> PhysicScenes { private set; get; }
-        public World World { private set; get; }
+        public World World { get; }
 
         private int currentScene = 0;
         private readonly RasterizerState wireframe, cullMode, normal;

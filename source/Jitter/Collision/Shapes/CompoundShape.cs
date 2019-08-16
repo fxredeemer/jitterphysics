@@ -20,10 +20,7 @@
 #region Using Statements
 using System;
 using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Collision.Shapes
@@ -98,7 +95,7 @@ namespace Jitter.Collision.Shapes
                 this.orientation = orientation;
                 JMatrix.Transpose(ref orientation, out invOrientation);
                 this.shape = shape;
-                this.boundingBox = new JBBox();
+                boundingBox = new JBBox();
                 UpdateBoundingBox();
             }
         }
@@ -109,10 +106,10 @@ namespace Jitter.Collision.Shapes
         /// <summary>
         /// An array conaining all 'sub' shapes and their transforms.
         /// </summary>
-        public TransformedShape[] Shapes { get { return this.shapes; } }
+        public TransformedShape[] Shapes { get { return shapes; } }
 
         JVector shifted;
-        public JVector Shift { get { return -1.0f * this.shifted; } }
+        public JVector Shift { get { return -1.0f * shifted; } }
 
         private JBBox mInternalBBox;
 
@@ -129,7 +126,7 @@ namespace Jitter.Collision.Shapes
             if (!TestValidity()) 
                 throw new ArgumentException("Multishapes are not supported!");
 
-            this.UpdateShape();
+            UpdateShape();
         }
 
         public CompoundShape(TransformedShape[] shapes)
@@ -140,7 +137,7 @@ namespace Jitter.Collision.Shapes
             if (!TestValidity())
                 throw new ArgumentException("Multishapes are not supported!");
 
-            this.UpdateShape();
+            UpdateShape();
         }
 
         private bool TestValidity()
@@ -220,7 +217,7 @@ namespace Jitter.Collision.Shapes
         protected override Multishape CreateWorkingClone()
         {
             CompoundShape clone = new CompoundShape();
-            clone.shapes = this.shapes;
+            clone.shapes = shapes;
             return clone;
         }
 
@@ -313,7 +310,7 @@ namespace Jitter.Collision.Shapes
             box.AddPoint(ref rayOrigin);
             box.AddPoint(ref rayEnd);
 
-            return this.Prepare(ref box);
+            return Prepare(ref box);
         }
 
 

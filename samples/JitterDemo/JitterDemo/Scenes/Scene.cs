@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Jitter.Dynamics;
+﻿using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Jitter.Collision.Shapes;
 using JitterDemo.Vehicle;
@@ -12,11 +7,11 @@ namespace JitterDemo.Scenes
 {
     public abstract class Scene
     {
-        public JitterDemo Demo { get; private set; }
+        public JitterDemo Demo { get; }
 
         public Scene(JitterDemo demo)
         {
-            this.Demo = demo;
+            Demo = demo;
         }
 
         public abstract void Build();
@@ -48,7 +43,7 @@ namespace JitterDemo.Scenes
         public void AddCar(JVector position)
         {
             car = new CarObject(Demo);
-            this.Demo.Components.Add(car);
+            Demo.Components.Add(car);
 
             car.carBody.Position = position;
         }

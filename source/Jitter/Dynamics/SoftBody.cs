@@ -20,10 +20,8 @@
 #region Using Statements
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 using Jitter.Dynamics.Constraints;
-using Jitter.Dynamics;
 using Jitter.Collision.Shapes;
 using Jitter.LinearMath;
 using Jitter.Collision;
@@ -214,12 +212,12 @@ namespace Jitter.Dynamics
         #region public class MassPoint : RigidBody
         public class MassPoint : RigidBody
         {
-            public SoftBody SoftBody { get; private set; }
+            public SoftBody SoftBody { get; }
 
             public MassPoint(Shape shape, SoftBody owner, Material material)
                 : base(shape, material, true)
             {
-                this.SoftBody = owner;
+                SoftBody = owner;
             }
 
         }
@@ -563,11 +561,11 @@ namespace Jitter.Dynamics
             for (int i = 0; i < points.Count; i++)
             {
                 queryList.Clear();
-                this.dynamicTree.Query(queryList, ref points[i].boundingBox);
+                dynamicTree.Query(queryList, ref points[i].boundingBox);
 
                 for (int e = 0; e < queryList.Count; e++)
                 {
-                    Triangle t = this.dynamicTree.GetUserData(queryList[e]);
+                    Triangle t = dynamicTree.GetUserData(queryList[e]);
 
                     if (!(t.VertexBody1 == points[i] || t.VertexBody2 == points[i] || t.VertexBody3 == points[i]))
                     {

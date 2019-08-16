@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Jitter.Collision.Shapes;
+﻿using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Jitter.Dynamics.Joints;

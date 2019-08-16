@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace JitterDemo.Primitives3D
@@ -53,7 +49,7 @@ namespace JitterDemo.Primitives3D
                     normal += Vector3.Cross(neighbour[0] - pos, neighbour[3] - pos);
                     normal.Normalize();
 
-                    this.AddVertex(new Vector3(i, heights[i,e], e), normal);
+                    AddVertex(new Vector3(i, heights[i,e], e), normal);
                 }
             }
 
@@ -61,20 +57,20 @@ namespace JitterDemo.Primitives3D
             {
                 for (int e = 1; e < 100; e++)
                 {
-                    this.AddIndex((i - 1) * 100 + e);
-                    this.AddIndex(i * 100 + (e - 1));
-                    this.AddIndex(i * 100 + e);
+                    AddIndex((i - 1) * 100 + e);
+                    AddIndex(i * 100 + (e - 1));
+                    AddIndex(i * 100 + e);
 
 
-                    this.AddIndex(i * 100 + (e - 1));
-                    this.AddIndex((i - 1) * 100 + e);
-                    this.AddIndex((i - 1) * 100 + (e - 1));
+                    AddIndex(i * 100 + (e - 1));
+                    AddIndex((i - 1) * 100 + e);
+                    AddIndex((i - 1) * 100 + (e - 1));
                     
                 }
             }
             
 
-            this.InitializePrimitive(device);
+            InitializePrimitive(device);
         }
 
     }

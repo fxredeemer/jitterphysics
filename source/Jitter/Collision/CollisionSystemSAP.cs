@@ -239,7 +239,7 @@ namespace Jitter.Collision
                     SoftBody softBody = e as SoftBody;
                     foreach (RigidBody b in softBody.VertexBodies)
                     {
-                        if (this.Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction))
+                        if (Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction))
                         {
                             if (tempFraction < fraction && (raycast == null || raycast(b, tempNormal, tempFraction)))
                             {
@@ -255,7 +255,7 @@ namespace Jitter.Collision
                 {
                     RigidBody b = e as RigidBody;
 
-                    if (this.Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction))
+                    if (Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction))
                     {
                         if (tempFraction < fraction && (raycast == null || raycast(b, tempNormal, tempFraction)))
                         {

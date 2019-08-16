@@ -18,12 +18,7 @@
 */
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Collision.Shapes
@@ -48,7 +43,7 @@ namespace Jitter.Collision.Shapes
         public SphereShape(float radius)
         {
             this.radius = radius;
-            this.UpdateShape();
+            UpdateShape();
         }
 
         /// <summary>
@@ -91,9 +86,9 @@ namespace Jitter.Collision.Shapes
             // (0,0,0) is the center of mass, so only
             // the main matrix elements are != 0
             inertia = JMatrix.Identity;
-            inertia.M11 = 0.4f * this.mass * radius * radius;
-            inertia.M22 = 0.4f * this.mass * radius * radius;
-            inertia.M33 = 0.4f * this.mass * radius * radius;
+            inertia.M11 = 0.4f * mass * radius * radius;
+            inertia.M22 = 0.4f * mass * radius * radius;
+            inertia.M33 = 0.4f * mass * radius * radius;
         }
 
 

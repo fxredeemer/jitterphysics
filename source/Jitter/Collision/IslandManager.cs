@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Jitter.Dynamics;
 using Jitter.Dynamics.Constraints;
 using System.Collections.ObjectModel;
@@ -27,7 +25,7 @@ namespace Jitter.Collision
         public IslandManager()
             : base(new List<CollisionIsland>())
         {
-            this.islands = this.Items as List<CollisionIsland>;
+            islands = Items as List<CollisionIsland>;
         }
 
         public void ArbiterCreated(Arbiter arbiter)

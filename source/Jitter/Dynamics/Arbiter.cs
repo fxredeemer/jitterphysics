@@ -18,12 +18,8 @@
 */
 
 #region Using Statements
-using System;
 using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 using System.Diagnostics;
 #endregion
 
@@ -130,7 +126,7 @@ namespace Jitter.Dynamics
         /// <param name="body2"></param>
         public Arbiter(RigidBody body1, RigidBody body2)
         {
-            this.contactList = new ContactList();
+            contactList = new ContactList();
             this.body1 = body1;
             this.body2 = body2;
         }
@@ -140,7 +136,7 @@ namespace Jitter.Dynamics
         /// </summary>
         public Arbiter()
         {
-            this.contactList = new ContactList();
+            contactList = new ContactList();
         }
 
         /// <summary>
@@ -172,7 +168,7 @@ namespace Jitter.Dynamics
 
             lock (contactList)
             {
-                if (this.contactList.Count == 4)
+                if (contactList.Count == 4)
                 {
                     index = SortCachedPoints(ref relPos1, penetration);
                     ReplaceContact(ref point1, ref point2, ref normal, penetration, index, contactSettings);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Jitter.Dynamics;
 using Jitter.Collision.Shapes;
 using Jitter.LinearMath;

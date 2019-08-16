@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Jitter.Collision.Shapes;
+﻿using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 
@@ -31,7 +27,7 @@ namespace JitterDemo.Scenes
             {
                 RigidBody body = new RigidBody(bShape);
                 body.Position = new JVector(i * 2.0f, 2, 0);
-                this.Demo.World.AddBody(body);
+                Demo.World.AddBody(body);
             }
 
             ground.Material.Restitution = 0.0f;

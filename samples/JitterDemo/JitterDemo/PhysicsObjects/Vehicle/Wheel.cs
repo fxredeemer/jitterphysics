@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Jitter.Collision;
@@ -137,18 +134,18 @@ namespace JitterDemo
         {
             this.world = world;
             this.car = car;
-            this.Position = position;
+            Position = position;
             
             raycast = new RaycastCallback(RaycastCallback);
 
             // set some default values.
-            this.SideFriction = 1.5f;
-            this.ForwardFriction = 1f;
-            this.Radius = radius;
-            this.Inertia = 1.0f;
-            this.WheelTravel = 0.2f;
-            this.MaximumAngularVelocity = 200;
-            this.NumberOfRays = 5;
+            SideFriction = 1.5f;
+            ForwardFriction = 1f;
+            Radius = radius;
+            Inertia = 1.0f;
+            WheelTravel = 0.2f;
+            MaximumAngularVelocity = 200;
+            NumberOfRays = 5;
         }
 
         /// <summary>
@@ -198,7 +195,7 @@ namespace JitterDemo
                 angVel += driveTorque * timeStep / Inertia;
                 driveTorque = 0;
 
-                float maxAngVel = this.MaximumAngularVelocity;
+                float maxAngVel = MaximumAngularVelocity;
                 angVel = JMath.Clamp(angVel, -maxAngVel, maxAngVel);
 
                 WheelRotation += (timeStep * angVel) / (2*JMath.Pi) * 360.0f;

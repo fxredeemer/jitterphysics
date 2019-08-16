@@ -18,13 +18,9 @@
 */
 
 #region Using Statements
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Collision.Shapes
@@ -70,8 +66,8 @@ namespace Jitter.Collision.Shapes
         Stack<Multishape> workingCloneStack = new Stack<Multishape>();
         public Multishape RequestWorkingClone()
         {
-            Debug.Assert(this.workingCloneStack.Count<10, "Unusual size of the workingCloneStack. Forgot to call ReturnWorkingClone?");
-            Debug.Assert(!this.isClone, "Can't clone clones! Something wrong here!");
+            Debug.Assert(workingCloneStack.Count<10, "Unusual size of the workingCloneStack. Forgot to call ReturnWorkingClone?");
+            Debug.Assert(!isClone, "Can't clone clones! Something wrong here!");
 
             Multishape multiShape;
 
@@ -79,8 +75,8 @@ namespace Jitter.Collision.Shapes
             {
                 if (workingCloneStack.Count == 0)
                 {
-                    multiShape = this.CreateWorkingClone();
-                    multiShape.workingCloneStack = this.workingCloneStack;
+                    multiShape = CreateWorkingClone();
+                    multiShape.workingCloneStack = workingCloneStack;
                     workingCloneStack.Push(multiShape);
                 }
                 multiShape = workingCloneStack.Pop();
@@ -98,7 +94,7 @@ namespace Jitter.Collision.Shapes
 
         public void ReturnWorkingClone()
         {
-            Debug.Assert(this.isClone, "Only clones can be returned!");
+            Debug.Assert(isClone, "Only clones can be returned!");
             lock (workingCloneStack) { workingCloneStack.Push(this); }
         }
 
@@ -111,13 +107,13 @@ namespace Jitter.Collision.Shapes
         public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
         {
             JBBox helpBox = JBBox.LargeBox;
-            int length = this.Prepare(ref helpBox);
+            int length = Prepare(ref helpBox);
 
             box = JBBox.SmallBox;
 
             for (int i = 0; i < length; i++)
             {
-                this.SetCurrentShape(i);
+                SetCurrentShape(i);
                 base.GetBoundingBox(ref orientation, out helpBox);
                 JBBox.CreateMerged(ref box, ref helpBox, out box);
             }

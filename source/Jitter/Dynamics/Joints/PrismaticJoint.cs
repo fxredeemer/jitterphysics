@@ -18,12 +18,7 @@
 */
 
 #region Using Statements
-using System;
-using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 using Jitter.Dynamics.Constraints;
 #endregion
 

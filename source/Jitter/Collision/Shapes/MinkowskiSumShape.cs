@@ -20,10 +20,7 @@
 #region Using Statements
 using System;
 using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Collision.Shapes
@@ -46,7 +43,7 @@ namespace Jitter.Collision.Shapes
                 this.shapes.Add(shape);
             }
 
-            this.UpdateShape();
+            UpdateShape();
         }
 
         public void AddShape(Shape shape)
@@ -54,7 +51,7 @@ namespace Jitter.Collision.Shapes
             if (shape is Multishape) throw new Exception("Multishapes not supported by MinkowskiSumShape.");
             shapes.Add(shape);
 
-            this.UpdateShape();
+            UpdateShape();
         }
 
         public bool Remove(Shape shape)
@@ -67,12 +64,12 @@ namespace Jitter.Collision.Shapes
 
         public JVector Shift()
         {
-            return -1 * this.shifted;
+            return -1 * shifted;
         }
 
         public override void CalculateMassInertia()
         {
-            this.mass = Shape.CalculateMassInertia(this, out shifted, out inertia);
+            mass = Shape.CalculateMassInertia(this, out shifted, out inertia);
         }
 
         public override void SupportMapping(ref JVector direction, out JVector result)

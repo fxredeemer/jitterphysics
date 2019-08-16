@@ -20,10 +20,7 @@
 #region Using Statements
 using System;
 using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Collision
@@ -56,9 +53,9 @@ namespace Jitter.Collision
         /// <param name="i2">The index of the third vertex.</param>
         public TriangleVertexIndices(int i0, int i1, int i2)
         {
-            this.I0 = i0;
-            this.I1 = i1;
-            this.I2 = i2;
+            I0 = i0;
+            I1 = i1;
+            I2 = i2;
         }
 
         /// <summary>

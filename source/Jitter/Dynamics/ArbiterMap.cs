@@ -18,14 +18,8 @@
 */
 
 #region Using Statements
-using System;
 using System.Collections.Generic;
-
-using Jitter.Dynamics;
-using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 using System.Collections;
-using Jitter.Collision;
 #endregion
 
 namespace Jitter.Dynamics

@@ -25,7 +25,6 @@ using System.Diagnostics;
 
 using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 using Jitter.Collision;
 using Jitter.Dynamics.Constraints;
 using Jitter.DataStructures;
@@ -156,9 +155,9 @@ namespace Jitter
         private HashSet<Constraint> constraints = new HashSet<Constraint>();
         private HashSet<SoftBody> softbodies = new HashSet<SoftBody>();
 
-        public ReadOnlyHashset<RigidBody> RigidBodies { get; private set; }
-        public ReadOnlyHashset<Constraint> Constraints { get; private set; }
-        public ReadOnlyHashset<SoftBody> SoftBodies { get; private set; }
+        public ReadOnlyHashset<RigidBody> RigidBodies { get; }
+        public ReadOnlyHashset<Constraint> Constraints { get; }
+        public ReadOnlyHashset<SoftBody> SoftBodies { get; }
 
         private WorldEvents events = new WorldEvents();
         public WorldEvents Events { get { return events; } }
@@ -206,17 +205,17 @@ namespace Jitter
             integrateCallback = new Action<object>(IntegrateCallback);
 
             // Create the readonly wrappers
-            this.RigidBodies = new ReadOnlyHashset<RigidBody>(rigidBodies);
-            this.Constraints = new ReadOnlyHashset<Constraint>(constraints);
-            this.SoftBodies = new ReadOnlyHashset<SoftBody>(softbodies);
+            RigidBodies = new ReadOnlyHashset<RigidBody>(rigidBodies);
+            Constraints = new ReadOnlyHashset<Constraint>(constraints);
+            SoftBodies = new ReadOnlyHashset<SoftBody>(softbodies);
 
-            this.CollisionSystem = collision;
+            CollisionSystem = collision;
 
             collisionDetectionHandler = new CollisionDetectedHandler(CollisionDetected);
 
-            this.CollisionSystem.CollisionDetected += collisionDetectionHandler;
+            CollisionSystem.CollisionDetected += collisionDetectionHandler;
 
-            this.arbiterMap = new ArbiterMap();
+            arbiterMap = new ArbiterMap();
 
             AllowDeactivation = true;
         }
@@ -226,8 +225,8 @@ namespace Jitter
             if (body == null) throw new ArgumentNullException("body", "body can't be null.");
             if (softbodies.Contains(body)) throw new ArgumentException("The body was already added to the world.", "body");
 
-            this.softbodies.Add(body);
-            this.CollisionSystem.AddEntity(body);
+            softbodies.Add(body);
+            CollisionSystem.AddEntity(body);
 
             events.RaiseAddedSoftBody(body);
 
@@ -243,9 +242,9 @@ namespace Jitter
 
         public bool RemoveBody(SoftBody body)
         {
-            if (!this.softbodies.Remove(body)) return false;
+            if (!softbodies.Remove(body)) return false;
 
-            this.CollisionSystem.RemoveEntity(body);
+            CollisionSystem.RemoveEntity(body);
 
             events.RaiseRemovedSoftBody(body);
 
@@ -385,9 +384,9 @@ namespace Jitter
             if (time < 0.0f) throw new ArgumentException("Deactivation time threshold has to " +
                 "be larger than zero", "time");
 
-            this.inactiveAngularThresholdSq = angularVelocity * angularVelocity;
-            this.inactiveLinearThresholdSq = linearVelocity * linearVelocity;
-            this.deactivationTime = time;
+            inactiveAngularThresholdSq = angularVelocity * angularVelocity;
+            inactiveLinearThresholdSq = linearVelocity * linearVelocity;
+            deactivationTime = time;
         }
 
         /// <summary>
@@ -407,7 +406,7 @@ namespace Jitter
             if (smallIterations < 1) throw new ArgumentException("The number of collision " +
                 "iterations has to be larger than zero", "smallIterations");
 
-            this.contactIterations = iterations;
+            contactIterations = iterations;
             this.smallIterations = smallIterations;
         }
 
@@ -465,7 +464,7 @@ namespace Jitter
 
             events.RaiseAddedRigidBody(body);
 
-            this.CollisionSystem.AddEntity(body);
+            CollisionSystem.AddEntity(body);
 
             rigidBodies.Add(body);
         }
@@ -932,7 +931,7 @@ namespace Jitter
                 bool deactivateIsland = true;
 
                 // global allowdeactivation
-                if (!this.AllowDeactivation) deactivateIsland = false;
+                if (!AllowDeactivation) deactivateIsland = false;
                 else
                 {
                     foreach (RigidBody body in island.bodies)

@@ -1,11 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Jitter
 {
-    public class ResourcePool<T>
+    public class ArrayResourcePool<T>
     {
-        private readonly Stack<T> stack = new Stack<T>();
+        private readonly Stack<T[]> stack = new Stack<T[]>();
+
+        private readonly int arrayLength;
+
+        public ArrayResourcePool(int arrayLength)
+        {
+            this.arrayLength = arrayLength;
+        }
 
         public void ResetResourcePool()
         {
@@ -14,20 +20,20 @@ namespace Jitter
 
         public int Count => stack.Count;
 
-        public void GiveBack(T obj)
+        public void GiveBack(T[] obj)
         {
             lock (stack) { stack.Push(obj); }
         }
 
-        public T GetNew()
+        public T[] GetNew()
         {
-            T freeObj;
+            T[] freeObj;
 
             lock (stack)
             {
                 if (stack.Count == 0)
                 {
-                    freeObj = Activator.CreateInstance<T>();
+                    freeObj = new T[arrayLength];
                     stack.Push(freeObj);
                 }
 

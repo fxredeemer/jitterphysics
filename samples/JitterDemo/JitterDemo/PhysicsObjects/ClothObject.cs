@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Jitter.Dynamics;
-using Jitter.LinearMath;
 
 namespace JitterDemo.PhysicsObjects
 {
@@ -145,8 +141,8 @@ namespace JitterDemo.PhysicsObjects
 
         protected override void LoadContent()
         {
-            texture = this.Game.Content.Load<Texture2D>("cloth");
-            effect = new BasicEffect(this.GraphicsDevice);
+            texture = Game.Content.Load<Texture2D>("cloth");
+            effect = new BasicEffect(GraphicsDevice);
             effect.EnableDefaultLighting();
             effect.SpecularColor = new Vector3(0.1f, 0.1f, 0.1f);
 
@@ -165,7 +161,7 @@ namespace JitterDemo.PhysicsObjects
 
         public override void Draw(GameTime gameTime)
         {
-            JitterDemo demo = this.Game as JitterDemo;
+            JitterDemo demo = Game as JitterDemo;
 
             GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;

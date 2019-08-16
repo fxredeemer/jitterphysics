@@ -18,12 +18,8 @@
 */
 
 #region Using Statements
-using System;
 using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Collision.Shapes
@@ -65,8 +61,8 @@ namespace Jitter.Collision.Shapes
  
         protected override Multishape CreateWorkingClone()
         {
-            TriangleMeshShape clone = new TriangleMeshShape(this.octree);
-            clone.sphericalExpansion = this.sphericalExpansion;
+            TriangleMeshShape clone = new TriangleMeshShape(octree);
+            clone.sphericalExpansion = sphericalExpansion;
             return clone;
         }
 

@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Jitter.Collision.Shapes;
-using System.Collections;
 #endregion
 
 namespace Jitter.Collision
@@ -45,9 +44,9 @@ namespace Jitter.Collision
 
             public SweepPoint(IBroadphaseEntity body, bool begin, int axis)
             {
-                this.Body = body;
-                this.Begin = begin;
-                this.Axis = axis;
+                Body = body;
+                Begin = begin;
+                Axis = axis;
             }
 
             public float Value
@@ -86,8 +85,8 @@ namespace Jitter.Collision
             /// <param name="entity2"></param>
             public OverlapPair(IBroadphaseEntity entity1, IBroadphaseEntity entity2)
             {
-                this.Entity1 = entity1;
-                this.Entity2 = entity2;
+                Entity1 = entity1;
+                Entity2 = entity2;
             }
 
             /// <summary>
@@ -98,8 +97,8 @@ namespace Jitter.Collision
             /// <param name="entity2">The second body.</param>
             internal void SetBodies(IBroadphaseEntity entity1, IBroadphaseEntity entity2)
             {
-                this.Entity1 = entity1;
-                this.Entity2 = entity2;
+                Entity1 = entity1;
+                Entity2 = entity2;
             }
 
             /// <summary>
@@ -297,7 +296,7 @@ namespace Jitter.Collision
 
             foreach (OverlapPair key in fullOverlaps)
             {
-                if (this.CheckBothStaticOrInactive(key.Entity1, key.Entity2)) continue;
+                if (CheckBothStaticOrInactive(key.Entity1, key.Entity2)) continue;
 
                 if (base.RaisePassedBroadphase(key.Entity1, key.Entity2))
                 {
@@ -456,7 +455,7 @@ namespace Jitter.Collision
                     SoftBody softBody = e as SoftBody;
                     foreach (RigidBody b in softBody.VertexBodies)
                     {
-                        if (this.Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction))
+                        if (Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction))
                         {
                             if (tempFraction < fraction && (raycast == null || raycast(b, tempNormal, tempFraction)))
                             {
@@ -472,7 +471,7 @@ namespace Jitter.Collision
                 {
                     RigidBody b = e as RigidBody;
 
-                    if (this.Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction))
+                    if (Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction))
                     {
                         if (tempFraction < fraction && (raycast == null || raycast(b, tempNormal, tempFraction)))
                         {

@@ -19,12 +19,7 @@
 
 #region Using Statements
 using System;
-using System.Collections.Generic;
 using System.Threading;
-
-using Jitter.Dynamics;
-using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Dynamics.Constraints
@@ -98,8 +93,8 @@ namespace Jitter.Dynamics.Constraints
 
         public int CompareTo(Constraint other)
         {
-            if (other.instance < this.instance) return -1;
-            else if (other.instance > this.instance) return 1;
+            if (other.instance < instance) return -1;
+            else if (other.instance > instance) return 1;
             else return 0;
         }
 

@@ -19,11 +19,7 @@
 
 #region Using Statements
 using System;
-using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Collision.Shapes
@@ -51,7 +47,7 @@ namespace Jitter.Collision.Shapes
         public BoxShape(JVector size)
         {
             this.size = size;
-            this.UpdateShape();
+            UpdateShape();
         }
 
         /// <summary>
@@ -62,10 +58,10 @@ namespace Jitter.Collision.Shapes
         /// <param name="width">The width of the box</param>
         public BoxShape(float length, float height, float width)
         {
-            this.size.X = length;
-            this.size.Y = height;
-            this.size.Z = width;
-            this.UpdateShape();
+            size.X = length;
+            size.Y = height;
+            size.Z = width;
+            UpdateShape();
         }
 
         private JVector halfSize = JVector.Zero;
@@ -78,7 +74,7 @@ namespace Jitter.Collision.Shapes
         /// </summary>
         public override void UpdateShape()
         {
-            this.halfSize = size * 0.5f;
+            halfSize = size * 0.5f;
             base.UpdateShape();
         }
 
@@ -112,7 +108,7 @@ namespace Jitter.Collision.Shapes
             inertia.M22 = (1.0f / 12.0f) * mass * (size.X * size.X + size.Z * size.Z);
             inertia.M33 = (1.0f / 12.0f) * mass * (size.X * size.X + size.Y * size.Y);
 
-            this.geomCen = JVector.Zero;
+            geomCen = JVector.Zero;
         }
 
         /// <summary>

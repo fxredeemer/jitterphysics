@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Jitter.LinearMath;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
-using JitterDemo.Vehicle;
 using Jitter.Collision;
 
 namespace JitterDemo.Scenes
@@ -65,7 +62,7 @@ namespace JitterDemo.Scenes
 
         public override void Draw()
         {
-            Camera camera = this.Demo.Camera;
+            Camera camera = Demo.Camera;
 
             foreach (ModelMesh mesh in model.Meshes)
             {

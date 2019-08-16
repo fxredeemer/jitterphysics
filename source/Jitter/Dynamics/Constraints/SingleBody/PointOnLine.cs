@@ -19,11 +19,7 @@
 
 #region Using Statements
 using System;
-using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Dynamics.Constraints.SingleBody
@@ -56,10 +52,10 @@ namespace Jitter.Dynamics.Constraints.SingleBody
                 throw new ArgumentException("Line direction can't be zero", "lineDirection");
 
             localAnchor1 = localAnchor;
-            this.anchor = body.position + JVector.Transform(localAnchor, body.orientation);
+            anchor = body.position + JVector.Transform(localAnchor, body.orientation);
 
-            this.lineNormal = lineDirection;
-            this.lineNormal.Normalize();
+            lineNormal = lineDirection;
+            lineNormal.Normalize();
         }
 
         /// <summary>

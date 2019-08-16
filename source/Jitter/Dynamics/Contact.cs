@@ -19,11 +19,7 @@
 
 #region Using Statements
 using System;
-using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 using Jitter.Dynamics.Constraints;
 #endregion
 
@@ -791,8 +787,8 @@ namespace Jitter.Dynamics
             float penetration, bool newContact, ContactSettings settings)
         {
             this.body1 = body1;  this.body2 = body2;
-            this.normal = n; normal.Normalize();
-            this.p1 = point1; this.p2 = point2;
+            normal = n; normal.Normalize();
+            p1 = point1; p2 = point2;
 
             this.newContact = newContact;
 
@@ -801,7 +797,7 @@ namespace Jitter.Dynamics
             JVector.Transform(ref relativePos1, ref body1.invOrientation, out realRelPos1);
             JVector.Transform(ref relativePos2, ref body2.invOrientation, out realRelPos2);
 
-            this.initialPen = penetration;
+            initialPen = penetration;
             this.penetration = penetration;
 
             body1IsMassPoint = body1.isParticle;

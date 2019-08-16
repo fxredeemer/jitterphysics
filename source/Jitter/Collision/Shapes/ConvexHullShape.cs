@@ -18,12 +18,8 @@
 */
 
 #region Using Statements
-using System;
 using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Collision.Shapes
@@ -49,11 +45,11 @@ namespace Jitter.Collision.Shapes
             UpdateShape();
         }
 
-        public JVector Shift { get { return -1 * this.shifted; } }
+        public JVector Shift { get { return -1 * shifted; } }
 
         public override void CalculateMassInertia()
         {
-            this.mass = Shape.CalculateMassInertia(this, out shifted, out inertia);
+            mass = Shape.CalculateMassInertia(this, out shifted, out inertia);
         }
 
         /// <summary>
@@ -79,7 +75,7 @@ namespace Jitter.Collision.Shapes
                 }
             }
 
-            result = vertices[maxIndex] - this.shifted;
+            result = vertices[maxIndex] - shifted;
         }
     }
 }

@@ -20,10 +20,7 @@
 #region Using Statements
 using System;
 using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Collision.Shapes
@@ -349,7 +346,7 @@ namespace Jitter.Collision.Shapes
         /// </summary>
         public virtual void CalculateMassInertia()
         {
-            this.mass = Shape.CalculateMassInertia(this, out geomCen, out inertia);
+            mass = Shape.CalculateMassInertia(this, out geomCen, out inertia);
         }
 
         /// <summary>
@@ -367,7 +364,7 @@ namespace Jitter.Collision.Shapes
         /// <param name="geomCenter">The center of the SupportMap.</param>
         public void SupportCenter(out JVector geomCenter)
         {
-            geomCenter = this.geomCen;
+            geomCenter = geomCen;
         }
 
     }

@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Jitter;
-using Microsoft.Xna.Framework;
-using Jitter.Collision.Shapes;
+﻿using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Microsoft.Xna.Framework.Graphics;
-using Jitter.Collision;
 
 namespace JitterDemo.Scenes
 {

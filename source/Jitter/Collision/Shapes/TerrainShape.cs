@@ -20,10 +20,7 @@
 #region Using Statements
 using System;
 using System.Collections.Generic;
-
-using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Jitter.Collision.Shapes;
 #endregion
 
 namespace Jitter.Collision.Shapes
@@ -102,13 +99,13 @@ namespace Jitter.Collision.Shapes
         protected override Multishape CreateWorkingClone()
         {
             TerrainShape clone = new TerrainShape();
-            clone.heights = this.heights;
-            clone.scaleX = this.scaleX;
-            clone.scaleZ = this.scaleZ;
-            clone.boundings = this.boundings;
-            clone.heightsLength0 = this.heightsLength0;
-            clone.heightsLength1 = this.heightsLength1;
-            clone.sphericalExpansion = this.sphericalExpansion;
+            clone.heights = heights;
+            clone.scaleX = scaleX;
+            clone.scaleZ = scaleZ;
+            clone.boundings = boundings;
+            clone.heightsLength0 = heightsLength0;
+            clone.heightsLength1 = heightsLength1;
+            clone.sphericalExpansion = sphericalExpansion;
             return clone;
         }
 
@@ -220,8 +217,8 @@ namespace Jitter.Collision.Shapes
         /// </summary>
         public override void CalculateMassInertia()
         {
-            this.inertia = JMatrix.Identity;
-            this.Mass = 1.0f;
+            inertia = JMatrix.Identity;
+            Mass = 1.0f;
         }
 
         /// <summary>
@@ -313,7 +310,7 @@ namespace Jitter.Collision.Shapes
             box.AddPoint(ref rayOrigin);
             box.AddPoint(ref rayEnd);
 
-            return this.Prepare(ref box);
+            return Prepare(ref box);
         }
     }
 }
