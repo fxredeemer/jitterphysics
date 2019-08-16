@@ -5,7 +5,6 @@ using Jitter;
 
 namespace JitterDemo
 {
-
     /// <summary>
     /// Enumeration for the four car wheels.
     /// </summary>
@@ -27,10 +26,7 @@ namespace JitterDemo
     /// </summary>
     public class DefaultCar : RigidBody
     {
-
-        // the default car has 4 wheels
-        private Wheel[] wheels = new Wheel[4];
-        private World world;
+        private readonly World world;
 
         private float destSteering = 0.0f;   
         private float destAccelerate = 0.0f;
@@ -84,10 +80,10 @@ namespace JitterDemo
             SteerRate = 5.0f;
 
             // create default wheels
-            wheels[(int)WheelPosition.FrontLeft] = new Wheel(world, this, JVector.Left + 1.8f * JVector.Forward + 0.8f * JVector.Down,0.4f);
-            wheels[(int)WheelPosition.FrontRight] = new Wheel(world, this, JVector.Right + 1.8f * JVector.Forward + 0.8f * JVector.Down, 0.4f);
-            wheels[(int)WheelPosition.BackLeft] = new Wheel(world, this, JVector.Left + 1.8f * JVector.Backward + 0.8f * JVector.Down, 0.4f);
-            wheels[(int)WheelPosition.BackRight] = new Wheel(world, this, JVector.Right + 1.8f * JVector.Backward + 0.8f * JVector.Down, 0.4f);
+            Wheels[(int)WheelPosition.FrontLeft] = new Wheel(world, this, JVector.Left + 1.8f * JVector.Forward + 0.8f * JVector.Down,0.4f);
+            Wheels[(int)WheelPosition.FrontRight] = new Wheel(world, this, JVector.Right + 1.8f * JVector.Forward + 0.8f * JVector.Down, 0.4f);
+            Wheels[(int)WheelPosition.BackLeft] = new Wheel(world, this, JVector.Left + 1.8f * JVector.Backward + 0.8f * JVector.Down, 0.4f);
+            Wheels[(int)WheelPosition.BackRight] = new Wheel(world, this, JVector.Right + 1.8f * JVector.Backward + 0.8f * JVector.Down, 0.4f);
 
             AdjustWheelValues();
         }
@@ -101,7 +97,7 @@ namespace JitterDemo
         {
             float mass = Mass / 4;
 
-            foreach (Wheel w in wheels)
+            foreach (var w in Wheels)
             {
                 w.Inertia = 0.5f * (w.Radius * w.Radius) * mass;
                 w.Spring = mass * world.Gravity.Length() / (w.WheelTravel * springFrac);
@@ -112,7 +108,7 @@ namespace JitterDemo
         /// <summary>
         /// Access the wheels. Wheel index follows <see cref="WheelPosition"/>
         /// </summary>
-        public Wheel[] Wheels { get { return wheels; } }
+        public Wheel[] Wheels { get; } = new Wheel[4];
 
         /// <summary>
         /// Set input values for the car.
@@ -131,7 +127,7 @@ namespace JitterDemo
 
         public override void PreStep(float timestep)
         {
-            foreach (Wheel w in wheels) w.PreStep(timestep);
+            foreach (var w in Wheels) w.PreStep(timestep);
         }
 
         public override void PostStep(float timestep)
@@ -151,21 +147,18 @@ namespace JitterDemo
 
             float maxTorque = DriveTorque * 0.5f;
 
-            foreach (Wheel w in wheels)
+            foreach (var w in Wheels)
             {
                 w.AddTorque(maxTorque * accelerate);
             }
 
             float alpha = SteerAngle * steering;
 
-            wheels[(int)WheelPosition.FrontLeft].SteerAngle = alpha;
-            wheels[(int)WheelPosition.FrontRight].SteerAngle = alpha;
+            Wheels[(int)WheelPosition.FrontLeft].SteerAngle = alpha;
+            Wheels[(int)WheelPosition.FrontRight].SteerAngle = alpha;
 
-
-            foreach (Wheel w in wheels) w.PostStep(timestep);
+            foreach (var w in Wheels) w.PostStep(timestep);
         }
-
-
 
     }
 }

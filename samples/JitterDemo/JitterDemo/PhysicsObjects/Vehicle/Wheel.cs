@@ -6,7 +6,6 @@ using Jitter;
 
 namespace JitterDemo
 {
-
     #region Copyright Notice - Wheel based on Jiglib
     /*
     Copyright (c) 2007 Danny Chapman 
@@ -34,16 +33,15 @@ namespace JitterDemo
     */
     #endregion
 
-
     /// <summary>
     /// A wheel which adds drive forces to a body.
     /// Can be used to create a vehicle.
     /// </summary>
     public class Wheel
     {
-        private World world;
+        private readonly World world;
 
-        private RigidBody car;
+        private readonly RigidBody car;
 
         private float displacement, upSpeed, lastDisplacement;
         private bool lastOnFloor;
@@ -55,7 +53,7 @@ namespace JitterDemo
         private float angVelForGrip;
         private float torque;
 
-        private RaycastCallback raycast;
+        private readonly RaycastCallback raycast;
 
         /// <summary>
         /// Sets or gets the current steering angle of
@@ -209,22 +207,22 @@ namespace JitterDemo
             SideFriction = 2.5f - JMath.Clamp(vel / 20.0f, 0.0f, 1.4f);
             ForwardFriction = 5.5f - JMath.Clamp(vel / 20.0f, 0.0f, 5.4f);
 
-            JVector force = JVector.Zero;
+            var force = JVector.Zero;
 
-            JVector worldAxis = JVector.Transform(JVector.Up, car.Orientation);
-            JVector worldPos = car.Position + JVector.Transform(Position, car.Orientation);
+            var worldAxis = JVector.Transform(JVector.Up, car.Orientation);
+            var worldPos = car.Position + JVector.Transform(Position, car.Orientation);
 
-            JVector forward = new JVector(-car.Orientation.M31, -car.Orientation.M32, -car.Orientation.M33);
+            var forward = new JVector(-car.Orientation.M31, -car.Orientation.M32, -car.Orientation.M33);
 
-            JVector wheelFwd = JVector.Transform(forward, JMatrix.CreateFromAxisAngle(JVector.Up, SteerAngle / 360 * 2 * JMath.Pi));
-            JVector wheelLeft = JVector.Cross(JVector.Up, wheelFwd); wheelLeft.Normalize();
-            JVector wheelUp = JVector.Cross(wheelFwd, wheelLeft);
+            var wheelFwd = JVector.Transform(forward, JMatrix.CreateFromAxisAngle(JVector.Up, SteerAngle / 360 * 2 * JMath.Pi));
+            var wheelLeft = JVector.Cross(JVector.Up, wheelFwd); wheelLeft.Normalize();
+            var wheelUp = JVector.Cross(wheelFwd, wheelLeft);
 
             float rayLen = 2.0f * Radius + WheelTravel;
             
-            JVector wheelRayStart = worldPos;
-            JVector wheelDelta = -Radius * worldAxis;
-            JVector wheelRayEnd = worldPos + wheelDelta;
+            var wheelRayStart = worldPos;
+            var wheelDelta = -Radius * worldAxis;
+            var wheelRayEnd = worldPos + wheelDelta;
 
             float deltaFwd = (2.0f * Radius) / (NumberOfRays + 1);
             float deltaFwdStart = deltaFwd;
@@ -234,10 +232,10 @@ namespace JitterDemo
 
             lastOnFloor = false;
 
-            JVector rayOrigin = car.Position + JVector.Transform(Position, car.Orientation);
+            var rayOrigin = car.Position + JVector.Transform(Position, car.Orientation);
 
-            JVector groundNormal = JVector.Zero;
-            JVector groundPos = JVector.Zero;
+            var groundNormal = JVector.Zero;
+            var groundPos = JVector.Zero;
             float deepestFrac = float.MaxValue;
             RigidBody worldBody = null;
 
@@ -246,13 +244,10 @@ namespace JitterDemo
                 float distFwd = (deltaFwdStart + i * deltaFwd) - Radius;
                 float zOffset = Radius * (1.0f - (float)Math.Cos(Math.PI / 4 * (distFwd / Radius)));
 
-                JVector newOrigin = wheelRayStart + distFwd * wheelFwd + zOffset * wheelUp;
+                var newOrigin = wheelRayStart + distFwd * wheelFwd + zOffset * wheelUp;
 
-                RigidBody body; JVector normal; float frac;
                 bool result = world.CollisionSystem.Raycast(newOrigin, wheelDelta,
-                    raycast, out body, out normal, out frac);
-
- 
+                    raycast, out var body, out var normal, out float frac);
 
                 if (result && frac <= 1.0f)
                 {
@@ -290,24 +285,24 @@ namespace JitterDemo
 
             if (totalForceMag < 0.0f) totalForceMag = 0.0f;
 
-            JVector extraForce = totalForceMag * worldAxis;
+            var extraForce = totalForceMag * worldAxis;
 
             force += extraForce;
 
-            JVector groundUp = groundNormal;
-            JVector groundLeft = JVector.Cross(groundNormal, wheelFwd);
+            var groundUp = groundNormal;
+            var groundLeft = JVector.Cross(groundNormal, wheelFwd);
             if (groundLeft.LengthSquared() > 0.0f) groundLeft.Normalize();
 
-            JVector groundFwd = JVector.Cross(groundLeft, groundUp);
+            var groundFwd = JVector.Cross(groundLeft, groundUp);
 
-            JVector wheelPointVel = car.LinearVelocity +
+            var wheelPointVel = car.LinearVelocity +
                     JVector.Cross(car.AngularVelocity, JVector.Transform(Position, car.Orientation));
 
             // rimVel=(wxr)*v
-            JVector rimVel = angVel * JVector.Cross(wheelLeft, groundPos - worldPos);
+            var rimVel = angVel * JVector.Cross(wheelLeft, groundPos - worldPos);
             wheelPointVel += rimVel;
 
-            JVector worldVel = worldBody.LinearVelocity +
+            var worldVel = worldBody.LinearVelocity +
              JVector.Cross(worldBody.AngularVelocity, groundPos - worldBody.Position);
 
             wheelPointVel -= worldVel;
@@ -361,7 +356,7 @@ namespace JitterDemo
             force += extraForce;
 
             // fwd force also spins the wheel
-            JVector wheelCentreVel = car.LinearVelocity +
+            var wheelCentreVel = car.LinearVelocity +
              JVector.Cross(car.AngularVelocity, JVector.Transform(Position, car.Orientation));
 
             angVelForGrip = JVector.Dot(wheelCentreVel, groundFwd) / Radius;
@@ -375,13 +370,11 @@ namespace JitterDemo
             {
                 worldBody.AddForce(force*(-1) * 0.01f, groundPos);
             }
-
         }
 
         private bool RaycastCallback(RigidBody body, JVector normal, float frac)
         {
             return (body != car);
         }
-
     }
 }

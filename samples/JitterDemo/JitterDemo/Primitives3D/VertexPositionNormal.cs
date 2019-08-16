@@ -23,7 +23,6 @@ namespace JitterDemo.Primitives3D
         public Vector3 Position;
         public Vector3 Normal;
 
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -47,7 +46,6 @@ namespace JitterDemo.Primitives3D
         {
             get { return VertexPositionNormal.VertexDeclaration; }
         }
-
     }
 
     public struct VertexPositionNormalColor : IVertexType
@@ -55,7 +53,6 @@ namespace JitterDemo.Primitives3D
         public Vector3 Position;
         public Vector3 Normal;
         public Vector3 Color;
-
 
         /// <summary>
         /// Constructor.
@@ -82,6 +79,5 @@ namespace JitterDemo.Primitives3D
         {
             get { return VertexPositionNormalColor.VertexDeclaration; }
         }
-
     }
 }

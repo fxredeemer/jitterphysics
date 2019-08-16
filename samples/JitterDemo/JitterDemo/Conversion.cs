@@ -45,7 +45,6 @@ namespace JitterDemo
                 M32 = matrix.M32,
                 M33 = matrix.M33
             };
-
         }
 
         public static Vector3 ToXNAVector(JVector vector)

@@ -1,22 +1,4 @@
-﻿/* Copyright (C) <2009-2011> <Thorben Linneweber, Jitter Physics>
-* 
-*  This software is provided 'as-is', without any express or implied
-*  warranty.  In no event will the authors be held liable for any damages
-*  arising from the use of this software.
-*
-*  Permission is granted to anyone to use this software for any purpose,
-*  including commercial applications, and to alter it and redistribute it
-*  freely, subject to the following restrictions:
-*
-*  1. The origin of this software must not be misrepresented; you must not
-*      claim that you wrote the original software. If you use this software
-*      in a product, an acknowledgment in the product documentation would be
-*      appreciated but is not required.
-*  2. Altered source versions must be plainly marked as such, and must not be
-*      misrepresented as being the original software.
-*  3. This notice may not be removed or altered from any source distribution. 
-*/
-
+﻿
 #region Using Statements
 using System;
 using System.Collections.Generic;
@@ -25,10 +7,6 @@ using Jitter.LinearMath;
 
 namespace Jitter.Collision.Shapes
 {
-
-    /// <summary>
-    /// Represents a terrain.
-    /// </summary>
     public class TerrainShape : Multishape
     {
         private float[,] heights;
@@ -41,24 +19,8 @@ namespace Jitter.Collision.Shapes
 
         private JBBox boundings;
 
-        private float sphericalExpansion = 0.05f;
+        public float SphericalExpansion { get; set; } = 0.05f;
 
-        /// <summary>
-        /// Expands the triangles by the specified amount.
-        /// This stabilizes collision detection for flat shapes.
-        /// </summary>
-        public float SphericalExpansion
-        {
-            get { return sphericalExpansion; }
-            set { sphericalExpansion = value; }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the TerrainShape class.
-        /// </summary>
-        /// <param name="heights">An array containing the heights of the terrain surface.</param>
-        /// <param name="scaleX">The x-scale factor. (The x-space between neighbour heights)</param>
-        /// <param name="scaleZ">The y-scale factor. (The y-space between neighbour heights)</param>
         public TerrainShape(float[,] heights, float scaleX, float scaleZ)
         {
             heightsLength0 = heights.GetLength(0);
@@ -95,29 +57,24 @@ namespace Jitter.Collision.Shapes
 
         internal TerrainShape() { }
 
- 
         protected override Multishape CreateWorkingClone()
         {
-            TerrainShape clone = new TerrainShape();
-            clone.heights = heights;
-            clone.scaleX = scaleX;
-            clone.scaleZ = scaleZ;
-            clone.boundings = boundings;
-            clone.heightsLength0 = heightsLength0;
-            clone.heightsLength1 = heightsLength1;
-            clone.sphericalExpansion = sphericalExpansion;
+            var clone = new TerrainShape
+            {
+                heights = heights,
+                scaleX = scaleX,
+                scaleZ = scaleZ,
+                boundings = boundings,
+                heightsLength0 = heightsLength0,
+                heightsLength1 = heightsLength1,
+                SphericalExpansion = SphericalExpansion
+            };
             return clone;
         }
 
-
-        private JVector[] points = new JVector[3];
+        private readonly JVector[] points = new JVector[3];
         private JVector normal = JVector.Up;
 
-        /// <summary>
-        /// Sets the current shape. First <see cref="Prepare"/> has to be called.
-        /// After SetCurrentShape the shape immitates another shape.
-        /// </summary>
-        /// <param name="index"></param>
         public override void SetCurrentShape(int index)
         {
             bool leftTriangle = false;
@@ -131,7 +88,6 @@ namespace Jitter.Collision.Shapes
             int quadIndexX = index % numX;
             int quadIndexZ = index / numX;
 
-            // each quad has two triangles, called 'leftTriangle' and !'leftTriangle'
             if (leftTriangle)
             {
                 points[0].Set((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
@@ -145,7 +101,7 @@ namespace Jitter.Collision.Shapes
                 points[2].Set((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
             }
 
-            JVector sum = points[0];
+            var sum = points[0];
             JVector.Add(ref sum, ref points[1], out sum);
             JVector.Add(ref sum, ref points[2], out sum);
             JVector.Multiply(ref sum, 1.0f / 3.0f, out sum);
@@ -161,83 +117,60 @@ namespace Jitter.Collision.Shapes
             normal = this.normal;
         }
 
-
-        /// <summary>
-        /// Passes a axis aligned bounding box to the shape where collision
-        /// could occour.
-        /// </summary>
-        /// <param name="box">The bounding box where collision could occur.</param>
-        /// <returns>The upper index with which <see cref="SetCurrentShape"/> can be 
-        /// called.</returns>
         public override int Prepare(ref JBBox box)
         {
-            // simple idea: the terrain is a grid. x and z is the position in the grid.
-            // y the height. we know compute the min and max grid-points. All quads
-            // between these points have to be checked.
-
-            // including overflow exception prevention
 
             if (box.Min.X < boundings.Min.X) minX = 0;
             else
             {
-                minX = (int)Math.Floor((float)((box.Min.X - sphericalExpansion) / scaleX));
+                minX = (int)Math.Floor((float)((box.Min.X - SphericalExpansion) / scaleX));
                 minX = Math.Max(minX, 0);
             }
 
             if (box.Max.X > boundings.Max.X) maxX = heightsLength0 - 1;
             else
             {
-                maxX = (int)Math.Ceiling((float)((box.Max.X + sphericalExpansion) / scaleX));
+                maxX = (int)Math.Ceiling((float)((box.Max.X + SphericalExpansion) / scaleX));
                 maxX = Math.Min(maxX, heightsLength0 - 1);
             }
 
             if (box.Min.Z < boundings.Min.Z) minZ = 0;
             else
             {
-                minZ = (int)Math.Floor((float)((box.Min.Z - sphericalExpansion) / scaleZ));
+                minZ = (int)Math.Floor((float)((box.Min.Z - SphericalExpansion) / scaleZ));
                 minZ = Math.Max(minZ, 0);
             }
 
             if (box.Max.Z > boundings.Max.Z) maxZ = heightsLength1 - 1;
             else
             {
-                maxZ = (int)Math.Ceiling((float)((box.Max.Z + sphericalExpansion) / scaleZ));
+                maxZ = (int)Math.Ceiling((float)((box.Max.Z + SphericalExpansion) / scaleZ));
                 maxZ = Math.Min(maxZ, heightsLength1 - 1);
             }
 
             numX = maxX - minX;
             numZ = maxZ - minZ;
 
-            // since every quad contains two triangles we multiply by 2.
             return numX * numZ * 2;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override void CalculateMassInertia()
         {
             inertia = JMatrix.Identity;
             Mass = 1.0f;
         }
 
-        /// <summary>
-        /// Gets the axis aligned bounding box of the orientated shape. This includes
-        /// the whole shape.
-        /// </summary>
-        /// <param name="orientation">The orientation of the shape.</param>
-        /// <param name="box">The axis aligned bounding box of the shape.</param>
         public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
         {
             box = boundings;
 
             #region Expand Spherical
-            box.Min.X -= sphericalExpansion;
-            box.Min.Y -= sphericalExpansion;
-            box.Min.Z -= sphericalExpansion;
-            box.Max.X += sphericalExpansion;
-            box.Max.Y += sphericalExpansion;
-            box.Max.Z += sphericalExpansion;
+            box.Min.X -= SphericalExpansion;
+            box.Min.Y -= SphericalExpansion;
+            box.Min.Z -= SphericalExpansion;
+            box.Max.X += SphericalExpansion;
+            box.Max.Y += SphericalExpansion;
+            box.Max.Z += SphericalExpansion;
             #endregion
 
             box.Transform(ref orientation);
@@ -260,18 +193,10 @@ namespace Jitter.Collision.Shapes
             }
         }
 
-        /// <summary>
-        /// SupportMapping. Finds the point in the shape furthest away from the given direction.
-        /// Imagine a plane with a normal in the search direction. Now move the plane along the normal
-        /// until the plane does not intersect the shape. The last intersection point is the result.
-        /// </summary>
-        /// <param name="direction">The direction.</param>
-        /// <param name="result">The result.</param>
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            JVector expandVector;
-            JVector.Normalize(ref direction, out expandVector);
-            JVector.Multiply(ref expandVector, sphericalExpansion, out expandVector);
+            JVector.Normalize(ref direction, out var expandVector);
+            JVector.Multiply(ref expandVector, SphericalExpansion, out expandVector);
 
             int minIndex = 0;
             float min = JVector.Dot(ref points[0], ref direction);
@@ -291,20 +216,13 @@ namespace Jitter.Collision.Shapes
             JVector.Add(ref points[minIndex], ref expandVector, out result);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rayOrigin"></param>
-        /// <param name="rayDelta"></param>
-        /// <returns></returns>
         public override int Prepare(ref JVector rayOrigin, ref JVector rayDelta)
         {
-            JBBox box = JBBox.SmallBox;
+            var box = JBBox.SmallBox;
 
             #region RayEnd + Expand Spherical
-            JVector rayEnd;
-            JVector.Normalize(ref rayDelta, out rayEnd);
-            rayEnd = rayOrigin + rayDelta + rayEnd * sphericalExpansion;
+            JVector.Normalize(ref rayDelta, out var rayEnd);
+            rayEnd = rayOrigin + rayDelta + rayEnd * SphericalExpansion;
             #endregion
 
             box.AddPoint(ref rayOrigin);

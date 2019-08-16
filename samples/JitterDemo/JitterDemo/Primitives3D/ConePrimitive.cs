@@ -28,7 +28,6 @@ namespace JitterDemo.Primitives3D
         {
         }
 
-
         /// <summary>
         /// Constructs a new cube primitive, with the specified size.
         /// </summary>
@@ -39,7 +38,7 @@ namespace JitterDemo.Primitives3D
 
             for (int i = 0; i < tessellation; i++)
             {
-                Vector3 normal = GetCircleVector(i, tessellation);
+                var normal = GetCircleVector(i, tessellation);
                 AddVertex(normal * radius + (1.0f / 3.0f) * height * Vector3.Down, normal);
 
                 AddIndex(0);
@@ -81,13 +80,12 @@ namespace JitterDemo.Primitives3D
             // Create cap vertices.
             for (int i = 0; i < tessellation; i++)
             {
-                Vector3 position = GetCircleVector(i, tessellation) * radius +
+                var position = GetCircleVector(i, tessellation) * radius +
                                    normal * height;
 
                 AddVertex(position, normal);
             }
         }
-
 
         /// <summary>
         /// Helper method computes a point on a circle.

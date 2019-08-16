@@ -25,7 +25,6 @@ using Jitter.Dynamics.Constraints;
 
 namespace Jitter.Dynamics
 {
-
     #region public class ContactSettings
     public class ContactSettings
     {
@@ -53,7 +52,6 @@ namespace Jitter.Dynamics
     }
     #endregion
 
-
     /// <summary>
     /// </summary>
     public class Contact : IConstraint
@@ -74,7 +72,7 @@ namespace Jitter.Dynamics
         internal float penetration = 0.0f;
         internal float initialPen = 0.0f;
 
-        private float staticFriction, dynamicFriction, restitution;
+        private float restitution;
         private float friction = 0.0f;
 
         private float massNormal = 0.0f, massTangent = 0.0f;
@@ -84,7 +82,6 @@ namespace Jitter.Dynamics
 
         private bool treatBody1AsStatic = false;
         private bool treatBody2AsStatic = false;
-
 
         bool body1IsMassPoint; bool body2IsMassPoint;
 
@@ -106,17 +103,9 @@ namespace Jitter.Dynamics
             set { restitution = value; }
         }
 
-        public float StaticFriction
-        {
-            get { return staticFriction; }
-            set { staticFriction = value; }
-        }
+        public float StaticFriction { get; set; }
 
-        public float DynamicFriction
-        {
-            get { return dynamicFriction; }
-            set { dynamicFriction = value; }
-        }
+        public float DynamicFriction { get; set; }
 
         /// <summary>
         /// The first body involved in the contact.
@@ -268,14 +257,12 @@ namespace Jitter.Dynamics
 
             if (!treatBody2AsStatic)
             {
-
                 body2.linearVelocity.X += (impulse.X * body2.inverseMass);
                 body2.linearVelocity.Y += (impulse.Y * body2.inverseMass);
                 body2.linearVelocity.Z += (impulse.Z * body2.inverseMass);
 
                 if (!body2IsMassPoint)
                 {
-
                     float num0, num1, num2;
                     num0 = relativePos2.Y * impulse.Z - relativePos2.Z * impulse.Y;
                     num1 = relativePos2.Z * impulse.X - relativePos2.X * impulse.Z;
@@ -297,10 +284,8 @@ namespace Jitter.Dynamics
                     body2.angularVelocity.X += num3;
                     body2.angularVelocity.Y += num4;
                     body2.angularVelocity.Z += num5;
-
                 }
             }
-
         }
 
         public float AppliedNormalImpulse { get { return accumulatedNormalImpulse; } }
@@ -332,8 +317,7 @@ namespace Jitter.Dynamics
                 JVector.Add(ref p2, ref body2.position, out p2);
             }
 
-
-            JVector dist; JVector.Subtract(ref p1, ref p2, out dist);
+            JVector.Subtract(ref p1, ref p2, out var dist);
             penetration = JVector.Dot(ref dist, ref normal);
         }
 
@@ -377,7 +361,6 @@ namespace Jitter.Dynamics
 
             if (!treatBody2AsStatic)
             {
-
                 body2.linearVelocity.X += (impulse.X * body2.inverseMass);
                 body2.linearVelocity.Y += (impulse.Y * body2.inverseMass);
                 body2.linearVelocity.Z += (impulse.Z * body2.inverseMass);
@@ -404,7 +387,6 @@ namespace Jitter.Dynamics
                 body2.angularVelocity.Y += num4;
                 body2.angularVelocity.Z += num5;
             }
-
 
             #endregion
         }
@@ -445,7 +427,6 @@ namespace Jitter.Dynamics
 
             if (!treatBody2AsStatic)
             {
-
                 body2.linearVelocity.X += (impulse.X * body2.inverseMass);
                 body2.linearVelocity.Y += (impulse.Y * body2.inverseMass);
                 body2.linearVelocity.Z += (impulse.Z * body2.inverseMass);
@@ -473,7 +454,6 @@ namespace Jitter.Dynamics
                 body2.angularVelocity.Z += num5;
             }
 
-
             #endregion
         }
 
@@ -495,14 +475,13 @@ namespace Jitter.Dynamics
 
             float kNormal = 0.0f;
 
-            JVector rantra = JVector.Zero;
+            var rantra = JVector.Zero;
             if (!treatBody1AsStatic)
             {
                 kNormal += body1.inverseMass;
 
                 if (!body1IsMassPoint)
                 {
-
                     // JVector.Cross(ref relativePos1, ref normal, out rantra);
                     rantra.X = (relativePos1.Y * normal.Z) - (relativePos1.Z * normal.Y);
                     rantra.Y = (relativePos1.Z * normal.X) - (relativePos1.X * normal.Z);
@@ -524,14 +503,13 @@ namespace Jitter.Dynamics
                 }
             }
 
-            JVector rbntrb = JVector.Zero;
+            var rbntrb = JVector.Zero;
             if (!treatBody2AsStatic)
             {
                 kNormal += body2.inverseMass;
 
                 if (!body2IsMassPoint)
                 {
-
                     // JVector.Cross(ref relativePos1, ref normal, out rantra);
                     rbntrb.X = (relativePos2.Y * normal.Z) - (relativePos2.Z * normal.Y);
                     rbntrb.Y = (relativePos2.Z * normal.X) - (relativePos2.X * normal.Z);
@@ -602,7 +580,6 @@ namespace Jitter.Dynamics
 
                     rantra.X = num0; rantra.Y = num1; rantra.Z = num2;
                 }
-
             }
 
             if (treatBody2AsStatic) rbntrb.MakeZero();
@@ -659,10 +636,10 @@ namespace Jitter.Dynamics
                 // Static/Dynamic friction
                 float relTangentVel = -(tangent.X * dvx + tangent.Y * dvy + tangent.Z * dvz);
                 float tangentImpulse = massTangent * relTangentVel;
-                float maxTangentImpulse = -staticFriction * accumulatedNormalImpulse;
+                float maxTangentImpulse = -StaticFriction * accumulatedNormalImpulse;
 
-                if (tangentImpulse < maxTangentImpulse) friction = dynamicFriction;
-                else friction = staticFriction;
+                if (tangentImpulse < maxTangentImpulse) friction = DynamicFriction;
+                else friction = StaticFriction;
             }
 
             JVector impulse;
@@ -724,20 +701,17 @@ namespace Jitter.Dynamics
                     body1.angularVelocity.X -= num3;
                     body1.angularVelocity.Y -= num4;
                     body1.angularVelocity.Z -= num5;
-
                 }
             }
 
             if (!treatBody2AsStatic)
             {
-
                 body2.linearVelocity.X += (impulse.X * body2.inverseMass);
                 body2.linearVelocity.Y += (impulse.Y * body2.inverseMass);
                 body2.linearVelocity.Z += (impulse.Z * body2.inverseMass);
 
                 if (!body2IsMassPoint)
                 {
-
                     float num0, num1, num2;
                     num0 = relativePos2.Y * impulse.Z - relativePos2.Z * impulse.Y;
                     num1 = relativePos2.Z * impulse.X - relativePos2.X * impulse.Z;
@@ -772,7 +746,6 @@ namespace Jitter.Dynamics
             if (index == RigidBodyIndex.RigidBody1) treatBody1AsStatic = true;
             else treatBody2AsStatic = true;
         }
-
 
         /// <summary>
         /// Initializes a contact.
@@ -817,28 +790,24 @@ namespace Jitter.Dynamics
                 switch (settings.MaterialCoefficientMixing)
                 {
                     case ContactSettings.MaterialCoefficientMixingType.TakeMaximum:
-                        staticFriction = JMath.Max(body1.material.staticFriction, body2.material.staticFriction);
-                        dynamicFriction = JMath.Max(body1.material.kineticFriction, body2.material.kineticFriction);
+                        StaticFriction = JMath.Max(body1.material.staticFriction, body2.material.staticFriction);
+                        DynamicFriction = JMath.Max(body1.material.kineticFriction, body2.material.kineticFriction);
                         restitution = JMath.Max(body1.material.restitution, body2.material.restitution);
                         break;
                     case ContactSettings.MaterialCoefficientMixingType.TakeMinimum:
-                        staticFriction = JMath.Min(body1.material.staticFriction, body2.material.staticFriction);
-                        dynamicFriction = JMath.Min(body1.material.kineticFriction, body2.material.kineticFriction);
+                        StaticFriction = JMath.Min(body1.material.staticFriction, body2.material.staticFriction);
+                        DynamicFriction = JMath.Min(body1.material.kineticFriction, body2.material.kineticFriction);
                         restitution = JMath.Min(body1.material.restitution, body2.material.restitution);
                         break;
                     case ContactSettings.MaterialCoefficientMixingType.UseAverage:
-                        staticFriction = (body1.material.staticFriction + body2.material.staticFriction) / 2.0f;
-                        dynamicFriction = (body1.material.kineticFriction + body2.material.kineticFriction) / 2.0f;
+                        StaticFriction = (body1.material.staticFriction + body2.material.staticFriction) / 2.0f;
+                        DynamicFriction = (body1.material.kineticFriction + body2.material.kineticFriction) / 2.0f;
                         restitution = (body1.material.restitution + body2.material.restitution) / 2.0f;
                         break;
                 }
-
             }
 
             this.settings = settings;
-            
-
-
         }
     }
 }

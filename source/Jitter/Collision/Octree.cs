@@ -25,7 +25,6 @@ using Jitter.LinearMath;
 
 namespace Jitter.Collision
 {
-
     /// <summary>
     /// structure used to set up the mesh
     /// </summary>
@@ -70,7 +69,6 @@ namespace Jitter.Collision
         }
     }
     #endregion
-
 
     /// <summary>
     /// An octree implementation.
@@ -169,7 +167,6 @@ namespace Jitter.Collision
             rootNodeBox = new JBBox(new JVector(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity),
                                            new JVector(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity));
 
-
             for (int i = 0; i < tris.Length; i++)
             {
                 JVector.Min(ref positions[tris[i].I1], ref positions[tris[i].I2], out triBoxes[i].Min);
@@ -183,15 +180,15 @@ namespace Jitter.Collision
                 JVector.Max(ref rootNodeBox.Max, ref triBoxes[i].Max, out rootNodeBox.Max);
             }
 
-            List<BuildNode> buildNodes = new List<BuildNode>();
+            var buildNodes = new List<BuildNode>();
             buildNodes.Add(new BuildNode());
             buildNodes[0].box = rootNodeBox;
 
-            JBBox[] children = new JBBox[8];
+            var children = new JBBox[8];
             for (int triNum = 0; triNum < tris.Length; triNum++)
             {
                 int nodeIndex = 0;
-                JBBox box = rootNodeBox;
+                var box = rootNodeBox;
 
                 while (box.Contains(ref triBoxes[triNum]) == JBBox.ContainmentType.Contains)
                 {
@@ -229,10 +226,12 @@ namespace Jitter.Collision
                         if (childIndex == -1)
                         {
                             // nope create child
-                            BuildNode parentNode = buildNodes[nodeIndex];
-                            BuildNode newNode = new BuildNode();
-                            newNode.childType = childCon;
-                            newNode.box = children[childCon];
+                            var parentNode = buildNodes[nodeIndex];
+                            var newNode = new BuildNode
+                            {
+                                childType = childCon,
+                                box = children[childCon]
+                            };
                             buildNodes.Add(newNode);
 
                             nodeIndex = buildNodes.Count - 1;
@@ -290,11 +289,10 @@ namespace Jitter.Collision
         #region  private void CreateAABox(ref JBBox aabb, EChild child,out JBBox result)
         private void CreateAABox(ref JBBox aabb, EChild child,out JBBox result)
         {
-            JVector dims;
-            JVector.Subtract(ref aabb.Max, ref aabb.Min, out dims);
+            JVector.Subtract(ref aabb.Max, ref aabb.Min, out var dims);
             JVector.Multiply(ref dims, 0.5f, out dims);
 
-            JVector offset = JVector.Zero;
+            var offset = JVector.Zero;
 
             switch (child)
             {
@@ -312,8 +310,10 @@ namespace Jitter.Collision
                     break;
             }
 
-            result = new JBBox();
-            result.Min = new JVector(offset.X * dims.X, offset.Y * dims.Y, offset.Z * dims.Z);
+            result = new JBBox
+            {
+                Min = new JVector(offset.X * dims.X, offset.Y * dims.Y, offset.Z * dims.Z)
+            };
             JVector.Add(ref result.Min, ref aabb.Min, out result.Min);
 
             JVector.Add(ref result.Min, ref dims, out result.Max);
@@ -321,7 +321,7 @@ namespace Jitter.Collision
             // expand it just a tiny bit just to be safe!
             float extra = 0.00001f;
 
-            JVector temp; JVector.Multiply(ref dims, extra, out temp);
+            JVector.Multiply(ref dims, extra, out var temp);
             JVector.Subtract(ref result.Min, ref temp, out result.Min);
             JVector.Add(ref result.Max, ref temp, out result.Max);
         }
@@ -342,7 +342,6 @@ namespace Jitter.Collision
             }
         }
         #endregion
-
 
         /// <summary>
         /// Returns all triangles which intersect the given axis aligned bounding box.
@@ -486,7 +485,6 @@ namespace Jitter.Collision
             get { return tris.Length; }
         }
         #endregion
-
 
     }
 }

@@ -15,8 +15,6 @@ namespace JitterDemo.Scenes
         static JVector cardHouseStartingPosition = new JVector(0, 0, 0);
         const int cardHouseLayers = 10; // starting from 1
 
-
-
         const double cardThickness = 0.05;
         const double cardHeight = 3;
         const double cardWidth = 2;
@@ -24,10 +22,10 @@ namespace JitterDemo.Scenes
 
         const float angle = degree * (float)Math.PI / 180f;
         const float oppositeAngle = (float)Math.PI - angle;
-        static double cardThicknessVerticalMargin = cardThickness / 2 * Math.Sin(MathHelper.PiOver2 - angle);
-        static double cardThicknessHorizontalMargin = cardThickness / 2 * Math.Cos(MathHelper.PiOver2 - angle);
-        static float layerHeight = (float)(cardHeight * Math.Sin(angle) + 2 * cardThicknessVerticalMargin);
-        static float cardSpacing = (float)(cardHeight * Math.Cos(angle) + 2 * cardThicknessHorizontalMargin);
+        static readonly double cardThicknessVerticalMargin = cardThickness / 2 * Math.Sin(MathHelper.PiOver2 - angle);
+        static readonly double cardThicknessHorizontalMargin = cardThickness / 2 * Math.Cos(MathHelper.PiOver2 - angle);
+        static readonly float layerHeight = (float)(cardHeight * Math.Sin(angle) + 2 * cardThicknessVerticalMargin);
+        static readonly float cardSpacing = (float)(cardHeight * Math.Cos(angle) + 2 * cardThicknessHorizontalMargin);
 
         public override void Build()
         {
@@ -72,8 +70,10 @@ namespace JitterDemo.Scenes
 
         private void AddCard(JVector position, float rollOrientation)
         {
-            RigidBody body = new RigidBody(new BoxShape((float)cardHeight, (float)cardThickness, (float)cardWidth));
-            body.Mass = 0.5f;
+            var body = new RigidBody(new BoxShape((float)cardHeight, (float)cardThickness, (float)cardWidth))
+            {
+                Mass = 0.5f
+            };
             body.Material.Restitution = 0;
             body.Position = position;
             if (rollOrientation != 0)
@@ -83,8 +83,5 @@ namespace JitterDemo.Scenes
 
             Demo.World.AddBody(body);
         }
-
-
     }
-
 }

@@ -27,17 +27,13 @@ namespace Jitter.Dynamics
 {
 
 
-
-
     /// <summary>
     /// Represents a list of contacts. Every ContactList 
     /// has a maximum of four contacts.
     /// </summary>
     public class ContactList : List<Contact>
     {
-
         public ContactList() : base(4) { }
-
 
         #region TODO: Write an implementation which only has 4 elements.
 
@@ -161,8 +157,7 @@ namespace Jitter.Dynamics
         public Contact AddContact(JVector point1, JVector point2, JVector normal, float penetration, 
             ContactSettings contactSettings)
         {
-            JVector relPos1;
-            JVector.Subtract(ref point1, ref body1.position, out relPos1);
+            JVector.Subtract(ref point1, ref body1.position, out var relPos1);
 
             int index;
 
@@ -184,7 +179,7 @@ namespace Jitter.Dynamics
                 }
                 else
                 {
-                    Contact contact = Contact.Pool.GetNew();
+                    var contact = Contact.Pool.GetNew();
                     contact.Initialize(body1, body2, ref point1, ref point2, ref normal, penetration, true, contactSettings);
                     contactList.Add(contact);
                     return contact;
@@ -195,12 +190,11 @@ namespace Jitter.Dynamics
         private void ReplaceContact(ref JVector point1, ref JVector point2, ref JVector n, float p, int index,
             ContactSettings contactSettings)
         {
-            Contact contact = contactList[index];
+            var contact = contactList[index];
 
             Debug.Assert(body1 == contact.body1, "Body1 and Body2 not consistent.");
 
             contact.Initialize(body1, body2, ref point1, ref point2, ref n, p, false, contactSettings);
-
         }
 
         private int GetCacheEntry(ref JVector realRelPos1, float contactBreakThreshold)
@@ -210,7 +204,7 @@ namespace Jitter.Dynamics
             int nearestPoint = -1;
             for (int i = 0; i < size; i++)
             {
-                JVector diffA; JVector.Subtract(ref contactList[i].relativePos1,ref realRelPos1,out diffA);
+                JVector.Subtract(ref contactList[i].relativePos1, ref realRelPos1, out var diffA);
                 float distToManiPoint = diffA.LengthSquared();
                 if (distToManiPoint < shortestDist)
                 {
@@ -241,32 +235,32 @@ namespace Jitter.Dynamics
             float res0 = 0, res1 = 0, res2 = 0, res3 = 0;
             if (maxPenetrationIndex != 0)
             {
-                JVector a0; JVector.Subtract(ref realRelPos1,ref contactList[1].relativePos1,out a0);
-                JVector b0; JVector.Subtract(ref contactList[3].relativePos1, ref contactList[2].relativePos1, out b0);
-                JVector cross; JVector.Cross(ref a0, ref b0, out cross);
+                JVector.Subtract(ref realRelPos1, ref contactList[1].relativePos1, out var a0);
+                JVector.Subtract(ref contactList[3].relativePos1, ref contactList[2].relativePos1, out var b0);
+                JVector.Cross(ref a0, ref b0, out var cross);
                 res0 = cross.LengthSquared();
             }
             if (maxPenetrationIndex != 1)
             {
-                JVector a0; JVector.Subtract(ref realRelPos1, ref contactList[0].relativePos1, out a0);
-                JVector b0; JVector.Subtract(ref contactList[3].relativePos1, ref contactList[2].relativePos1, out b0);
-                JVector cross; JVector.Cross(ref a0, ref b0, out cross);
+                JVector.Subtract(ref realRelPos1, ref contactList[0].relativePos1, out var a0);
+                JVector.Subtract(ref contactList[3].relativePos1, ref contactList[2].relativePos1, out var b0);
+                JVector.Cross(ref a0, ref b0, out var cross);
                 res1 = cross.LengthSquared();
             }
 
             if (maxPenetrationIndex != 2)
             {
-                JVector a0; JVector.Subtract(ref realRelPos1, ref contactList[0].relativePos1, out a0);
-                JVector b0; JVector.Subtract(ref contactList[3].relativePos1, ref contactList[1].relativePos1, out b0);
-                JVector cross; JVector.Cross(ref a0, ref b0, out cross);
+                JVector.Subtract(ref realRelPos1, ref contactList[0].relativePos1, out var a0);
+                JVector.Subtract(ref contactList[3].relativePos1, ref contactList[1].relativePos1, out var b0);
+                JVector.Cross(ref a0, ref b0, out var cross);
                 res2 = cross.LengthSquared();
             }
 
             if (maxPenetrationIndex != 3)
             {
-                JVector a0; JVector.Subtract(ref realRelPos1, ref contactList[0].relativePos1, out a0);
-                JVector b0; JVector.Subtract(ref contactList[2].relativePos1, ref contactList[1].relativePos1, out b0);
-                JVector cross; JVector.Cross(ref a0, ref b0, out cross);
+                JVector.Subtract(ref realRelPos1, ref contactList[0].relativePos1, out var a0);
+                JVector.Subtract(ref contactList[2].relativePos1, ref contactList[1].relativePos1, out var b0);
+                JVector.Cross(ref a0, ref b0, out var cross);
                 res3 = cross.LengthSquared();
             }
 
@@ -286,6 +280,5 @@ namespace Jitter.Dynamics
 
             return maxIndex;
         }
-
     }
 }

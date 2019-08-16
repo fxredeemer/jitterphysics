@@ -34,8 +34,8 @@ namespace Jitter.Collision
     /// </summary>
     public class CollisionSystemBrute : CollisionSystem
     {
-        private List<IBroadphaseEntity> bodyList = new List<IBroadphaseEntity>();
-        private Action<object> detectCallback;
+        private readonly List<IBroadphaseEntity> bodyList = new List<IBroadphaseEntity>();
+        private readonly Action<object> detectCallback;
 
         /// <summary>
         /// Creates a new instance of the CollisionSystemBrute class.
@@ -71,8 +71,6 @@ namespace Jitter.Collision
             bodyList.Add(body);
         }
 
-
-
         /// <summary>
         /// Tells the collisionsystem to check all bodies for collisions. Hook into the 
         /// <see cref="CollisionSystem.PassedBroadphase"/>
@@ -94,7 +92,7 @@ namespace Jitter.Collision
                         {
                             if (RaisePassedBroadphase(bodyList[i], bodyList[e]))
                             {
-                                BroadphasePair pair = BroadphasePair.Pool.GetNew();
+                                var pair = BroadphasePair.Pool.GetNew();
 
                                 if (swapOrder) { pair.Entity1 = bodyList[i]; pair.Entity2 = bodyList[e]; }
                                 else { pair.Entity2 = bodyList[e]; pair.Entity1 = bodyList[i]; }
@@ -129,12 +127,11 @@ namespace Jitter.Collision
         }
         #endregion
 
-
         private bool swapOrder = false;
 
         private void DetectCallback(object obj)
         {
-            BroadphasePair pair = obj as BroadphasePair;
+            var pair = obj as BroadphasePair;
             base.Detect(pair.Entity1, pair.Entity2);
             BroadphasePair.Pool.GiveBack(pair);
         }
@@ -154,11 +151,11 @@ namespace Jitter.Collision
             bool result = false;
 
             // TODO: This can be done better in CollisionSystemPersistenSAP
-            foreach (IBroadphaseEntity e in bodyList)
+            foreach (var e in bodyList)
             {
                 if (e is SoftBody)
                 {
-                    SoftBody softBody = e as SoftBody;
+                    var softBody = e as SoftBody;
                     foreach (RigidBody b in softBody.VertexBodies)
                     {
                         if (Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction))
@@ -175,7 +172,7 @@ namespace Jitter.Collision
                 }
                 else
                 {
-                    RigidBody b = e as RigidBody;
+                    var b = e as RigidBody;
 
                     if (Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction))
                     {
@@ -194,7 +191,6 @@ namespace Jitter.Collision
         }
         #endregion
 
-
         /// <summary>
         /// Raycasts a single body. NOTE: For performance reasons terrain and trianglemeshshape aren't checked
         /// against rays (rays are of infinite length). They are checked against segments
@@ -209,14 +205,13 @@ namespace Jitter.Collision
 
             if (body.Shape is Multishape)
             {
-                Multishape ms = (body.Shape as Multishape).RequestWorkingClone();
+                var ms = (body.Shape as Multishape).RequestWorkingClone();
 
-                JVector tempNormal; float tempFraction;
                 bool multiShapeCollides = false;
 
-                JVector transformedOrigin; JVector.Subtract(ref rayOrigin, ref body.position, out transformedOrigin);
+                JVector.Subtract(ref rayOrigin, ref body.position, out var transformedOrigin);
                 JVector.Transform(ref transformedOrigin, ref body.invOrientation, out transformedOrigin);
-                JVector transformedDirection; JVector.Transform(ref rayDirection, ref body.invOrientation, out transformedDirection);
+                JVector.Transform(ref rayDirection, ref body.invOrientation, out var transformedDirection);
 
                 int msLength = ms.Prepare(ref transformedOrigin, ref transformedDirection);
 
@@ -225,7 +220,7 @@ namespace Jitter.Collision
                     ms.SetCurrentShape(i);
 
                     if (GJKCollide.Raycast(ms, ref body.orientation, ref body.invOrientation, ref body.position,
-                        ref rayOrigin, ref rayDirection, out tempFraction, out tempNormal))
+                        ref rayOrigin, ref rayDirection, out float tempFraction, out var tempNormal))
                     {
                         if (tempFraction < fraction)
                         {
@@ -257,8 +252,6 @@ namespace Jitter.Collision
                 return (GJKCollide.Raycast(body.Shape, ref body.orientation, ref body.invOrientation, ref body.position,
                     ref rayOrigin, ref rayDirection, out fraction, out normal));
             }
-
-
         }
         #endregion
 

@@ -30,8 +30,6 @@ using Jitter.DataStructures;
 
 namespace Jitter.Dynamics
 {
-
-
     public enum RigidBodyIndex
     {
         RigidBody1, RigidBody2
@@ -70,7 +68,7 @@ namespace Jitter.Dynamics
 
         internal JVector force, torque;
 
-        private int hashCode;
+        private readonly int hashCode;
 
         internal int internalIndex = 0;
 
@@ -80,12 +78,7 @@ namespace Jitter.Dynamics
 
         internal HashSet<Arbiter> arbiters = new HashSet<Arbiter>();
         internal HashSet<Constraint> constraints = new HashSet<Constraint>();
-
-        private ReadOnlyHashset<Arbiter> readOnlyArbiters;
-        private ReadOnlyHashset<Constraint> readOnlyConstraints;
-
         internal int marker = 0;
-
 
         public RigidBody(Shape shape)
             : this(shape, new Material(), false)
@@ -141,8 +134,8 @@ namespace Jitter.Dynamics
         /// Also contacts are only solved for the linear motion part.</param>
         public RigidBody(Shape shape, Material material, bool isParticle)
         {
-            readOnlyArbiters = new ReadOnlyHashset<Arbiter>(arbiters);
-            readOnlyConstraints = new ReadOnlyHashset<Constraint>(constraints);
+            Arbiters = new ReadOnlyHashset<Arbiter>(arbiters);
+            Constraints = new ReadOnlyHashset<Constraint>(constraints);
 
             instance = Interlocked.Increment(ref instanceCount);
             hashCode = CalculateHash(instance);
@@ -185,8 +178,8 @@ namespace Jitter.Dynamics
             return hashCode;
         }
 
-        public ReadOnlyHashset<Arbiter> Arbiters { get { return readOnlyArbiters; } }
-        public ReadOnlyHashset<Constraint> Constraints { get { return readOnlyConstraints; } }
+        public ReadOnlyHashset<Arbiter> Arbiters { get; }
+        public ReadOnlyHashset<Constraint> Constraints { get; }
 
         /// <summary>
         /// If set to false the body will never be deactived by the
@@ -201,9 +194,8 @@ namespace Jitter.Dynamics
         /// </summary>
         public JBBox BoundingBox { get { return boundingBox; } }
 
-
         private static int instanceCount = 0;
-        private int instance;
+        private readonly int instance;
 
         private int CalculateHash(int a)
         {
@@ -259,8 +251,7 @@ namespace Jitter.Dynamics
             if (isStatic)
                 throw new InvalidOperationException("Can't apply an impulse to a static body.");
 
-            JVector temp;
-            JVector.Multiply(ref impulse, inverseMass, out temp);
+            JVector.Multiply(ref impulse, inverseMass, out var temp);
             JVector.Add(ref linearVelocity, ref temp, out linearVelocity);
         }
 
@@ -276,8 +267,7 @@ namespace Jitter.Dynamics
             if (isStatic)
                 throw new InvalidOperationException("Can't apply an impulse to a static body.");
 
-            JVector temp;
-            JVector.Multiply(ref impulse, inverseMass, out temp);
+            JVector.Multiply(ref impulse, inverseMass, out var temp);
             JVector.Add(ref linearVelocity, ref temp, out linearVelocity);
 
             JVector.Cross(ref relativePosition, ref impulse, out temp);
@@ -414,9 +404,7 @@ namespace Jitter.Dynamics
 
         #region Properties
 
-        private DampingType damping = DampingType.Angular | DampingType.Linear;
-
-        public DampingType Damping { get { return damping; } set { damping = value; } }
+        public DampingType Damping { get; set; } = DampingType.Angular | DampingType.Linear;
 
         public Material Material { get { return material; } set { material = value; } }
 
@@ -537,7 +525,6 @@ namespace Jitter.Dynamics
 
         #endregion
 
-
         internal JVector sweptDirection = JVector.Zero;
 
         public void SweptExpandBoundingBox(float timestep)
@@ -597,7 +584,6 @@ namespace Jitter.Dynamics
                 JVector.Add(ref boundingBox.Min, ref position, out boundingBox.Min);
                 JVector.Add(ref boundingBox.Max, ref position, out boundingBox.Max);
 
-
                 if (!isStatic)
                 {
                     JMatrix.Multiply(ref invOrientation, ref invInertia, out invInertiaWorld);
@@ -620,7 +606,6 @@ namespace Jitter.Dynamics
 
         public int BroadphaseTag { get; set; }
 
-
         public virtual void PreStep(float timestep)
         {
             //
@@ -630,7 +615,6 @@ namespace Jitter.Dynamics
         {
             //
         }
-
 
         public bool IsStaticOrInactive
         {
@@ -656,7 +640,6 @@ namespace Jitter.Dynamics
 
             if(enableDebugDraw) shape.MakeHull(ref hullPoints, 3);
         }
-
 
         public void DebugDraw(IDebugDrawer drawer)
         {

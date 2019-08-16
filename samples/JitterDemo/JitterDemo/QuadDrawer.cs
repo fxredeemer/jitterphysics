@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JitterDemo
 {
-
     public class QuadDrawer : DrawableGameComponent
     {
         private Texture2D texture;

@@ -6,7 +6,6 @@ namespace JitterDemo.Scenes
 {
     class Jenga : Scene
     {
-
         public Jenga(JitterDemo demo)
             : base(demo)
         {
@@ -22,13 +21,14 @@ namespace JitterDemo.Scenes
 
                 for (int e = 0; e < 3; e++)
                 {
-                    JVector size = (even) ? new JVector(1, 1, 3) : new JVector(3, 1, 1);
-                    RigidBody body = new RigidBody(new BoxShape(size));
-                    body.Position = new JVector(3.0f + (even ? e : 1.0f), i + 0.5f,-13.0f +  (even ? 1.0f : e));
+                    var size = (even) ? new JVector(1, 1, 3) : new JVector(3, 1, 1);
+                    var body = new RigidBody(new BoxShape(size))
+                    {
+                        Position = new JVector(3.0f + (even ? e : 1.0f), i + 0.5f, -13.0f + (even ? 1.0f : e))
+                    };
 
-                   Demo.World.AddBody(body);
+                    Demo.World.AddBody(body);
                 }
-
             }
 
             //BoxShape bs = new BoxShape(10, 10, 0.01f);
@@ -40,7 +40,5 @@ namespace JitterDemo.Scenes
             //bb.IsStatic = true;
             
         }
-        
-
     }
 }

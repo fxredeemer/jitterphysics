@@ -38,12 +38,7 @@ namespace Jitter.Dynamics.Constraints
 
         private JVector localAnchor1, localAnchor2;
         private JVector r1, r2;
-
-        private float biasFactor = 0.1f;
-        private float softness = 0.01f;
         private float distance;
-
-        private DistanceBehavior behavior = DistanceBehavior.LimitDistance;
 
         /// <summary>
         /// Initializes a new instance of the DistanceConstraint class.
@@ -66,7 +61,7 @@ namespace Jitter.Dynamics.Constraints
             distance = (anchor1 - anchor2).Length();
         }
 
-        public float AppliedImpulse { get { return accumulatedImpulse; } }
+        public float AppliedImpulse { get; private set; } = 0.0f;
 
         /// <summary>
         /// 
@@ -76,7 +71,7 @@ namespace Jitter.Dynamics.Constraints
         /// <summary>
         /// 
         /// </summary>
-        public DistanceBehavior Behavior { get { return behavior; } set { behavior = value; } }
+        public DistanceBehavior Behavior { get; set; } = DistanceBehavior.LimitDistance;
 
         /// <summary>
         /// The anchor point of body1 in local (body) coordinates.
@@ -91,19 +86,17 @@ namespace Jitter.Dynamics.Constraints
         /// <summary>
         /// Defines how big the applied impulses can get.
         /// </summary>
-        public float Softness { get { return softness; } set { softness = value; } }
+        public float Softness { get; set; } = 0.01f;
 
         /// <summary>
         /// Defines how big the applied impulses can get which correct errors.
         /// </summary>
-        public float BiasFactor { get { return biasFactor; } set { biasFactor = value; } }
+        public float BiasFactor { get; set; } = 0.1f;
 
         float effectiveMass = 0.0f;
-        float accumulatedImpulse = 0.0f;
         float bias;
         float softnessOverDt;
-        
-        JVector[] jacobian = new JVector[4];
+        readonly JVector[] jacobian = new JVector[4];
 
         bool skipConstraint = false;
 
@@ -116,19 +109,18 @@ namespace Jitter.Dynamics.Constraints
             JVector.Transform(ref localAnchor1, ref body1.orientation, out r1);
             JVector.Transform(ref localAnchor2, ref body2.orientation, out r2);
 
-            JVector p1, p2, dp;
-            JVector.Add(ref body1.position, ref r1, out p1);
-            JVector.Add(ref body2.position, ref r2, out p2);
+            JVector.Add(ref body1.position, ref r1, out var p1);
+            JVector.Add(ref body2.position, ref r2, out var p2);
 
-            JVector.Subtract(ref p2, ref p1, out dp);
+            JVector.Subtract(ref p2, ref p1, out var dp);
 
             float deltaLength = dp.Length() - distance;
 
-            if (behavior == DistanceBehavior.LimitMaximumDistance && deltaLength <= 0.0f)
+            if (Behavior == DistanceBehavior.LimitMaximumDistance && deltaLength <= 0.0f)
             {
                 skipConstraint = true;
             }
-            else if (behavior == DistanceBehavior.LimitMinimumDistance && deltaLength >= 0.0f)
+            else if (Behavior == DistanceBehavior.LimitMinimumDistance && deltaLength >= 0.0f)
             {
                 skipConstraint = true;
             }
@@ -136,7 +128,7 @@ namespace Jitter.Dynamics.Constraints
             {
                 skipConstraint = false;
 
-                JVector n = p2 - p1;
+                var n = p2 - p1;
                 if (n.LengthSquared() != 0.0f) n.Normalize();
 
                 jacobian[0] = -1.0f * n;
@@ -148,26 +140,25 @@ namespace Jitter.Dynamics.Constraints
                     + JVector.Transform(jacobian[1], body1.invInertiaWorld) * jacobian[1]
                     + JVector.Transform(jacobian[3], body2.invInertiaWorld) * jacobian[3];
 
-                softnessOverDt = softness / timestep;
+                softnessOverDt = Softness / timestep;
                 effectiveMass += softnessOverDt;
 
                 effectiveMass = 1.0f / effectiveMass;
 
-                bias = deltaLength * biasFactor * (1.0f / timestep);
+                bias = deltaLength * BiasFactor * (1.0f / timestep);
 
                 if (!body1.isStatic)
                 {
-                    body1.linearVelocity += body1.inverseMass * accumulatedImpulse * jacobian[0];
-                    body1.angularVelocity += JVector.Transform(accumulatedImpulse * jacobian[1], body1.invInertiaWorld);
+                    body1.linearVelocity += body1.inverseMass * AppliedImpulse * jacobian[0];
+                    body1.angularVelocity += JVector.Transform(AppliedImpulse * jacobian[1], body1.invInertiaWorld);
                 }
 
                 if (!body2.isStatic)
                 {
-                    body2.linearVelocity += body2.inverseMass * accumulatedImpulse * jacobian[2];
-                    body2.angularVelocity += JVector.Transform(accumulatedImpulse * jacobian[3], body2.invInertiaWorld);
+                    body2.linearVelocity += body2.inverseMass * AppliedImpulse * jacobian[2];
+                    body2.angularVelocity += JVector.Transform(AppliedImpulse * jacobian[3], body2.invInertiaWorld);
                 }
             }
-            
         }
 
         /// <summary>
@@ -183,25 +174,25 @@ namespace Jitter.Dynamics.Constraints
                 body2.linearVelocity * jacobian[2] +
                 body2.angularVelocity * jacobian[3];
 
-            float softnessScalar = accumulatedImpulse * softnessOverDt;
+            float softnessScalar = AppliedImpulse * softnessOverDt;
 
             float lambda = -effectiveMass * (jv + bias + softnessScalar);
 
-            if (behavior == DistanceBehavior.LimitMinimumDistance)
+            if (Behavior == DistanceBehavior.LimitMinimumDistance)
             {
-                float previousAccumulatedImpulse = accumulatedImpulse;
-                accumulatedImpulse = JMath.Max(accumulatedImpulse + lambda, 0);
-                lambda = accumulatedImpulse - previousAccumulatedImpulse;
+                float previousAccumulatedImpulse = AppliedImpulse;
+                AppliedImpulse = JMath.Max(AppliedImpulse + lambda, 0);
+                lambda = AppliedImpulse - previousAccumulatedImpulse;
             }
-            else if (behavior == DistanceBehavior.LimitMaximumDistance)
+            else if (Behavior == DistanceBehavior.LimitMaximumDistance)
             {
-                float previousAccumulatedImpulse = accumulatedImpulse;
-                accumulatedImpulse = JMath.Min(accumulatedImpulse + lambda, 0);
-                lambda = accumulatedImpulse - previousAccumulatedImpulse;
+                float previousAccumulatedImpulse = AppliedImpulse;
+                AppliedImpulse = JMath.Min(AppliedImpulse + lambda, 0);
+                lambda = AppliedImpulse - previousAccumulatedImpulse;
             }
             else
             {
-                accumulatedImpulse += lambda;
+                AppliedImpulse += lambda;
             }
 
             if (!body1.isStatic)
@@ -217,11 +208,9 @@ namespace Jitter.Dynamics.Constraints
             }
         }
 
-
         public override void DebugDraw(IDebugDrawer drawer)
         {
             drawer.DrawLine(body1.position + r1, body2.position + r2);
         }
-
     }
 }

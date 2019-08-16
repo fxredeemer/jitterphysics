@@ -24,13 +24,13 @@ namespace JitterDemo.Vehicle
 
         private void BuildCar()
         {
-            JitterDemo demo = Game as JitterDemo;
-            World world = demo.World;
+            var demo = Game as JitterDemo;
+            var world = demo.World;
 
-            CompoundShape.TransformedShape lower = new CompoundShape.TransformedShape(
+            var lower = new CompoundShape.TransformedShape(
                 new BoxShape(2.5f, 1f, 6.0f), JMatrix.Identity, JVector.Zero);
 
-            CompoundShape.TransformedShape upper = new CompoundShape.TransformedShape(
+            var upper = new CompoundShape.TransformedShape(
                 new BoxShape(2.0f, 0.5f, 3.0f), JMatrix.Identity, JVector.Up * 0.75f + JVector.Backward * 1.0f);
 
             CompoundShape.TransformedShape[] subShapes = { lower, upper };
@@ -39,14 +39,16 @@ namespace JitterDemo.Vehicle
 
             //chassis = new BoxShape(2.5f, 1f, 6.0f);
 
-            carBody = new DefaultCar(world, chassis);
+            carBody = new DefaultCar(world, chassis)
+            {
+                // use the inertia of the lower box.
 
-            // use the inertia of the lower box.
-
-            // adjust some driving values
-            carBody.SteerAngle = 30; carBody.DriveTorque = 155;
-            carBody.AccelerationRate = 10;
-            carBody.SteerRate = 2f;
+                // adjust some driving values
+                SteerAngle = 30,
+                DriveTorque = 155,
+                AccelerationRate = 10,
+                SteerRate = 2f
+            };
             carBody.AdjustWheelValues();
 
             carBody.Tag = BodyTag.DontDrawMe;
@@ -60,7 +62,7 @@ namespace JitterDemo.Vehicle
 
         public override void Update(GameTime gameTime)
         {
-            KeyboardState keyState = Keyboard.GetState();
+            var keyState = Keyboard.GetState();
 
             float steer, accelerate;
             if (keyState.IsKeyDown(Keys.Up)) accelerate = 1.0f;
@@ -79,15 +81,15 @@ namespace JitterDemo.Vehicle
         #region Draw Wheels
         private void DrawWheels()
         {
-            JitterDemo demo = Game as JitterDemo;
+            var demo = Game as JitterDemo;
 
             for(int i = 0;i<carBody.Wheels.Length;i++)
             {
-                Wheel wheel = carBody.Wheels[i];
+                var wheel = carBody.Wheels[i];
 
-                Vector3 position = Conversion.ToXNAVector(wheel.GetWorldPosition());
+                var position = Conversion.ToXNAVector(wheel.GetWorldPosition());
 
-                foreach (ModelMesh mesh in tireModel.Meshes)
+                foreach (var mesh in tireModel.Meshes)
                 {
                     foreach (BasicEffect effect in mesh.Effects)
                     {
@@ -110,21 +112,19 @@ namespace JitterDemo.Vehicle
                     }
                     mesh.Draw();
                 }
-
             }
-
         }
         #endregion
 
         private void DrawChassis()
         {
-            JitterDemo demo = Game as JitterDemo;
+            var demo = Game as JitterDemo;
 
-            foreach (ModelMesh mesh in chassisModel.Meshes)
+            foreach (var mesh in chassisModel.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    Matrix matrix = Conversion.ToXNAMatrix(carBody.Orientation);
+                    var matrix = Conversion.ToXNAMatrix(carBody.Orientation);
                     matrix.Translation = Conversion.ToXNAVector(carBody.Position) -
                         Vector3.Transform(new Vector3(0,1.0f,0),matrix);
 
@@ -151,7 +151,5 @@ namespace JitterDemo.Vehicle
             DrawChassis();
             base.Draw(gameTime);
         }
-
-
     }
 }

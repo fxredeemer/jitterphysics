@@ -22,7 +22,6 @@
 
 namespace Jitter.Dynamics.Joints
 {
-
     /// <summary>
     /// A joint is a collection of internally handled constraints.
     /// </summary>

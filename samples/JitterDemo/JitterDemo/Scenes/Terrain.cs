@@ -8,7 +8,6 @@ namespace JitterDemo.Scenes
 {
     public class Terrain : Scene
     {
-
         Primitives3D.TerrainPrimitive terrain;
 
         public Terrain(JitterDemo demo)
@@ -24,9 +23,9 @@ namespace JitterDemo.Scenes
                 return (float)(Math.Cos(a * 0.2f) * Math.Sin(b * 0.2f) * 2.0f);
             }));
 
-            TerrainShape shape = new TerrainShape(terrain.heights, 1.0f, 1.0f);
+            var shape = new TerrainShape(terrain.heights, 1.0f, 1.0f);
             
-            RigidBody body = new RigidBody(shape);
+            var body = new RigidBody(shape);
             body.Position -= new JVector(50, 0, 50);
             body.IsStatic = true;
             body.Tag = BodyTag.DontDrawMe;
@@ -43,6 +42,5 @@ namespace JitterDemo.Scenes
             terrain.Draw(Demo.BasicEffect);
             base.Draw();
         }
-
     }
 }

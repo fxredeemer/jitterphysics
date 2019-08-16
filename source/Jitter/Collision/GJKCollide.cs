@@ -23,7 +23,6 @@ using Jitter.LinearMath;
 
 namespace Jitter.Collision
 {
-
     /// <summary>
     /// GJK based implementation of Raycasting.
     /// </summary>
@@ -31,7 +30,7 @@ namespace Jitter.Collision
     {
         private const int MaxIterations = 15;
 
-        private static ResourcePool<VoronoiSimplexSolver> simplexSolverPool = new ResourcePool<VoronoiSimplexSolver>();
+        private static readonly ResourcePool<VoronoiSimplexSolver> simplexSolverPool = new ResourcePool<VoronoiSimplexSolver>();
 
         #region private static void SupportMapTransformed(ISupportMappable support, ref JMatrix orientation, ref JVector position, ref JVector direction, out JVector result)
         private static void SupportMapTransformed(ISupportMappable support, ref JMatrix orientation, ref JVector position, ref JVector direction, out JVector result)
@@ -68,34 +67,31 @@ namespace Jitter.Collision
         /// <returns>Returns true if the point is within the shape, otherwise false.</returns>
         public static bool Pointcast(ISupportMappable support, ref JMatrix orientation,ref JVector position,ref JVector point)
         {
-            JVector arbitraryPoint; 
-
-            SupportMapTransformed(support, ref orientation, ref position, ref point, out arbitraryPoint);
+            SupportMapTransformed(support, ref orientation, ref position, ref point, out var arbitraryPoint);
             JVector.Subtract(ref point, ref arbitraryPoint, out arbitraryPoint);
 
-            JVector r; support.SupportCenter(out r);
+            support.SupportCenter(out var r);
             JVector.Transform(ref r, ref orientation, out r);
             JVector.Add(ref position, ref r, out r);
             JVector.Subtract(ref point, ref r, out r);
 
-            JVector x = point;
-            JVector w, p;
+            var x = point;
             float VdotR;
 
-            JVector v; JVector.Subtract(ref x, ref arbitraryPoint, out v);
+            JVector.Subtract(ref x, ref arbitraryPoint, out var v);
             float dist = v.LengthSquared();
             float epsilon = 0.0001f;
 
             int maxIter = MaxIterations;
 
-            VoronoiSimplexSolver simplexSolver = simplexSolverPool.GetNew();
+            var simplexSolver = simplexSolverPool.GetNew();
 
             simplexSolver.Reset();
 
             while ((dist > epsilon) && (maxIter-- != 0))
             {
-                SupportMapTransformed(support, ref orientation, ref position, ref v, out p);
-                JVector.Subtract(ref x, ref p, out w);
+                SupportMapTransformed(support, ref orientation, ref position, ref v, out var p);
+                JVector.Subtract(ref x, ref p, out var w);
 
                 float VdotW = JVector.Dot(ref v, ref w);
 
@@ -114,32 +110,27 @@ namespace Jitter.Collision
 
             simplexSolverPool.GiveBack(simplexSolver);
             return true;
-
         }
-
 
         public static bool ClosestPoints(ISupportMappable support1, ISupportMappable support2, ref JMatrix orientation1,
             ref JMatrix orientation2, ref JVector position1, ref JVector position2,
             out JVector p1, out JVector p2, out JVector normal)
         {
-
-            VoronoiSimplexSolver simplexSolver = simplexSolverPool.GetNew();
+            var simplexSolver = simplexSolverPool.GetNew();
             simplexSolver.Reset();
 
             p1 = p2 = JVector.Zero;
 
-            JVector r = position1 - position2;
+            var r = position1 - position2;
             JVector w, v;
 
-            JVector supVertexA;
-            JVector rn,vn;
+            JVector rn, vn;
 
             rn = JVector.Negate(r);
 
-            SupportMapTransformed(support1, ref orientation1, ref position1, ref rn, out supVertexA);
+            SupportMapTransformed(support1, ref orientation1, ref position1, ref rn, out var supVertexA);
 
-            JVector supVertexB;
-            SupportMapTransformed(support2, ref orientation2, ref position2, ref r, out supVertexB);
+            SupportMapTransformed(support2, ref orientation2, ref position2, ref r, out var supVertexB);
 
             v = supVertexA - supVertexB;
 
@@ -166,7 +157,6 @@ namespace Jitter.Collision
                 else distSq = 0.0f;
             }
 
-
             simplexSolver.ComputePoints(out p1, out p2);
 
             if (normal.LengthSquared() > JMath.Epsilon * JMath.Epsilon)
@@ -175,7 +165,6 @@ namespace Jitter.Collision
             simplexSolverPool.GiveBack(simplexSolver);
 
             return true;
-
         }
 
         #region TimeOfImpact Conservative Advancement - Depricated
@@ -210,7 +199,6 @@ namespace Jitter.Collision
 
     //        normal = JVector.Zero;
 
-
     //        float lastLambda = lambda;
 
     //        int maxIter = MaxIterations;
@@ -243,7 +231,6 @@ namespace Jitter.Collision
     //                {
     //                    lambda = lambda - VdotW / VdotR;
 
-
     //                    x1 = position1 + lambda * sweptA;
     //                    x2 = position2 + lambda * sweptB;
 
@@ -263,9 +250,7 @@ namespace Jitter.Collision
     //            else distSq = 0.0f;
     //        }
 
-
     //        simplexSolver.ComputePoints(out p1, out p2);
-
 
     //        if (normal.LengthSquared() > JMath.Epsilon * JMath.Epsilon)
     //            normal.Normalize();
@@ -299,7 +284,7 @@ namespace Jitter.Collision
         public static bool Raycast(ISupportMappable support, ref JMatrix orientation, ref JMatrix invOrientation,
             ref JVector position,ref JVector origin,ref JVector direction, out float fraction, out JVector normal)
         {
-            VoronoiSimplexSolver simplexSolver = simplexSolverPool.GetNew();
+            var simplexSolver = simplexSolverPool.GetNew();
             simplexSolver.Reset();
 
             normal = JVector.Zero;
@@ -307,13 +292,11 @@ namespace Jitter.Collision
 
             float lambda = 0.0f;
 
-            JVector r = direction;
-            JVector x = origin;
-            JVector w, p, v;
+            var r = direction;
+            var x = origin;
 
-            JVector arbitraryPoint; 
-            SupportMapTransformed(support, ref orientation, ref position, ref r, out arbitraryPoint);
-            JVector.Subtract(ref x, ref arbitraryPoint, out v);
+            SupportMapTransformed(support, ref orientation, ref position, ref r, out var arbitraryPoint);
+            JVector.Subtract(ref x, ref arbitraryPoint, out var v);
 
             int maxIter = MaxIterations;
 
@@ -324,8 +307,8 @@ namespace Jitter.Collision
 
             while ((distSq > epsilon) && (maxIter-- != 0))
             {
-                SupportMapTransformed(support, ref orientation, ref position, ref v, out p);
-                JVector.Subtract(ref x, ref p, out w);
+                SupportMapTransformed(support, ref orientation, ref position, ref v, out var p);
+                JVector.Subtract(ref x, ref p, out var w);
 
                 float VdotW = JVector.Dot(ref v, ref w);
 
@@ -358,8 +341,7 @@ namespace Jitter.Collision
             // but is inaccurate against large objects:
             // fraction = lambda;
 
-            JVector p1, p2;
-            simplexSolver.ComputePoints(out p1, out p2);
+            simplexSolver.ComputePoints(out var p1, out var p2);
 
             p2 = p2 - origin;
             fraction = p2.Length() / direction.Length();
@@ -403,50 +385,44 @@ namespace Jitter.Collision
 
         private class UsageBitfield
         {
-            private bool _usedVertexA, _usedVertexB, _usedVertexC, _usedVertexD;
+            private bool _usedVertexD;
 
-            public bool UsedVertexA { get { return _usedVertexA; } set { _usedVertexA = value; } }
-            public bool UsedVertexB { get { return _usedVertexB; } set { _usedVertexB = value; } }
-            public bool UsedVertexC { get { return _usedVertexC; } set { _usedVertexC = value; } }
+            public bool UsedVertexA { get; set; }
+            public bool UsedVertexB { get; set; }
+            public bool UsedVertexC { get; set; }
             public bool UsedVertexD { get { return _usedVertexD; } set { _usedVertexD = value; } }
 
             public void Reset()
             {
-                _usedVertexA = _usedVertexB = _usedVertexC = _usedVertexD = false;
+                UsedVertexA = UsedVertexB = UsedVertexC = _usedVertexD = false;
             }
         }
 
         private class SubSimplexClosestResult
         {
             private JVector _closestPointOnSimplex;
-
-            //MASK for m_usedVertices
-            //stores the simplex vertex-usage, using the MASK, 
-            // if m_usedVertices & MASK then the related vertex is used
-            private UsageBitfield _usedVertices = new UsageBitfield();
-            private float[] _barycentricCoords = new float[4];
             private bool _degenerate;
 
             public JVector ClosestPointOnSimplex { get { return _closestPointOnSimplex; } set { _closestPointOnSimplex = value; } }
-            public UsageBitfield UsedVertices { get { return _usedVertices; } set { _usedVertices = value; } }
-            public float[] BarycentricCoords { get { return _barycentricCoords; } set { _barycentricCoords = value; } }
+            public UsageBitfield UsedVertices { get; set; } = new UsageBitfield();
+            public float[] BarycentricCoords { get; set; } = new float[4];
             public bool Degenerate { get { return _degenerate; } set { _degenerate = value; } }
 
             public void Reset()
             {
                 _degenerate = false;
                 SetBarycentricCoordinates();
-                _usedVertices.Reset();
+                UsedVertices.Reset();
             }
 
             public bool IsValid
             {
                 get
                 {
-                    return (_barycentricCoords[0] >= 0f) &&
-                            (_barycentricCoords[1] >= 0f) &&
-                            (_barycentricCoords[2] >= 0f) &&
-                            (_barycentricCoords[3] >= 0f);
+                    return (BarycentricCoords[0] >= 0f) &&
+                            (BarycentricCoords[1] >= 0f) &&
+                            (BarycentricCoords[2] >= 0f) &&
+                            (BarycentricCoords[3] >= 0f);
                 }
             }
 
@@ -457,10 +433,10 @@ namespace Jitter.Collision
 
             public void SetBarycentricCoordinates(float a, float b, float c, float d)
             {
-                _barycentricCoords[0] = a;
-                _barycentricCoords[1] = b;
-                _barycentricCoords[2] = c;
-                _barycentricCoords[3] = d;
+                BarycentricCoords[0] = a;
+                BarycentricCoords[1] = b;
+                BarycentricCoords[2] = c;
+                BarycentricCoords[3] = d;
             }
         }
 
@@ -473,12 +449,9 @@ namespace Jitter.Collision
 
             private const int VoronoiSimplexMaxVerts = 5;
             private const bool CatchDegenerateTetrahedron = true;
-
-            private int _numVertices;
-
-            private JVector[] _simplexVectorW = new JVector[VoronoiSimplexMaxVerts];
-            private JVector[] _simplexPointsP = new JVector[VoronoiSimplexMaxVerts];
-            private JVector[] _simplexPointsQ = new JVector[VoronoiSimplexMaxVerts];
+            private readonly JVector[] _simplexVectorW = new JVector[VoronoiSimplexMaxVerts];
+            private readonly JVector[] _simplexPointsP = new JVector[VoronoiSimplexMaxVerts];
+            private readonly JVector[] _simplexPointsQ = new JVector[VoronoiSimplexMaxVerts];
 
             private JVector _cachedPA;
             private JVector _cachedPB;
@@ -501,22 +474,16 @@ namespace Jitter.Collision
             {
                 get
                 {
-                    return _numVertices == 4;
+                    return NumVertices == 4;
                 }
             }
 
-            public int NumVertices
-            {
-                get
-                {
-                    return _numVertices;
-                }
-            }
+            public int NumVertices { get; private set; }
 
             public void Reset()
             {
                 _cachedValidClosest = false;
-                _numVertices = 0;
+                NumVertices = 0;
                 _needsUpdate = true;
                 _lastW = new JVector(1e30f, 1e30f, 1e30f);
                 _cachedBC.Reset();
@@ -527,11 +494,11 @@ namespace Jitter.Collision
                 _lastW = w;
                 _needsUpdate = true;
 
-                _simplexVectorW[_numVertices] = w;
-                _simplexPointsP[_numVertices] = p;
-                _simplexPointsQ[_numVertices] = q;
+                _simplexVectorW[NumVertices] = w;
+                _simplexPointsP[NumVertices] = p;
+                _simplexPointsQ[NumVertices] = q;
 
-                _numVertices++;
+                NumVertices++;
             }
 
             //return/calculate the closest vertex
@@ -610,10 +577,10 @@ namespace Jitter.Collision
 
             public void RemoveVertex(int index)
             {
-                 _numVertices--;
-                _simplexVectorW[index] = _simplexVectorW[_numVertices];
-                _simplexPointsP[index] = _simplexPointsP[_numVertices];
-                _simplexPointsQ[index] = _simplexPointsQ[_numVertices];
+                 NumVertices--;
+                _simplexVectorW[index] = _simplexVectorW[NumVertices];
+                _simplexPointsP[index] = _simplexPointsP[NumVertices];
+                _simplexPointsQ[index] = _simplexPointsQ[NumVertices];
             }
 
             public void ReduceVertices(UsageBitfield usedVerts)
@@ -647,12 +614,12 @@ namespace Jitter.Collision
                             break;
                         case 2:
                             //closest point origin from line segment
-                            JVector from = _simplexVectorW[0];
-                            JVector to = _simplexVectorW[1];
+                            var from = _simplexVectorW[0];
+                            var to = _simplexVectorW[1];
                             JVector nearest;
 
-                            JVector diff = from * (-1);
-                            JVector v = to - from;
+                            var diff = from * (-1);
+                            var v = to - from;
                             float t = JVector.Dot(v, diff);
 
                             if (t > 0)
@@ -774,9 +741,9 @@ namespace Jitter.Collision
                 float v, w;
 
                 // Check if P in vertex region outside A
-                JVector ab = b - a;
-                JVector ac = c - a;
-                JVector ap = p - a;
+                var ab = b - a;
+                var ac = c - a;
+                var ap = p - a;
                 float d1 = JVector.Dot(ab, ap);
                 float d2 = JVector.Dot(ac, ap);
                 if (d1 <= 0f && d2 <= 0f)
@@ -788,7 +755,7 @@ namespace Jitter.Collision
                 }
 
                 // Check if P in vertex region outside B
-                JVector bp = p - b;
+                var bp = p - b;
                 float d3 = JVector.Dot(ab, bp);
                 float d4 = JVector.Dot(ac, bp);
                 if (d3 >= 0f && d4 <= d3)
@@ -813,7 +780,7 @@ namespace Jitter.Collision
                 }
 
                 // Check if P in vertex region outside C
-                JVector cp = p - c;
+                var cp = p - c;
                 float d5 = JVector.Dot(ab, cp);
                 float d6 = JVector.Dot(ac, cp);
                 if (d6 >= 0f && d5 <= d6)
@@ -868,7 +835,7 @@ namespace Jitter.Collision
             /// Test if point p and d lie on opposite sides of plane through abc
             public int PointOutsideOfPlane(JVector p, JVector a, JVector b, JVector c, JVector d)
             {
-                JVector normal = JVector.Cross(b - a, c - a);
+                var normal = JVector.Cross(b - a, c - a);
 
                 float signp = JVector.Dot(p - a, normal); // [AP AB AC]
                 float signd = JVector.Dot(d - a, normal); // [AD AB AC]
@@ -912,7 +879,7 @@ namespace Jitter.Collision
                 if (pointOutsideABC != 0)
                 {
                     ClosestPtPointTriangle(p, a, b, c, ref tempResult);
-                    JVector q = tempResult.ClosestPointOnSimplex;
+                    var q = tempResult.ClosestPointOnSimplex;
 
                     float sqDist = ((JVector)(q - p)).LengthSquared();
                     // Update best closest point if (squared) distance is less than current best
@@ -937,7 +904,7 @@ namespace Jitter.Collision
                 if (pointOutsideACD != 0)
                 {
                     ClosestPtPointTriangle(p, a, c, d, ref tempResult);
-                    JVector q = tempResult.ClosestPointOnSimplex;
+                    var q = tempResult.ClosestPointOnSimplex;
                     //convert result bitmask!
 
                     float sqDist = ((JVector)(q - p)).LengthSquared();
@@ -961,7 +928,7 @@ namespace Jitter.Collision
                 if (pointOutsideADB != 0)
                 {
                     ClosestPtPointTriangle(p, a, d, b, ref tempResult);
-                    JVector q = tempResult.ClosestPointOnSimplex;
+                    var q = tempResult.ClosestPointOnSimplex;
                     //convert result bitmask!
 
                     float sqDist = ((JVector)(q - p)).LengthSquared();
@@ -978,7 +945,6 @@ namespace Jitter.Collision
                                 tempResult.BarycentricCoords[VertexC],
                                 0,
                                 tempResult.BarycentricCoords[VertexB]);
-
                     }
                 }
                 // Repeat test for face bdc
@@ -986,7 +952,7 @@ namespace Jitter.Collision
                 if (pointOutsideBDC != 0)
                 {
                     ClosestPtPointTriangle(p, b, d, c, ref tempResult);
-                    JVector q = tempResult.ClosestPointOnSimplex;
+                    var q = tempResult.ClosestPointOnSimplex;
                     //convert result bitmask!
                     float sqDist = ((JVector)(q - p)).LengthSquared();
                     if (sqDist < bestSqDist)

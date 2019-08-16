@@ -24,7 +24,6 @@ using Jitter.LinearMath;
 
 namespace Jitter.Dynamics.Constraints.SingleBody
 {
-
     #region Constraint Equations
     // Constraint formulation:
     // 
@@ -61,8 +60,6 @@ namespace Jitter.Dynamics.Constraints.SingleBody
     /// </summary>
     public class FixedAngle : Constraint
     {
-
-        private float biasFactor = 0.05f;
         private float softness = 0.0f;
 
         private JMatrix orientation;
@@ -87,7 +84,7 @@ namespace Jitter.Dynamics.Constraints.SingleBody
         /// <summary>
         /// Defines how big the applied impulses can get which correct errors.
         /// </summary>
-        public float BiasFactor { get { return biasFactor; } set { biasFactor = value; } }
+        public float BiasFactor { get; set; } = 0.05f;
 
         public JMatrix InitialOrientation { get { return orientation; } set { orientation = value; } }
 
@@ -111,7 +108,7 @@ namespace Jitter.Dynamics.Constraints.SingleBody
 
             JMatrix.Inverse(ref effectiveMass, out effectiveMass);
 
-            JMatrix q = JMatrix.Transpose(orientation) * body1.orientation;
+            var q = JMatrix.Transpose(orientation) * body1.orientation;
             JVector axis;
 
             float x = q.M32 - q.M23;
@@ -126,7 +123,7 @@ namespace Jitter.Dynamics.Constraints.SingleBody
 
             if (r != 0.0f) axis = axis * (1.0f / r);
 
-            bias = axis * biasFactor * (-1.0f / timestep);
+            bias = axis * BiasFactor * (-1.0f / timestep);
 
             // Apply previous frame solution as initial guess for satisfying the constraint.
             if (!body1.IsStatic) body1.angularVelocity += JVector.Transform(accumulatedImpulse, body1.invInertiaWorld);
@@ -137,16 +134,15 @@ namespace Jitter.Dynamics.Constraints.SingleBody
         /// </summary>
         public override void Iterate()
         {
-            JVector jv = body1.angularVelocity;
+            var jv = body1.angularVelocity;
 
-            JVector softnessVector = accumulatedImpulse * softnessOverDt;
+            var softnessVector = accumulatedImpulse * softnessOverDt;
 
-            JVector lambda = -1.0f * JVector.Transform(jv + bias + softnessVector, effectiveMass);
+            var lambda = -1.0f * JVector.Transform(jv + bias + softnessVector, effectiveMass);
 
             accumulatedImpulse += lambda;
 
             if (!body1.IsStatic) body1.angularVelocity += JVector.Transform(lambda, body1.invInertiaWorld);
         }
-
     }
 }

@@ -5,8 +5,6 @@ using System.Collections.ObjectModel;
 
 namespace Jitter.Collision
 {
-
-
     /// <summary>
     /// bodies have: connections - bodies they are connected with (via constraints or arbiters)
     ///              arbiters    - all arbiters they are involved
@@ -17,10 +15,9 @@ namespace Jitter.Collision
     /// </summary>
     class IslandManager : ReadOnlyCollection<CollisionIsland>
     {
-
         public static ResourcePool<CollisionIsland> Pool = new ResourcePool<CollisionIsland>();
 
-        private List<CollisionIsland> islands;
+        private readonly List<CollisionIsland> islands;
 
         public IslandManager()
             : base(new List<CollisionIsland>())
@@ -84,8 +81,7 @@ namespace Jitter.Collision
 
         public void MakeBodyStatic(RigidBody body)
         {
-
-            foreach (RigidBody b in body.connections) rmStackRb.Push(b);
+            foreach (var b in body.connections) rmStackRb.Push(b);
             while (rmStackRb.Count > 0) RemoveConnection(body,rmStackRb.Pop());
 
             // A static body doesn't have any connections.
@@ -105,17 +101,17 @@ namespace Jitter.Collision
             body.island = null;
         }
 
-        private Stack<RigidBody> rmStackRb = new Stack<RigidBody>();
-        private Stack<Arbiter> rmStackArb = new Stack<Arbiter>();
-        private Stack<Constraint> rmStackCstr = new Stack<Constraint>();
+        private readonly Stack<RigidBody> rmStackRb = new Stack<RigidBody>();
+        private readonly Stack<Arbiter> rmStackArb = new Stack<Arbiter>();
+        private readonly Stack<Constraint> rmStackCstr = new Stack<Constraint>();
 
         public void RemoveBody(RigidBody body)
         {
             // Remove everything.
-            foreach (Arbiter arbiter in body.arbiters) rmStackArb.Push(arbiter);
+            foreach (var arbiter in body.arbiters) rmStackArb.Push(arbiter);
             while (rmStackArb.Count > 0) ArbiterRemoved(rmStackArb.Pop());
 
-            foreach (Constraint constraint in body.constraints) rmStackCstr.Push(constraint);
+            foreach (var constraint in body.constraints) rmStackCstr.Push(constraint);
             while (rmStackCstr.Count > 0) ConstraintRemoved(rmStackCstr.Pop());
 
             body.arbiters.Clear();
@@ -125,7 +121,6 @@ namespace Jitter.Collision
             {
                 System.Diagnostics.Debug.Assert(body.island.islandManager == this,
                     "IslandManager Inconsistency: IslandManager doesn't own the Island.");
-
 
                 // the body should now form an island on his own.
                 // thats okay, but since static bodies dont have islands
@@ -140,15 +135,13 @@ namespace Jitter.Collision
 
                 body.island = null;
             }
-
         }
-
 
         public void RemoveAll()
         {
-            foreach (CollisionIsland island in islands)
+            foreach (var island in islands)
             {
-                foreach (RigidBody body in island.bodies)
+                foreach (var body in island.bodies)
                 {
                     body.arbiters.Clear();
                     body.constraints.Clear();
@@ -169,7 +162,7 @@ namespace Jitter.Collision
             {
                 if (body2.island == null)
                 {
-                    CollisionIsland newIsland = Pool.GetNew();
+                    var newIsland = Pool.GetNew();
                     newIsland.islandManager = this;
 
                     body2.island = newIsland;
@@ -181,7 +174,7 @@ namespace Jitter.Collision
             {
                 if (body1.island == null)
                 {
-                    CollisionIsland newIsland = Pool.GetNew();
+                    var newIsland = Pool.GetNew();
                     newIsland.islandManager = this;
 
                     body1.island = newIsland;
@@ -232,12 +225,11 @@ namespace Jitter.Collision
             }
         }
 
+        private readonly Queue<RigidBody> leftSearchQueue = new Queue<RigidBody>();
+        private readonly Queue<RigidBody> rightSearchQueue = new Queue<RigidBody>();
 
-        private Queue<RigidBody> leftSearchQueue = new Queue<RigidBody>();
-        private Queue<RigidBody> rightSearchQueue = new Queue<RigidBody>();
-
-        private List<RigidBody> visitedBodiesLeft = new List<RigidBody>();
-        private List<RigidBody> visitedBodiesRight = new List<RigidBody>();
+        private readonly List<RigidBody> visitedBodiesLeft = new List<RigidBody>();
+        private readonly List<RigidBody> visitedBodiesRight = new List<RigidBody>();
 
         private void SplitIslands(RigidBody body0, RigidBody body1)
         {
@@ -255,12 +247,12 @@ namespace Jitter.Collision
 
             while (leftSearchQueue.Count > 0 && rightSearchQueue.Count > 0)
             {
-                RigidBody currentNode = leftSearchQueue.Dequeue();
+                var currentNode = leftSearchQueue.Dequeue();
                 if (!currentNode.isStatic)
                 {
                     for (int i = 0; i < currentNode.connections.Count; i++)
                     {
-                        RigidBody connectedNode = currentNode.connections[i];
+                        var connectedNode = currentNode.connections[i];
 
                         if (connectedNode.marker == 0)
                         {
@@ -280,10 +272,9 @@ namespace Jitter.Collision
                 currentNode = rightSearchQueue.Dequeue();
                 if (!currentNode.isStatic)
                 {
-
                     for (int i = 0; i < currentNode.connections.Count; i++)
                     {
-                        RigidBody connectedNode = currentNode.connections[i];
+                        var connectedNode = currentNode.connections[i];
 
                         if (connectedNode.marker == 0)
                         {
@@ -301,7 +292,7 @@ namespace Jitter.Collision
                 }
             }
 
-            CollisionIsland island = Pool.GetNew();
+            var island = Pool.GetNew();
             island.islandManager = this;
 
             islands.Add(island);
@@ -310,18 +301,18 @@ namespace Jitter.Collision
             {
                 for (int i = 0; i < visitedBodiesLeft.Count; i++)
                 {
-                    RigidBody body = visitedBodiesLeft[i];
+                    var body = visitedBodiesLeft[i];
                     body1.island.bodies.Remove(body);
                     island.bodies.Add(body);
                     body.island = island;
 
-                    foreach (Arbiter a in body.arbiters)
+                    foreach (var a in body.arbiters)
                     {
                         body1.island.arbiter.Remove(a);
                         island.arbiter.Add(a);
                     }
 
-                    foreach (Constraint c in body.constraints)
+                    foreach (var c in body.constraints)
                     {
                         body1.island.constraints.Remove(c);
                         island.constraints.Add(c);
@@ -334,18 +325,18 @@ namespace Jitter.Collision
             {
                 for (int i = 0; i < visitedBodiesRight.Count; i++)
                 {
-                    RigidBody body = visitedBodiesRight[i];
+                    var body = visitedBodiesRight[i];
                     body0.island.bodies.Remove(body);
                     island.bodies.Add(body);
                     body.island = island;
 
-                    foreach (Arbiter a in body.arbiters)
+                    foreach (var a in body.arbiters)
                     {
                         body0.island.arbiter.Remove(a);
                         island.arbiter.Add(a);
                     }
 
-                    foreach (Constraint c in body.constraints)
+                    foreach (var c in body.constraints)
                     {
                         body0.island.constraints.Remove(c);
                         island.constraints.Add(c);
@@ -402,34 +393,33 @@ namespace Jitter.Collision
                         largeIslandOwner = body1;
                     }
 
-                    CollisionIsland giveBackIsland = smallIslandOwner.island;
+                    var giveBackIsland = smallIslandOwner.island;
 
                     Pool.GiveBack(giveBackIsland);
                     islands.Remove(giveBackIsland);
 
-                    foreach (RigidBody b in giveBackIsland.bodies)
+                    foreach (var b in giveBackIsland.bodies)
                     {
                         b.island = largeIslandOwner.island;
                         largeIslandOwner.island.bodies.Add(b);
                     }
 
-                    foreach (Arbiter a in giveBackIsland.arbiter)
+                    foreach (var a in giveBackIsland.arbiter)
                     {
                         largeIslandOwner.island.arbiter.Add(a);
                     }
 
-                    foreach (Constraint c in giveBackIsland.constraints)
+                    foreach (var c in giveBackIsland.constraints)
                     {
                         largeIslandOwner.island.constraints.Add(c);
                     }
 
                     giveBackIsland.ClearLists();
                 }
-
             }
             else if (body0.island == null) // <- both are null
             {
-                CollisionIsland island = Pool.GetNew();
+                var island = Pool.GetNew();
                 island.islandManager = this;
 
                 body0.island = body1.island = island;
@@ -439,10 +429,7 @@ namespace Jitter.Collision
 
                 islands.Add(island);
             }
-
         }
-
-
 
 
     }

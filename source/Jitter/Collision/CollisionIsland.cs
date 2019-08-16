@@ -48,7 +48,6 @@ namespace Jitter.Collision
                     body.inactiveTime = 0.0f;
                 }
             }
-
         }
 
         internal void ClearLists()

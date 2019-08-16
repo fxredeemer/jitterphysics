@@ -26,73 +26,70 @@ namespace Jitter.Dynamics.Joints
 {
     public class PrismaticJoint : Joint
     {
-        // form prismatic joint
-        FixedAngle fixedAngle;
-        PointOnLine pointOnLine;
+        readonly PointPointDistance minDistance = null;
 
-        PointPointDistance minDistance = null;
-        PointPointDistance maxDistance = null;
-
-        public PointPointDistance MaximumDistanceConstraint { get { return maxDistance; } }
+        public PointPointDistance MaximumDistanceConstraint { get; } = null;
         public PointPointDistance MinimumDistanceConstraint { get { return minDistance; } }
 
-        public FixedAngle FixedAngleConstraint { get { return fixedAngle; } }
-        public PointOnLine PointOnLineConstraint { get { return pointOnLine; } }
+        public FixedAngle FixedAngleConstraint { get; }
+        public PointOnLine PointOnLineConstraint { get; }
 
         public PrismaticJoint(World world, RigidBody body1, RigidBody body2)
             : base(world)
         {
-            fixedAngle = new FixedAngle(body1, body2);
-            pointOnLine = new PointOnLine(body1, body2, body1.position, body2.position);
+            FixedAngleConstraint = new FixedAngle(body1, body2);
+            PointOnLineConstraint = new PointOnLine(body1, body2, body1.position, body2.position);
         }
 
         public PrismaticJoint(World world, RigidBody body1, RigidBody body2,float minimumDistance, float maximumDistance)
             : base(world)
         {
-            fixedAngle = new FixedAngle(body1, body2);
-            pointOnLine = new PointOnLine(body1, body2, body1.position, body2.position);
+            FixedAngleConstraint = new FixedAngle(body1, body2);
+            PointOnLineConstraint = new PointOnLine(body1, body2, body1.position, body2.position);
 
-            minDistance = new PointPointDistance(body1, body2, body1.position, body2.position);
-            minDistance.Behavior = PointPointDistance.DistanceBehavior.LimitMinimumDistance;
-            minDistance.Distance = minimumDistance;
+            minDistance = new PointPointDistance(body1, body2, body1.position, body2.position)
+            {
+                Behavior = PointPointDistance.DistanceBehavior.LimitMinimumDistance,
+                Distance = minimumDistance
+            };
 
-            maxDistance = new PointPointDistance(body1, body2, body1.position, body2.position);
-            maxDistance.Behavior = PointPointDistance.DistanceBehavior.LimitMaximumDistance;
-            maxDistance.Distance = maximumDistance;
+            MaximumDistanceConstraint = new PointPointDistance(body1, body2, body1.position, body2.position)
+            {
+                Behavior = PointPointDistance.DistanceBehavior.LimitMaximumDistance,
+                Distance = maximumDistance
+            };
         }
-
 
         public PrismaticJoint(World world, RigidBody body1, RigidBody body2, JVector pointOnBody1,JVector pointOnBody2)
             : base(world)
         {
-            fixedAngle = new FixedAngle(body1, body2);
-            pointOnLine = new PointOnLine(body1, body2, pointOnBody1, pointOnBody2);
+            FixedAngleConstraint = new FixedAngle(body1, body2);
+            PointOnLineConstraint = new PointOnLine(body1, body2, pointOnBody1, pointOnBody2);
         }
-
 
         public PrismaticJoint(World world, RigidBody body1, RigidBody body2, JVector pointOnBody1, JVector pointOnBody2, float maximumDistance, float minimumDistance)
             : base(world)
         {
-            fixedAngle = new FixedAngle(body1, body2);
-            pointOnLine = new PointOnLine(body1, body2, pointOnBody1, pointOnBody2);
+            FixedAngleConstraint = new FixedAngle(body1, body2);
+            PointOnLineConstraint = new PointOnLine(body1, body2, pointOnBody1, pointOnBody2);
         }
 
         public override void Activate()
         {
-            if (maxDistance != null) World.AddConstraint(maxDistance);
+            if (MaximumDistanceConstraint != null) World.AddConstraint(MaximumDistanceConstraint);
             if (minDistance != null) World.AddConstraint(minDistance);
 
-            World.AddConstraint(fixedAngle);
-            World.AddConstraint(pointOnLine);
+            World.AddConstraint(FixedAngleConstraint);
+            World.AddConstraint(PointOnLineConstraint);
         }
 
         public override void Deactivate()
         {
-            if (maxDistance != null) World.RemoveConstraint(maxDistance);
+            if (MaximumDistanceConstraint != null) World.RemoveConstraint(MaximumDistanceConstraint);
             if (minDistance != null) World.RemoveConstraint(minDistance);
 
-            World.RemoveConstraint(fixedAngle);
-            World.RemoveConstraint(pointOnLine);
+            World.RemoveConstraint(FixedAngleConstraint);
+            World.RemoveConstraint(PointOnLineConstraint);
         }
     }
 }

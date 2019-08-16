@@ -11,7 +11,7 @@ namespace JitterDemo
 {
     public class ConvexHullObject : DrawableGameComponent
     {
-        private static Random random = new Random();
+        private static readonly Random random = new Random();
 
         public RigidBody body;
 
@@ -20,27 +20,26 @@ namespace JitterDemo
         public ConvexHullObject(Game game)
             : base(game)
         {
-
         }
 
         public static void ExtractData(List<JVector> vertices, List<TriangleVertexIndices> indices, Model model)
         {
-            Matrix[] bones_ = new Matrix[model.Bones.Count];
+            var bones_ = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(bones_);
-            foreach (ModelMesh modelmesh in model.Meshes)
+            foreach (var modelmesh in model.Meshes)
             {
-                JMatrix xform = Conversion.ToJitterMatrix(bones_[modelmesh.ParentBone.Index]);
-                foreach (ModelMeshPart meshPart in modelmesh.MeshParts)
+                var xform = Conversion.ToJitterMatrix(bones_[modelmesh.ParentBone.Index]);
+                foreach (var meshPart in modelmesh.MeshParts)
                 {
                     // Before we add any more where are we starting from 
                     int offset = vertices.Count;
 
                     // Read the format of the vertex buffer 
-                    VertexDeclaration declaration = meshPart.VertexBuffer.VertexDeclaration;
-                    VertexElement[] vertexElements = declaration.GetVertexElements();
+                    var declaration = meshPart.VertexBuffer.VertexDeclaration;
+                    var vertexElements = declaration.GetVertexElements();
                     // Find the element that holds the position 
-                    VertexElement vertexPosition = new VertexElement();
-                    foreach (VertexElement vert in vertexElements)
+                    var vertexPosition = new VertexElement();
+                    foreach (var vert in vertexElements)
                     {
                         if (vert.VertexElementUsage == VertexElementUsage.Position &&
                         vert.VertexElementFormat == VertexElementFormat.Vector3)
@@ -58,7 +57,7 @@ namespace JitterDemo
                         throw new Exception("Model uses unsupported vertex format!");
                     }
                     // This where we store the vertices until transformed 
-                    JVector[] allVertex = new JVector[meshPart.NumVertices];
+                    var allVertex = new JVector[meshPart.NumVertices];
                     // Read the vertices from the buffer in to the array 
                     meshPart.VertexBuffer.GetData<JVector>(
                         meshPart.VertexOffset * declaration.VertexStride + vertexPosition.Offset,
@@ -88,7 +87,7 @@ namespace JitterDemo
                     0,
                     meshPart.PrimitiveCount * 3);
                     // Each TriangleVertexIndices holds the three indexes to each vertex that makes up a triangle 
-                    TriangleVertexIndices[] tvi = new TriangleVertexIndices[meshPart.PrimitiveCount];
+                    var tvi = new TriangleVertexIndices[meshPart.PrimitiveCount];
                     for (int i = 0; i != tvi.Length; ++i)
                     {
                         // The offset is because we are storing them all in the one array and the 
@@ -105,22 +104,20 @@ namespace JitterDemo
 
         static ConvexHullShape cvhs = null;
 
-
         protected override void LoadContent()
         {
             model = Game.Content.Load<Model>("convexhull");
 
             if (cvhs == null)
             {
-
-                List<JVector> jvecs = new List<JVector>();
-                List<TriangleVertexIndices> indices = new List<TriangleVertexIndices>();
+                var jvecs = new List<JVector>();
+                var indices = new List<TriangleVertexIndices>();
 
                 ExtractData(jvecs, indices, model);
 
                 int[] convexHullIndices = JConvexHull.Build(jvecs, JConvexHull.Approximation.Level6);
 
-                List<JVector> hullPoints = new List<JVector>();
+                var hullPoints = new List<JVector>();
                 for (int i = 0; i < convexHullIndices.Length; i++)
                 {
                     hullPoints.Add(jvecs[convexHullIndices[i]]);
@@ -129,18 +126,17 @@ namespace JitterDemo
                 cvhs = new ConvexHullShape(hullPoints);
             }
 
-
-            body = new RigidBody(cvhs);
-            body.Tag = BodyTag.DontDrawMe;
-
-
+            body = new RigidBody(cvhs)
+            {
+                Tag = BodyTag.DontDrawMe
+            };
         }
 
         public override void Draw(GameTime gameTime)
         {
-            ConvexHullShape hullShape = body.Shape as ConvexHullShape;
+            var hullShape = body.Shape as ConvexHullShape;
 
-            Matrix world = Conversion.ToXNAMatrix(body.Orientation);
+            var world = Conversion.ToXNAMatrix(body.Orientation);
 
             // RigidBody.Position gives you the position of the center of mass of the shape.
             // But this is not the center of our graphical represantion, use the
@@ -148,11 +144,10 @@ namespace JitterDemo
             world.Translation = Conversion.ToXNAVector(body.Position +
                 JVector.Transform(hullShape.Shift, body.Orientation));
 
-
-            Matrix[] boneTransforms = new Matrix[model.Bones.Count];
+            var boneTransforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(boneTransforms);
 
-            foreach (ModelMesh mesh in model.Meshes)
+            foreach (var mesh in model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
@@ -165,9 +160,7 @@ namespace JitterDemo
                 mesh.Draw();
             }
 
-
             base.Draw(gameTime);
         }
-
     }
 }

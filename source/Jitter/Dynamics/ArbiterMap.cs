@@ -65,7 +65,7 @@ namespace Jitter.Dynamics
         /// <returns>Returns true if they are equal, otherwise false.</returns>
         public override bool Equals(object obj)
         {
-            ArbiterKey other = (ArbiterKey)obj;
+            var other = (ArbiterKey)obj;
             return (other.body1.Equals(body1) && other.body2.Equals(body2) ||
                 other.body1.Equals(body2) && other.body2.Equals(body1));
         }
@@ -82,7 +82,6 @@ namespace Jitter.Dynamics
             return body1.GetHashCode() + body2.GetHashCode();
         }
         #endregion
-
 
     }
 
@@ -105,11 +104,11 @@ namespace Jitter.Dynamics
     /// </summary>
     public class ArbiterMap : IEnumerable
     {
-        private Dictionary<ArbiterKey, Arbiter> dictionary =
+        private readonly Dictionary<ArbiterKey, Arbiter> dictionary =
             new Dictionary<ArbiterKey, Arbiter>(2048, arbiterKeyComparer);
 
         private ArbiterKey lookUpKey;
-        private static ArbiterKeyComparer arbiterKeyComparer = new ArbiterKeyComparer();
+        private static readonly ArbiterKeyComparer arbiterKeyComparer = new ArbiterKeyComparer();
 
         /// <summary>
         /// Initializes a new instance of the ArbiterMap class.
@@ -170,5 +169,4 @@ namespace Jitter.Dynamics
             return dictionary.Values.GetEnumerator();
         }
     }
-
 }

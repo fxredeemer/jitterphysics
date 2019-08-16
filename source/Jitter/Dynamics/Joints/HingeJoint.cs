@@ -24,14 +24,12 @@ using Jitter.Dynamics.Constraints;
 
 namespace Jitter.Dynamics.Joints
 {
-
     /// <summary>
     /// Connects to bodies with a hinge joint.
     /// </summary>
     public class HingeJoint : Joint
     {
-
-        private PointOnPoint[] worldPointConstraint;
+        private readonly PointOnPoint[] worldPointConstraint;
 
         public PointOnPoint PointConstraint1 { get { return worldPointConstraint[0]; } }
         public PointOnPoint PointConstraint2 { get { return worldPointConstraint[1]; } }
@@ -50,8 +48,8 @@ namespace Jitter.Dynamics.Joints
 
             hingeAxis *= 0.5f;
 
-            JVector pos1 = position; JVector.Add(ref pos1,ref hingeAxis,out pos1);
-            JVector pos2 = position; JVector.Subtract(ref pos2,ref hingeAxis,out pos2);
+            var pos1 = position; JVector.Add(ref pos1,ref hingeAxis,out pos1);
+            var pos2 = position; JVector.Subtract(ref pos2,ref hingeAxis,out pos2);
 
             worldPointConstraint[0] = new PointOnPoint(body1,body2,pos1);
             worldPointConstraint[1] = new PointOnPoint(body1,body2,pos2);

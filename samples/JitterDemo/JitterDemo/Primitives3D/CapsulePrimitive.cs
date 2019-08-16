@@ -28,7 +28,6 @@ namespace JitterDemo.Primitives3D
         {
         }
 
-
         /// <summary>
         /// Constructs a new sphere primitive,
         /// with the specified size and tessellation level.
@@ -70,8 +69,8 @@ namespace JitterDemo.Primitives3D
                     float dx = (float)Math.Cos(longitude) * dxz;
                     float dz = (float)Math.Sin(longitude) * dxz;
 
-                    Vector3 normal = new Vector3(dx, dy, dz);
-                    Vector3 position = normal * radius;
+                    var normal = new Vector3(dx, dy, dz);
+                    var position = normal * radius;
 
                     if (bla) position += Vector3.Up * 0.5f * length;
                     else position += Vector3.Down * 0.5f * length;

@@ -78,7 +78,6 @@ namespace JitterDemo
             this.Window.Title = "Jitter Physics Demo - Jitter";
 #endif
 
-
             var rr = new Random();
             rndColors = new Color[20];
 
@@ -86,7 +85,6 @@ namespace JitterDemo
             {
                 rndColors[i] = new Color((float)rr.NextDouble(), (float)rr.NextDouble(), (float)rr.NextDouble());
             }
-
 
             wireframe = new RasterizerState
             {
@@ -97,7 +95,6 @@ namespace JitterDemo
             {
                 CullMode = CullMode.None
             };
-
 
             normal = new RasterizerState();
         }
@@ -132,7 +129,6 @@ namespace JitterDemo
 
             PhysicScenes = new List<Scenes.Scene>();
 
-
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
             {
                 if (type.Namespace == "JitterDemo.Scenes" && !type.IsAbstract && type.DeclaringType == null)
@@ -153,9 +149,7 @@ namespace JitterDemo
             }
 
             base.Initialize();
-
         }
-
 
         private Vector3 RayTo(int x, int y)
         {
@@ -221,7 +215,6 @@ namespace JitterDemo
             return keyboard || gamePad;
         }
 
-
         // Hold previous input states.
         private KeyboardState keyboardPreviousState = new KeyboardState();
         private GamePadState gamePadPreviousState = new GamePadState();
@@ -272,7 +265,6 @@ namespace JitterDemo
                 var camp = Conversion.ToJitterVector(Camera.Position);
 
                 ray = JVector.Normalize(ray) * 100;
-
 
                 bool result = World.CollisionSystem.Raycast(camp, ray, RaycastCallback, out grabBody, out hitNormal, out float fraction);
 
@@ -329,12 +321,10 @@ namespace JitterDemo
                 grabConstraint = null;
             }
 
-
             if (PressedOnce(Keys.Space, Buttons.B))
             {
                 SpawnRandomPrimitive(Conversion.ToJitterVector(Camera.Position),
                     Conversion.ToJitterVector((Camera.Target - Camera.Position) * 40.0f));
-
             }
 
             if (PressedOnce(Keys.Add, Buttons.X))
@@ -370,8 +360,6 @@ namespace JitterDemo
 
             base.Update(gameTime);
         }
-
-
 
         private bool RaycastCallback(RigidBody body, JVector normal, float fraction)
         {
@@ -444,7 +432,6 @@ namespace JitterDemo
             body.LinearVelocity = velocity;
             lastBody = body;
         }
-
 
         private float accUpdateTime = 0.0f;
         private void UpdateDisplayText(GameTime time)
@@ -523,7 +510,6 @@ namespace JitterDemo
                 primitive = primitives[(int)Primitives.capsule];
                 var cs = shape as CapsuleShape;
                 scaleMatrix = Matrix.CreateScale(cs.Radius * 2, cs.Length, cs.Radius * 2);
-
             }
             else if (shape is ConeShape)
             {
@@ -570,12 +556,8 @@ namespace JitterDemo
 
                     AddShapeToDrawList(ts.Shape, ori, pos);
                 }
-
             }
-
         }
-
-
 
         private void DrawJitterDebugInfo()
         {
@@ -615,7 +597,6 @@ namespace JitterDemo
             Walk(cloth.DynamicTree, cloth.DynamicTree.Root);
         }
 
-
         private void DrawIslands()
         {
             JBBox box;
@@ -630,14 +611,11 @@ namespace JitterDemo
                 }
 
                 DebugDrawer.DrawAabb(box.Min, box.Max, island.IsActive() ? Color.Green : Color.Yellow);
-
             }
         }
 
-
         private void DrawCloth()
         {
-
             foreach (SoftBody body in World.SoftBodies)
             {
                 if (body.Tag is BodyTag && ((BodyTag)body.Tag) == BodyTag.DontDrawMe)
@@ -655,7 +633,6 @@ namespace JitterDemo
                 //DrawDynamicTree(body);
             }
         }
-
 
         protected override void Draw(GameTime gameTime)
         {
@@ -701,7 +678,6 @@ namespace JitterDemo
             //        DebugDrawer.DrawLine(c.Position1 + 0.5f * JVector.Up, c.Position1 + 0.5f * JVector.Down, Color.Green);
             //        DebugDrawer.DrawLine(c.Position1 + 0.5f * JVector.Forward, c.Position1 + 0.5f * JVector.Backward, Color.Green);
 
-
             //        DebugDrawer.DrawLine(c.Position2 + 0.5f * JVector.Left, c.Position2 + 0.5f * JVector.Right, Color.Red);
             //        DebugDrawer.DrawLine(c.Position2 + 0.5f * JVector.Up, c.Position2 + 0.5f * JVector.Down, Color.Red);
             //        DebugDrawer.DrawLine(c.Position2 + 0.5f * JVector.Forward, c.Position2 + 0.5f * JVector.Backward, Color.Red);
@@ -719,7 +695,5 @@ namespace JitterDemo
 
             GraphicsDevice.RasterizerState = normal;
         }
-
-
     }
 }

@@ -24,10 +24,9 @@ using System.Collections;
 
 namespace Jitter.DataStructures
 {
-
     public class ReadOnlyHashset<T> : IEnumerable, IEnumerable<T>
     {
-        private HashSet<T> hashset;
+        private readonly HashSet<T> hashset;
 
         public ReadOnlyHashset(HashSet<T> hashset) { this.hashset = hashset; }
 
@@ -44,6 +43,5 @@ namespace Jitter.DataStructures
         public int Count { get { return hashset.Count; } }
 
         public bool Contains(T item) { return hashset.Contains(item); }
-
     }
 }

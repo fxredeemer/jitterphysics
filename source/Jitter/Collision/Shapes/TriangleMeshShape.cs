@@ -1,55 +1,15 @@
-﻿/* Copyright (C) <2009-2011> <Thorben Linneweber, Jitter Physics>
-* 
-*  This software is provided 'as-is', without any express or implied
-*  warranty.  In no event will the authors be held liable for any damages
-*  arising from the use of this software.
-*
-*  Permission is granted to anyone to use this software for any purpose,
-*  including commercial applications, and to alter it and redistribute it
-*  freely, subject to the following restrictions:
-*
-*  1. The origin of this software must not be misrepresented; you must not
-*      claim that you wrote the original software. If you use this software
-*      in a product, an acknowledgment in the product documentation would be
-*      appreciated but is not required.
-*  2. Altered source versions must be plainly marked as such, and must not be
-*      misrepresented as being the original software.
-*  3. This notice may not be removed or altered from any source distribution. 
-*/
-
-#region Using Statements
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Jitter.LinearMath;
-#endregion
 
 namespace Jitter.Collision.Shapes
 {
-
-    /// <summary>
-    /// A <see cref="Shape"/> representing a triangleMesh.
-    /// </summary>
     public class TriangleMeshShape : Multishape
     {
-        private List<int> potentialTriangles = new List<int>();
-        private Octree octree = null;
+        private readonly List<int> potentialTriangles = new List<int>();
+        private readonly Octree octree = null;
 
-        private float sphericalExpansion = 0.05f;
+        public float SphericalExpansion { get; set; } = 0.05f;
 
-        /// <summary>
-        /// Expands the triangles by the specified amount.
-        /// This stabilizes collision detection for flat shapes.
-        /// </summary>
-        public float SphericalExpansion 
-        { 
-            get { return sphericalExpansion; } 
-            set { sphericalExpansion = value; } 
-        }
-
-        /// <summary>
-        /// Creates a new istance if the TriangleMeshShape class.
-        /// </summary>
-        /// <param name="octree">The octree which holds the triangles
-        /// of a mesh.</param>
         public TriangleMeshShape(Octree octree)
         {
             this.octree = octree;
@@ -58,36 +18,27 @@ namespace Jitter.Collision.Shapes
 
         internal TriangleMeshShape() { }
 
- 
         protected override Multishape CreateWorkingClone()
         {
-            TriangleMeshShape clone = new TriangleMeshShape(octree);
-            clone.sphericalExpansion = sphericalExpansion;
+            var clone = new TriangleMeshShape(octree)
+            {
+                SphericalExpansion = SphericalExpansion
+            };
             return clone;
         }
 
-
-        /// <summary>
-        /// Passes a axis aligned bounding box to the shape where collision
-        /// could occour.
-        /// </summary>
-        /// <param name="box">The bounding box where collision could occur.</param>
-        /// <returns>The upper index with which <see cref="SetCurrentShape"/> can be 
-        /// called.</returns>
         public override int Prepare(ref JBBox box)
         {
             potentialTriangles.Clear();
 
-            #region Expand Spherical
-            JBBox exp = box;
+            var exp = box;
 
-            exp.Min.X -= sphericalExpansion;
-            exp.Min.Y -= sphericalExpansion;
-            exp.Min.Z -= sphericalExpansion;
-            exp.Max.X += sphericalExpansion;
-            exp.Max.Y += sphericalExpansion;
-            exp.Max.Z += sphericalExpansion;
-            #endregion
+            exp.Min.X -= SphericalExpansion;
+            exp.Min.Y -= SphericalExpansion;
+            exp.Min.Z -= SphericalExpansion;
+            exp.Max.X += SphericalExpansion;
+            exp.Max.Y += SphericalExpansion;
+            exp.Max.Z += SphericalExpansion;
 
             octree.GetTrianglesIntersectingtAABox(potentialTriangles, ref exp);
 
@@ -96,9 +47,9 @@ namespace Jitter.Collision.Shapes
 
         public override void MakeHull(ref List<JVector> triangleList, int generationThreshold)
         {
-            JBBox large = JBBox.LargeBox;
+            var large = JBBox.LargeBox;
 
-            List<int> indices = new List<int>();
+            var indices = new List<int>();
             octree.GetTrianglesIntersectingtAABox(indices, ref large);
 
             for (int i = 0; i < indices.Count; i++)
@@ -107,44 +58,26 @@ namespace Jitter.Collision.Shapes
                 triangleList.Add(octree.GetVertex(octree.GetTriangleVertexIndex(i).I1));
                 triangleList.Add(octree.GetVertex(octree.GetTriangleVertexIndex(i).I2));
             }
-
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rayOrigin"></param>
-        /// <param name="rayDelta"></param>
-        /// <returns></returns>
         public override int Prepare(ref JVector rayOrigin, ref JVector rayDelta)
         {
             potentialTriangles.Clear();
 
-            #region Expand Spherical
-            JVector expDelta;
-            JVector.Normalize(ref rayDelta, out expDelta);
-            expDelta = rayDelta + expDelta * sphericalExpansion;
-            #endregion
+            JVector.Normalize(ref rayDelta, out var expDelta);
+            expDelta = rayDelta + expDelta * SphericalExpansion;
 
             octree.GetTrianglesIntersectingRay(potentialTriangles, rayOrigin, expDelta);
 
             return potentialTriangles.Count;
         }
 
-        JVector[] vecs = new JVector[3];
+        readonly JVector[] vecs = new JVector[3];
 
-        /// <summary>
-        /// SupportMapping. Finds the point in the shape furthest away from the given direction.
-        /// Imagine a plane with a normal in the search direction. Now move the plane along the normal
-        /// until the plane does not intersect the shape. The last intersection point is the result.
-        /// </summary>
-        /// <param name="direction">The direction.</param>
-        /// <param name="result">The result.</param>
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            JVector exp;
-            JVector.Normalize(ref direction, out exp);
-            exp *= sphericalExpansion;
+            JVector.Normalize(ref direction, out var exp);
+            exp *= SphericalExpansion;
 
             float min = JVector.Dot(ref vecs[0], ref direction);
             int minIndex = 0;
@@ -164,55 +97,40 @@ namespace Jitter.Collision.Shapes
             result = vecs[minIndex] + exp;
         }
 
-        /// <summary>
-        /// Gets the axis aligned bounding box of the orientated shape. This includes
-        /// the whole shape.
-        /// </summary>
-        /// <param name="orientation">The orientation of the shape.</param>
-        /// <param name="box">The axis aligned bounding box of the shape.</param>
         public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
         {
             box = octree.rootNodeBox;
 
-            #region Expand Spherical
-            box.Min.X -= sphericalExpansion;
-            box.Min.Y -= sphericalExpansion;
-            box.Min.Z -= sphericalExpansion;
-            box.Max.X += sphericalExpansion;
-            box.Max.Y += sphericalExpansion;
-            box.Max.Z += sphericalExpansion;
-            #endregion
+            box.Min.X -= SphericalExpansion;
+            box.Min.Y -= SphericalExpansion;
+            box.Min.Z -= SphericalExpansion;
+            box.Max.X += SphericalExpansion;
+            box.Max.Y += SphericalExpansion;
+            box.Max.Z += SphericalExpansion;
 
             box.Transform(ref orientation);
         }
 
-        private bool flipNormal = false;
-        public bool FlipNormals { get { return flipNormal; } set { flipNormal = value; } }
+        public bool FlipNormals { get; set; } = false;
 
-        /// <summary>
-        /// Sets the current shape. First <see cref="Prepare"/> has to be called.
-        /// After SetCurrentShape the shape immitates another shape.
-        /// </summary>
-        /// <param name="index"></param>
         public override void SetCurrentShape(int index)
         {
             vecs[0] = octree.GetVertex(octree.tris[potentialTriangles[index]].I0);
             vecs[1] = octree.GetVertex(octree.tris[potentialTriangles[index]].I1);
             vecs[2] = octree.GetVertex(octree.tris[potentialTriangles[index]].I2);
 
-            JVector sum = vecs[0];
+            var sum = vecs[0];
             JVector.Add(ref sum, ref vecs[1], out sum);
             JVector.Add(ref sum, ref vecs[2], out sum);
             JVector.Multiply(ref sum, 1.0f / 3.0f, out sum);
 
-      
             geomCen = sum;
 
             JVector.Subtract(ref vecs[1], ref vecs[0], out sum);
             JVector.Subtract(ref vecs[2], ref vecs[0], out normal);
             JVector.Cross(ref sum, ref normal, out normal);
 
-            if (flipNormal) normal.Negate();
+            if (FlipNormals) normal.Negate();
         }
 
         private JVector normal = JVector.Up;
@@ -222,5 +140,4 @@ namespace Jitter.Collision.Shapes
             normal = this.normal;
         }
     }
-
 }

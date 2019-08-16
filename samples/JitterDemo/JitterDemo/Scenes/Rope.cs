@@ -7,7 +7,6 @@ namespace JitterDemo.Scenes
 {
     class Rope : Scene
     {
-
         public Rope(JitterDemo demo)
             : base(demo)
         {
@@ -21,19 +20,21 @@ namespace JitterDemo.Scenes
 
             for (int i = 0; i < 12; i++)
             {
-                RigidBody body = new RigidBody(new BoxShape(JVector.One));
-                body.Position = new JVector(i * 1.5f-20, 0.5f, 0);
+                var body = new RigidBody(new BoxShape(JVector.One))
+                {
+                    Position = new JVector(i * 1.5f - 20, 0.5f, 0)
+                };
 
-                JVector jpos2 = body.Position;
+                var jpos2 = body.Position;
 
                 Demo.World.AddBody(body);
                 body.Update();
 
                 if (last != null)
                 {
-                    JVector jpos3 = last.Position;
+                    var jpos3 = last.Position;
 
-                    JVector dif; JVector.Subtract(ref jpos2, ref jpos3, out dif);
+                    JVector.Subtract(ref jpos2, ref jpos3, out var dif);
                     JVector.Multiply(ref dif, 0.5f, out dif);
                     JVector.Subtract(ref jpos2, ref dif, out dif);
 
@@ -43,9 +44,6 @@ namespace JitterDemo.Scenes
 
                 last = body;
             }
-           
         }
-
-
     }
 }

@@ -7,20 +7,17 @@ namespace JitterDemo.Scenes
 {
     public class PrismaticJointTest : Scene
     {
-
         public PrismaticJointTest(JitterDemo demo)
             : base(demo)
         {
-
-
         }
 
         public override void Build()
         {
             AddGround();
 
-            RigidBody body1 = new RigidBody(new BoxShape(1, 1, 1));
-            RigidBody body2 = new RigidBody(new BoxShape(1, 1, 1));
+            var body1 = new RigidBody(new BoxShape(1, 1, 1));
+            var body2 = new RigidBody(new BoxShape(1, 1, 1));
 
             body1.Position = new JVector(0, 7, 0);
             body2.Position = new JVector(0, 4, 0);
@@ -29,7 +26,7 @@ namespace JitterDemo.Scenes
             // the minimum allowed distance is 3
             // the maximum allowed distance is also 3
             // => the body should be fixed on the slider
-            PrismaticJoint pj = new PrismaticJoint(Demo.World, body1, body2, 3, 3);
+            var pj = new PrismaticJoint(Demo.World, body1, body2, 3, 3);
 
             // but we set very heigh softness (1.0f) to the minimum distance
             // so we have something like a suspension effect.
@@ -40,6 +37,5 @@ namespace JitterDemo.Scenes
             Demo.World.AddBody(body1);
             Demo.World.AddBody(body2);
         }
-
     }
 }

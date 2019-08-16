@@ -11,7 +11,6 @@ namespace JitterDemo.Scenes
 {
     public class TriangleMesh : Scene
     {
-
         Model model;
 
         public TriangleMesh(JitterDemo demo)
@@ -27,15 +26,15 @@ namespace JitterDemo.Scenes
         /// <param name="model"></param>
         public void ExtractData(List<Vector3> vertices, List<TriangleVertexIndices> indices, Model model)
         {
-            Matrix[] bones_ = new Matrix[model.Bones.Count];
+            var bones_ = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(bones_);
-            foreach (ModelMesh mm in model.Meshes)
+            foreach (var mm in model.Meshes)
             {
-                Matrix xform = bones_[mm.ParentBone.Index];
-                foreach (ModelMeshPart mmp in mm.MeshParts)
+                var xform = bones_[mm.ParentBone.Index];
+                foreach (var mmp in mm.MeshParts)
                 {
                     int offset = vertices.Count;
-                    Vector3[] a = new Vector3[mmp.NumVertices];
+                    var a = new Vector3[mmp.NumVertices];
                     mmp.VertexBuffer.GetData<Vector3>(mmp.VertexOffset * mmp.VertexBuffer.VertexDeclaration.VertexStride,
                         a, 0, mmp.NumVertices, mmp.VertexBuffer.VertexDeclaration.VertexStride);
                     for (int i = 0; i != a.Length; ++i)
@@ -47,7 +46,7 @@ namespace JitterDemo.Scenes
                             String.Format("Model uses 32-bit indices, which are not supported."));
                     short[] s = new short[mmp.PrimitiveCount * 3];
                     mmp.IndexBuffer.GetData<short>(mmp.StartIndex * 2, s, 0, mmp.PrimitiveCount * 3);
-                    TriangleVertexIndices[] tvi = new TriangleVertexIndices[mmp.PrimitiveCount];
+                    var tvi = new TriangleVertexIndices[mmp.PrimitiveCount];
                     for (int i = 0; i != tvi.Length; ++i)
                     {
                         tvi[i].I0 = s[i * 3 + 0] + offset;
@@ -59,12 +58,11 @@ namespace JitterDemo.Scenes
             }
         }
 
-
         public override void Draw()
         {
-            Camera camera = Demo.Camera;
+            var camera = Demo.Camera;
 
-            foreach (ModelMesh mesh in model.Meshes)
+            foreach (var mesh in model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
@@ -81,34 +79,33 @@ namespace JitterDemo.Scenes
 
         Matrix[] boneTransforms;
 
-
         public override void Build()
         {
             model = Demo.Content.Load<Model>("staticmesh");
             boneTransforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(boneTransforms);
 
-            List<TriangleVertexIndices> indices = new List<TriangleVertexIndices>();
-            List<Vector3> vertices = new List<Vector3>();
+            var indices = new List<TriangleVertexIndices>();
+            var vertices = new List<Vector3>();
 
             ExtractData(vertices, indices, model);
 
-            List<JVector> jvertices = new List<JVector>(vertices.Count);
-            foreach(Vector3 vertex in vertices) jvertices.Add(Conversion.ToJitterVector(vertex));
+            var jvertices = new List<JVector>(vertices.Count);
+            foreach(var vertex in vertices) jvertices.Add(Conversion.ToJitterVector(vertex));
 
-            Octree octree = new Octree(jvertices, indices);
+            var octree = new Octree(jvertices, indices);
 
-            TriangleMeshShape tms = new TriangleMeshShape(octree);
-            RigidBody body = new RigidBody(tms);
-            body.IsStatic = true;
-            //body.EnableDebugDraw = true;
-            body.Tag = BodyTag.DontDrawMe;
+            var tms = new TriangleMeshShape(octree);
+            var body = new RigidBody(tms)
+            {
+                IsStatic = true,
+                //body.EnableDebugDraw = true;
+                Tag = BodyTag.DontDrawMe
+            };
 
             Demo.World.AddBody(body);
 
             AddCar(new JVector(-20, 20, 0));
         }
-
-
     }
 }

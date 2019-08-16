@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 namespace JitterDemo
 {
-
     /// <summary>
     /// Draw axis aligned bounding boxes, points and lines.
     /// </summary>
@@ -148,8 +147,6 @@ namespace JitterDemo
             basicEffect.View = demo.Camera.View;
             basicEffect.Projection = demo.Camera.Projection;
 
-
-
             foreach (var pass in basicEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -172,7 +169,6 @@ namespace JitterDemo
 
             base.Draw(gameTime);
         }
-
 
         public void DrawLine(JVector start, JVector end)
         {

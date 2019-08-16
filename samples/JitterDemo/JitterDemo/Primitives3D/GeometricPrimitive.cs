@@ -27,12 +27,10 @@ namespace JitterDemo.Primitives3D
     {
         #region Fields
 
-
         // During the process of constructing a primitive model, vertex
         // and index data is stored on the CPU in these managed lists.
-        List<VertexPositionNormal> vertices = new List<VertexPositionNormal>();
-        List<ushort> indices = new List<ushort>();
-
+        readonly List<VertexPositionNormal> vertices = new List<VertexPositionNormal>();
+        readonly List<ushort> indices = new List<ushort>();
 
         // Once all the geometry has been specified, the InitializePrimitive
         // method copies the vertex and index data into these buffers, which
@@ -40,11 +38,9 @@ namespace JitterDemo.Primitives3D
         VertexBuffer vertexBuffer;
         IndexBuffer indexBuffer;
 
-
         #endregion
 
         #region Initialization
-
 
         /// <summary>
         /// Adds a new vertex to the primitive model. This should only be called
@@ -54,7 +50,6 @@ namespace JitterDemo.Primitives3D
         {
             vertices.Add(new VertexPositionNormal(position, normal));
         }
-
 
         /// <summary>
         /// Adds a new index to the primitive model. This should only be called
@@ -68,7 +63,6 @@ namespace JitterDemo.Primitives3D
             indices.Add((ushort)index);
         }
 
-
         /// <summary>
         /// Queries the index of the current vertex. This starts at
         /// zero, and increments every time AddVertex is called.
@@ -77,7 +71,6 @@ namespace JitterDemo.Primitives3D
         {
             get { return vertices.Count; }
         }
-
 
         /// <summary>
         /// Once all the geometry has been specified by calling AddVertex and AddIndex,
@@ -99,9 +92,7 @@ namespace JitterDemo.Primitives3D
                                           indices.Count, BufferUsage.None);
 
             indexBuffer.SetData(indices.ToArray());
-
         }
-
 
         /// <summary>
         /// Finalizer.
@@ -111,7 +102,6 @@ namespace JitterDemo.Primitives3D
             Dispose(false);
         }
 
-
         /// <summary>
         /// Frees resources used by this object.
         /// </summary>
@@ -120,7 +110,6 @@ namespace JitterDemo.Primitives3D
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
 
         /// <summary>
         /// Frees resources used by this object.
@@ -137,7 +126,6 @@ namespace JitterDemo.Primitives3D
             }
         }
 
-
         #endregion
 
         #region Draw
@@ -149,7 +137,7 @@ namespace JitterDemo.Primitives3D
         {
             if (index == worlds.Length)
             {
-                Matrix[] temp = new Matrix[worlds.Length + 50];
+                var temp = new Matrix[worlds.Length + 50];
                 worlds.CopyTo(temp, 0);
                 worlds = temp;
             }
@@ -157,7 +145,6 @@ namespace JitterDemo.Primitives3D
             worlds[index] = matrix;
             index++;
         }
-
 
         /// <summary>
         /// Draws the primitive model, using the specified effect. Unlike the other
@@ -169,7 +156,7 @@ namespace JitterDemo.Primitives3D
         {
             if (index == 0) return;
 
-            GraphicsDevice graphicsDevice = effect.GraphicsDevice;
+            var graphicsDevice = effect.GraphicsDevice;
 
             graphicsDevice.SetVertexBuffer(vertexBuffer);
             graphicsDevice.Indices = indexBuffer;
@@ -186,7 +173,6 @@ namespace JitterDemo.Primitives3D
             }
 
             index = 0;
-
         }
 
         #endregion

@@ -1,18 +1,16 @@
 ﻿namespace Jitter.Forces
 {
-
     /// <summary>
     /// Base class for physic effect.
     /// </summary>
     public class ForceGenerator
     {
-
         /// <summary>
         /// 
         /// </summary>
         protected World world;
 
-        private World.WorldStep preStep, postStep;
+        private readonly World.WorldStep preStep, postStep;
 
         /// <summary>
         /// 
@@ -53,7 +51,5 @@
             world.Events.PostStep -= postStep;
             world.Events.PreStep -= preStep;
         }
-
-
     }
 }

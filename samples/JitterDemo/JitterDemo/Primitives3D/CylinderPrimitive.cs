@@ -28,7 +28,6 @@ namespace JitterDemo.Primitives3D
         {
         }
 
-
         /// <summary>
         /// Constructs a new cylinder primitive,
         /// with the specified size and tessellation level.
@@ -44,7 +43,7 @@ namespace JitterDemo.Primitives3D
             // Create a ring of triangles around the outside of the cylinder.
             for (int i = 0; i < tessellation; i++)
             {
-                Vector3 normal = GetCircleVector(i, tessellation);
+                var normal = GetCircleVector(i, tessellation);
 
                 AddVertex(normal * radius + Vector3.Up * height, normal);
                 AddVertex(normal * radius + Vector3.Down * height, normal);
@@ -64,7 +63,6 @@ namespace JitterDemo.Primitives3D
 
             InitializePrimitive(graphicsDevice);
         }
-
 
         /// <summary>
         /// Helper method creates a triangle fan to close the ends of the cylinder.
@@ -91,13 +89,12 @@ namespace JitterDemo.Primitives3D
             // Create cap vertices.
             for (int i = 0; i < tessellation; i++)
             {
-                Vector3 position = GetCircleVector(i, tessellation) * radius +
+                var position = GetCircleVector(i, tessellation) * radius +
                                    normal * height;
 
                 AddVertex(position, normal);
             }
         }
-
 
         /// <summary>
         /// Helper method computes a point on a circle.

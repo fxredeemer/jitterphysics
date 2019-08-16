@@ -45,7 +45,6 @@ namespace Jitter
 
         private void Initialize()
         {
-
             threadCount = System.Environment.ProcessorCount * ThreadsPerProcessor;
 
             threads = new Thread[threadCount];

@@ -22,10 +22,13 @@ namespace JitterDemo.Scenes
 
         public void AddGround()
         {
-            ground = new RigidBody(new BoxShape(new JVector(200, 20, 200)));
-            ground.Position = new JVector(0, -10, 0);
-            ground.Tag = BodyTag.DontDrawMe;
-            ground.IsStatic = true; Demo.World.AddBody(ground);
+            ground = new RigidBody(new BoxShape(new JVector(200, 20, 200)))
+            {
+                Position = new JVector(0, -10, 0),
+                Tag = BodyTag.DontDrawMe,
+                IsStatic = true
+            };
+            Demo.World.AddBody(ground);
             //ground.Restitution = 1.0f;
             ground.Material.KineticFriction = 0.0f;
 
@@ -55,8 +58,6 @@ namespace JitterDemo.Scenes
             Demo.Components.Remove(car);
         }
 
-
         public virtual void Draw() { }
-
     }
 }

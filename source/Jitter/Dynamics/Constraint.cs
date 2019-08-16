@@ -24,7 +24,6 @@ using System.Threading;
 
 namespace Jitter.Dynamics.Constraints
 {
-
     public interface IConstraint
     {
         void PrepareForIteration(float timestep);
@@ -57,7 +56,7 @@ namespace Jitter.Dynamics.Constraints
         public RigidBody Body2 { get { return body2; } }
 
         private static int instanceCount = 0;
-        private int instance;
+        private readonly int instance;
 
         /// <summary>
         /// Constructor.
@@ -89,7 +88,6 @@ namespace Jitter.Dynamics.Constraints
         /// Iteratively solve this constraint.
         /// </summary>
         public abstract void Iterate();
-
 
         public int CompareTo(Constraint other)
         {

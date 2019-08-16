@@ -44,10 +44,6 @@ namespace Jitter.Collision
 
         public bool EnableSpeculativeContacts { get; set; } = false;
 
-        public CollisionSystem()
-        {
-        }
-
         internal bool useTerrainNormal = true;
         internal bool useTriangleMeshNormal = true;
 
@@ -229,7 +225,6 @@ namespace Jitter.Collision
                                     }
                                 }
                             }
-
                         }
                     }
                 }

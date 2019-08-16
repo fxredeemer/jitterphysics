@@ -6,7 +6,6 @@ namespace JitterDemo.Scenes
 {
     class CylinderWall : Scene
     {
-
         public CylinderWall(JitterDemo demo)
             : base(demo)
         {
@@ -20,12 +19,13 @@ namespace JitterDemo.Scenes
             {
                 for (int e = 0; e < 20; e++)
                 {
-                    RigidBody body = new RigidBody(new CylinderShape(1.0f,0.5f));
-                    body.Position = new JVector(e * 1.01f + ((i % 2 == 0) ? 0.5f : 0.0f), 0.5f + i * 1.0f, 0.0f);
+                    var body = new RigidBody(new CylinderShape(1.0f, 0.5f))
+                    {
+                        Position = new JVector(e * 1.01f + ((i % 2 == 0) ? 0.5f : 0.0f), 0.5f + i * 1.0f, 0.0f)
+                    };
                     Demo.World.AddBody(body);
                 }
             }
         }
-
     }
 }

@@ -6,7 +6,6 @@ namespace JitterDemo
         {
             using (var game = new JitterDemo())
             {
-
                 game.Run();
             }
         }
