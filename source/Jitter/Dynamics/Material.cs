@@ -1,7 +1,5 @@
 ﻿namespace Jitter.Dynamics
 {
-    // TODO: Check values, Documenation
-    // Maybe some default materials, aka Material.Soft?
     public class Material
     {
         internal float kineticFriction = 0.3f;

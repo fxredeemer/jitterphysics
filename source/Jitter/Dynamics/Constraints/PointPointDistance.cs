@@ -13,7 +13,6 @@ namespace Jitter.Dynamics.Constraints
 
         private JVector localAnchor1, localAnchor2;
         private JVector r1, r2;
-        private float distance;
 
         public PointPointDistance(RigidBody body1, RigidBody body2, JVector anchor1, JVector anchor2) : base(body1, body2)
         {
@@ -23,12 +22,12 @@ namespace Jitter.Dynamics.Constraints
             JVector.Transform(ref localAnchor1, ref body1.invOrientation, out localAnchor1);
             JVector.Transform(ref localAnchor2, ref body2.invOrientation, out localAnchor2);
 
-            distance = (anchor1 - anchor2).Length();
+            Distance = (anchor1 - anchor2).Length();
         }
 
         public float AppliedImpulse { get; private set; } = 0.0f;
 
-        public float Distance { get { return distance; } set { distance = value; } }
+        public float Distance { get; set; }
 
         public DistanceBehavior Behavior { get; set; } = DistanceBehavior.LimitDistance;
 
@@ -57,7 +56,7 @@ namespace Jitter.Dynamics.Constraints
 
             JVector.Subtract(ref p2, ref p1, out var dp);
 
-            float deltaLength = dp.Length() - distance;
+            float deltaLength = dp.Length() - Distance;
 
             if (Behavior == DistanceBehavior.LimitMaximumDistance && deltaLength <= 0.0f)
             {

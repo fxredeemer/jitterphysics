@@ -1,32 +1,10 @@
-﻿/* Copyright (C) <2009-2011> <Thorben Linneweber, Jitter Physics>
-* 
-*  This software is provided 'as-is', without any express or implied
-*  warranty.  In no event will the authors be held liable for any damages
-*  arising from the use of this software.
-*
-*  Permission is granted to anyone to use this software for any purpose,
-*  including commercial applications, and to alter it and redistribute it
-*  freely, subject to the following restrictions:
-*
-*  1. The origin of this software must not be misrepresented; you must not
-*      claim that you wrote the original software. If you use this software
-*      in a product, an acknowledgment in the product documentation would be
-*      appreciated but is not required.
-*  2. Altered source versions must be plainly marked as such, and must not be
-*      misrepresented as being the original software.
-*  3. This notice may not be removed or altered from any source distribution. 
-*/
-
-#region Using Statements
+﻿using Jitter.Collision;
+using Jitter.Collision.Shapes;
+using Jitter.Dynamics.Constraints;
+using Jitter.LinearMath;
 using System;
 using System.Collections.Generic;
-
-using Jitter.Dynamics.Constraints;
-using Jitter.Collision.Shapes;
-using Jitter.LinearMath;
-using Jitter.Collision;
 using System.Collections.ObjectModel;
-#endregion
 
 namespace Jitter.Dynamics
 {
@@ -38,7 +16,6 @@ namespace Jitter.Dynamics
             EdgeSpring = 0x02, ShearSpring = 0x04, BendSpring = 0x08
         }
 
-        #region public class Spring : Constraint
         public class Spring : Constraint
         {
             public enum DistanceBehavior
@@ -50,43 +27,20 @@ namespace Jitter.Dynamics
 
             public SpringType SpringType { get; set; }
 
-            private float distance;
-
-            /// <summary>
-            /// Initializes a new instance of the DistanceConstraint class.
-            /// </summary>
-            /// <param name="body1">The first body.</param>
-            /// <param name="body2">The second body.</param>
-            /// <param name="anchor1">The anchor point of the first body in world space. 
-            /// The distance is given by the initial distance between both anchor points.</param>
-            /// <param name="anchor2">The anchor point of the second body in world space.
-            /// The distance is given by the initial distance between both anchor points.</param>
             public Spring(RigidBody body1, RigidBody body2)
-                : base(body1, body2)
+    : base(body1, body2)
             {
-                distance = (body1.position - body2.position).Length();
+                Distance = (body1.position - body2.position).Length();
             }
 
             public float AppliedImpulse { get; private set; } = 0.0f;
 
-            /// <summary>
-            /// 
-            /// </summary>
-            public float Distance { get { return distance; } set { distance = value; } }
+            public float Distance { get; set; }
 
-            /// <summary>
-            /// 
-            /// </summary>
             public DistanceBehavior Behavior { get; set; } = DistanceBehavior.LimitDistance;
 
-            /// <summary>
-            /// Defines how big the applied impulses can get.
-            /// </summary>
             public float Softness { get; set; } = 0.01f;
 
-            /// <summary>
-            /// Defines how big the applied impulses can get which correct errors.
-            /// </summary>
             public float BiasFactor { get; set; } = 0.1f;
 
             private float effectiveMass = 0.0f;
@@ -96,15 +50,11 @@ namespace Jitter.Dynamics
 
             private bool skipConstraint = false;
 
-            /// <summary>
-            /// Called once before iteration starts.
-            /// </summary>
-            /// <param name="timestep">The 5simulation timestep</param>
             public override void PrepareForIteration(float timestep)
             {
                 JVector.Subtract(ref body2.position, ref body1.position, out var dp);
 
-                float deltaLength = dp.Length() - distance;
+                float deltaLength = dp.Length() - Distance;
 
                 if (Behavior == DistanceBehavior.LimitMaximumDistance && deltaLength <= 0.0f)
                 {
@@ -119,12 +69,13 @@ namespace Jitter.Dynamics
                     skipConstraint = false;
 
                     var n = dp;
-                    if (n.LengthSquared() != 0.0f) n.Normalize();
+                    if (n.LengthSquared() != 0.0f)
+                    {
+                        n.Normalize();
+                    }
 
                     jacobian[0] = -1.0f * n;
-                    //jacobian[1] = -1.0f * (r1 % n);
                     jacobian[1] = 1.0f * n;
-                    //jacobian[3] = (r2 % n);
 
                     effectiveMass = body1.inverseMass + body2.inverseMass;
 
@@ -147,12 +98,12 @@ namespace Jitter.Dynamics
                 }
             }
 
-            /// <summary>
-            /// Iteratively solve this constraint.
-            /// </summary>
             public override void Iterate()
             {
-                if (skipConstraint) return;
+                if (skipConstraint)
+                {
+                    return;
+                }
 
                 float jv = JVector.Dot(ref body1.linearVelocity, ref jacobian[0]);
                 jv += JVector.Dot(ref body2.linearVelocity, ref jacobian[1]);
@@ -198,9 +149,7 @@ namespace Jitter.Dynamics
                 drawer.DrawLine(body1.position, body2.position);
             }
         }
-        #endregion
 
-        #region public class MassPoint : RigidBody
         public class MassPoint : RigidBody
         {
             public SoftBody SoftBody { get; }
@@ -211,9 +160,7 @@ namespace Jitter.Dynamics
                 SoftBody = owner;
             }
         }
-        #endregion
 
-        #region public class Triangle : ISupportMappable
         public class Triangle : ISupportMappable
         {
             public SoftBody Owner { get; }
@@ -222,18 +169,18 @@ namespace Jitter.Dynamics
             internal int dynamicTreeID;
             internal TriangleVertexIndices indices;
 
-            public JBBox BoundingBox { get { return boundingBox; } }
-            public int DynamicTreeID { get { return dynamicTreeID; } }
+            public JBBox BoundingBox => boundingBox;
+            public int DynamicTreeID => dynamicTreeID;
 
-            public TriangleVertexIndices Indices { get { return indices; } }
+            public TriangleVertexIndices Indices => indices;
 
-            public MassPoint VertexBody1 { get { return Owner.points[indices.I0]; } }
-            public MassPoint VertexBody2 { get { return Owner.points[indices.I1]; } }
-            public MassPoint VertexBody3 { get { return Owner.points[indices.I2]; } }
+            public MassPoint VertexBody1 => Owner.points[indices.I0];
+            public MassPoint VertexBody2 => Owner.points[indices.I1];
+            public MassPoint VertexBody3 => Owner.points[indices.I2];
 
             public Triangle(SoftBody owner)
             {
-                this.Owner = owner;
+                Owner = owner;
             }
 
             public void GetNormal(out JVector normal)
@@ -292,7 +239,6 @@ namespace Jitter.Dynamics
                 JVector.Multiply(ref center, 1.0f / 3.0f, out center);
             }
         }
-        #endregion
 
         private readonly SphereShape sphere = new SphereShape(0.1f);
 
@@ -308,15 +254,18 @@ namespace Jitter.Dynamics
 
         public bool SelfCollision { get; set; } = false;
 
-        public float TriangleExpansion { get { return triangleExpansion; } 
-            set { triangleExpansion = value; } }
+        public float TriangleExpansion
+        {
+            get => triangleExpansion;
+            set => triangleExpansion = value;
+        }
 
-        public float VertexExpansion { get { return sphere.Radius; } set { sphere.Radius = value; } }
+        public float VertexExpansion { get => sphere.Radius; set => sphere.Radius = value; }
 
         private float mass = 1.0f;
 
         internal DynamicTree<Triangle> dynamicTree = new DynamicTree<Triangle>();
-        public DynamicTree<Triangle> DynamicTree { get { return dynamicTree; } }
+        public DynamicTree<Triangle> DynamicTree => dynamicTree;
 
         public Material Material { get; } = new Material();
 
@@ -324,22 +273,11 @@ namespace Jitter.Dynamics
 
         private bool active = true;
 
-        /// <summary>
-        /// Does create an empty body. Derive from SoftBody and fill 
-        /// EdgeSprings,VertexBodies and Triangles by yourself.
-        /// </summary>
         public SoftBody()
         {
         }
 
-        /// <summary>
-        /// Creates a 2D-Cloth. Connects Nearest Neighbours (4x, called EdgeSprings) and adds additional
-        /// shear/bend constraints (4xShear+4xBend).
-        /// </summary>
-        /// <param name="sizeX"></param>
-        /// <param name="sizeY"></param>
-        /// <param name="scale"></param>
-        public SoftBody(int sizeX,int sizeY, float scale)
+        public SoftBody(int sizeX, int sizeY, float scale)
         {
             var indices = new List<TriangleVertexIndices>();
             var vertices = new List<JVector>();
@@ -348,13 +286,13 @@ namespace Jitter.Dynamics
             {
                 for (int e = 0; e < sizeX; e++)
                 {
-                    vertices.Add(new JVector(i, 0, e) *scale);
+                    vertices.Add(new JVector(i, 0, e) * scale);
                 }
             }
-            
-            for (int i = 0; i < sizeX-1; i++)
+
+            for (int i = 0; i < sizeX - 1; i++)
             {
-                for (int e = 0; e < sizeY-1; e++)
+                for (int e = 0; e < sizeY - 1; e++)
                 {
                     var index = new TriangleVertexIndices();
                     {
@@ -368,7 +306,7 @@ namespace Jitter.Dynamics
                         index.I1 = ((e + 1) * sizeX) + i + 1;
                         index.I2 = ((e + 1) * sizeX) + i + 0;
 
-                        indices.Add(index);    
+                        indices.Add(index);
                     }
                 }
             }
@@ -396,8 +334,14 @@ namespace Jitter.Dynamics
             {
                 var delta = spring.body1.position - spring.body2.position;
 
-                if (delta.Z != 0.0f && delta.X != 0.0f) spring.SpringType = SpringType.ShearSpring;
-                else spring.SpringType = SpringType.EdgeSpring;
+                if (delta.Z != 0.0f && delta.X != 0.0f)
+                {
+                    spring.SpringType = SpringType.ShearSpring;
+                }
+                else
+                {
+                    spring.SpringType = SpringType.EdgeSpring;
+                }
             }
 
             for (int i = 0; i < sizeX - 2; i++)
@@ -459,10 +403,12 @@ namespace Jitter.Dynamics
             }
         }
 
-        #region AddPressureForces
         private void AddPressureForces(float timeStep)
         {
-            if (Pressure == 0.0f || Volume == 0.0f) return;
+            if (Pressure == 0.0f || Volume == 0.0f)
+            {
+                return;
+            }
 
             float invVolume = 1.0f / Volume;
 
@@ -480,18 +426,19 @@ namespace Jitter.Dynamics
                 points[t.indices.I2].AddForce(invVolume * cross * Pressure);
             }
         }
-        #endregion
 
         public void Translate(JVector position)
         {
-            foreach (var point in points) point.Position += position;
+            foreach (var point in points)
+            {
+                point.Position += position;
+            }
 
             Update(float.Epsilon);
         }
 
         public void AddForce(JVector force)
         {
-            // TODO
             throw new NotImplementedException();
         }
 
@@ -505,7 +452,6 @@ namespace Jitter.Dynamics
 
         public JVector CalculateCenter()
         {
-            // TODO
             throw new NotImplementedException();
         }
 
@@ -518,13 +464,22 @@ namespace Jitter.Dynamics
                 Edge edge;
 
                 edge = new Edge(indices[i].I0, indices[i].I1);
-                if (!edges.Contains(edge)) edges.Add(edge);
+                if (!edges.Contains(edge))
+                {
+                    edges.Add(edge);
+                }
 
                 edge = new Edge(indices[i].I1, indices[i].I2);
-                if (!edges.Contains(edge)) edges.Add(edge);
+                if (!edges.Contains(edge))
+                {
+                    edges.Add(edge);
+                }
 
                 edge = new Edge(indices[i].I2, indices[i].I0);
-                if (!edges.Contains(edge)) edges.Add(edge);
+                if (!edges.Contains(edge))
+                {
+                    edges.Add(edge);
+                }
             }
 
             return edges;
@@ -534,7 +489,10 @@ namespace Jitter.Dynamics
 
         public virtual void DoSelfCollision(CollisionDetectedHandler collision)
         {
-            if (!SelfCollision) return;
+            if (!SelfCollision)
+            {
+                return;
+            }
 
             for (int i = 0; i < points.Count; i++)
             {
@@ -559,8 +517,6 @@ namespace Jitter.Dynamics
                 }
             }
         }
-                    
-                
 
         private void AddPointsAndSprings(List<TriangleVertexIndices> indices, List<JVector> vertices)
         {
@@ -638,7 +594,10 @@ namespace Jitter.Dynamics
                 if (point.isActive && !point.isStatic) { active = true; break; }
             }
 
-            if(!active) return;
+            if (!active)
+            {
+                return;
+            }
 
             box = JBBox.SmallBox;
             Volume = 0.0f;
@@ -655,12 +614,11 @@ namespace Jitter.Dynamics
 
             foreach (var t in triangles)
             {
-                // Update bounding box and move proxy in dynamic tree.
                 var prevCenter = t.boundingBox.Center;
                 t.UpdateBoundingBox();
 
-                var linVel = t.VertexBody1.linearVelocity + 
-                    t.VertexBody2.linearVelocity + 
+                var linVel = t.VertexBody1.linearVelocity +
+                    t.VertexBody2.linearVelocity +
                     t.VertexBody3.linearVelocity;
 
                 linVel *= 1.0f / 3.0f;
@@ -682,10 +640,7 @@ namespace Jitter.Dynamics
 
         public float Mass
         {
-            get
-            {
-                return mass;
-            }
+            get => mass;
             set
             {
                 for (int i = 0; i < points.Count; i++)
@@ -697,20 +652,14 @@ namespace Jitter.Dynamics
 
         public float Volume { get; private set; } = 1.0f;
 
-        public JBBox BoundingBox
-        {
-            get { return box; }
-        }
+        public JBBox BoundingBox => box;
 
         public int BroadphaseTag { get; set; }
 
         public object Tag { get; set; }
 
-        public bool IsStaticOrInactive
-        {
-            get { return !active; }
-        }
+        public bool IsStaticOrInactive => !active;
     }
 }
 
-    
+

@@ -226,32 +226,29 @@ namespace Jitter.Collision
 
         private class UsageBitfield
         {
-            private bool _usedVertexD;
-
             public bool UsedVertexA { get; set; }
             public bool UsedVertexB { get; set; }
             public bool UsedVertexC { get; set; }
-            public bool UsedVertexD { get => _usedVertexD; set => _usedVertexD = value; }
+            public bool UsedVertexD { get; set; }
 
             public void Reset()
             {
-                UsedVertexA = UsedVertexB = UsedVertexC = _usedVertexD = false;
+                UsedVertexA = UsedVertexB = UsedVertexC = UsedVertexD = false;
             }
         }
 
         private class SubSimplexClosestResult
         {
             private JVector _closestPointOnSimplex;
-            private bool _degenerate;
 
             public JVector ClosestPointOnSimplex { get => _closestPointOnSimplex; set => _closestPointOnSimplex = value; }
             public UsageBitfield UsedVertices { get; set; } = new UsageBitfield();
             public float[] BarycentricCoords { get; set; } = new float[4];
-            public bool Degenerate { get => _degenerate; set => _degenerate = value; }
+            public bool Degenerate { get; set; }
 
             public void Reset()
             {
-                _degenerate = false;
+                Degenerate = false;
                 SetBarycentricCoordinates();
                 UsedVertices.Reset();
             }
