@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Jitter.Dynamics;
 using Jitter.Collision.Shapes;
 using Jitter.LinearMath;
@@ -8,7 +7,6 @@ using Jitter.Collision;
 
 namespace Jitter.Forces
 {
-
     /// <summary>
     /// Simple Helper that adds buoyancy forces to a body if it is within
     /// the FluidVolume. The volume is represented by a axis aligned bounding box or by
@@ -16,7 +14,6 @@ namespace Jitter.Forces
     /// </summary>
     public class Buoyancy : ForceGenerator
     {
-
         /// <summary>
         /// Returns true if the given point is within the area.
         /// </summary>
@@ -24,8 +21,8 @@ namespace Jitter.Forces
         /// <returns>True if the given point is within the area.</returns>
         public delegate bool DefineFluidArea(ref JVector point);
 
-        private Dictionary<Shape, JVector[]> samples = new Dictionary<Shape, JVector[]>();
-        private List<RigidBody> bodies = new List<RigidBody>();
+        private readonly Dictionary<Shape, JVector[]> samples = new Dictionary<Shape, JVector[]>();
+        private readonly List<RigidBody> bodies = new List<RigidBody>();
 
         /// <summary>
         /// The axis aligned bounding box representing the fluid.
@@ -70,7 +67,7 @@ namespace Jitter.Forces
         {
             bool flag = false;
 
-            foreach (RigidBody b in bodies)
+            foreach (var b in bodies)
             {
                 if (body.Shape == b.Shape)
                 { flag = true; break; }
@@ -110,20 +107,20 @@ namespace Jitter.Forces
         /// the results. Note that the total number of subdivisions is subdivisions³.</param>
         public void Add(RigidBody body, int subdivisions)
         {
-            List<JVector> massPoints = new List<JVector>();
+            var massPoints = new List<JVector>();
             JVector testVector;
 
-            JVector diff = body.Shape.BoundingBox.Max - body.Shape.BoundingBox.Min;
+            var diff = body.Shape.BoundingBox.Max - body.Shape.BoundingBox.Min;
 
             if (diff.IsNearlyZero())
                 throw new InvalidOperationException("BoundingBox volume of the shape is zero.");
 
-            Multishape ms = body.Shape as Multishape;
+            var ms = body.Shape as Multishape;
             int values = 0;
 
             if (ms != null)
             {
-                JBBox largeBox = JBBox.LargeBox;
+                var largeBox = JBBox.LargeBox;
                 values = ms.Prepare(ref largeBox);
             }
 
@@ -133,16 +130,15 @@ namespace Jitter.Forces
                 {
                     for (int k = 0; k < subdivisions; k++)
                     {
-                        testVector.X = body.Shape.BoundingBox.Min.X + (diff.X / (float)(subdivisions - 1)) * ((float)i);
-                        testVector.Y = body.Shape.BoundingBox.Min.Y + (diff.Y / (float)(subdivisions - 1)) * ((float)e);
-                        testVector.Z = body.Shape.BoundingBox.Min.Z + (diff.Z / (float)(subdivisions - 1)) * ((float)k);
+                        testVector.X = body.Shape.BoundingBox.Min.X + (diff.X / (float)(subdivisions - 1) * ((float)i));
+                        testVector.Y = body.Shape.BoundingBox.Min.Y + (diff.Y / (float)(subdivisions - 1) * ((float)e));
+                        testVector.Z = body.Shape.BoundingBox.Min.Z + (diff.Z / (float)(subdivisions - 1) * ((float)k));
 
-                        JMatrix ident = JMatrix.Identity;
-                        JVector zero = JVector.Zero;
+                        var ident = JMatrix.Identity;
+                        var zero = JVector.Zero;
 
                         if (ms != null)
                         {
-     
                             for (int j = 0; j < values; j++)
                             {
                                 ms.SetCurrentShape(j);
@@ -179,16 +175,15 @@ namespace Jitter.Forces
         {
             float damping = (float)Math.Pow(Damping, timeStep);
 
-            foreach (RigidBody body in bodies)
+            foreach (var body in bodies)
             {
-
                 if (FluidBox.Contains(body.BoundingBox) != JBBox.ContainmentType.Disjoint)
                 {
-                    JVector[] positions = samples[body.Shape];
+                    var positions = samples[body.Shape];
 
                     float frac = 0.0f;
 
-                    JVector currentCoord = JVector.Zero;
+                    var currentCoord = JVector.Zero;
                     for (int i = 0; i < positions.Length; i++)
                     {
                         currentCoord = JVector.Transform(positions[i], body.Orientation);
@@ -201,7 +196,7 @@ namespace Jitter.Forces
 
                         if (containsCoord)
                         {
-                            body.AddForce((1.0f / positions.Length) * body.Mass * Flow);
+                            body.AddForce(1.0f / positions.Length * body.Mass * Flow);
                             body.AddForce(-(1.0f / positions.Length) * body.Shape.Mass * Density * world.Gravity, currentCoord);
                             frac += 1.0f / positions.Length;
                         }
@@ -210,10 +205,7 @@ namespace Jitter.Forces
                     body.AngularVelocity *= damping;
                     body.LinearVelocity *= damping;
                 }
-
-
             }
         }
-
     }
 }

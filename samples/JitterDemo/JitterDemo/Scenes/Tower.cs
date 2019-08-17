@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Jitter;
+﻿using Jitter;
 using Microsoft.Xna.Framework;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
-using Jitter.LinearMath;
 
 namespace JitterDemo.Scenes
 {
-    class Tower : Scene
+    internal class Tower : Scene
     {
-
         public Tower(JitterDemo demo)
             : base(demo)
         {
@@ -22,13 +16,13 @@ namespace JitterDemo.Scenes
         {
             AddGround();
 
-            World world = Demo.World;
+            var world = Demo.World;
 
-            Matrix halfRotationStep = Matrix.CreateRotationY(MathHelper.Pi * 2.0f / 24.0f);
-            Matrix fullRotationStep = halfRotationStep * halfRotationStep;
-            Matrix orientation = Matrix.Identity;
+            var halfRotationStep = Matrix.CreateRotationY(MathHelper.Pi * 2.0f / 24.0f);
+            var fullRotationStep = halfRotationStep * halfRotationStep;
+            var orientation = Matrix.Identity;
 
-            BoxShape shape = new BoxShape(2, 1, 1);
+            var shape = new BoxShape(2, 1, 1);
 
             //for (int i = 0; i < 15; i++)
             //{
@@ -50,12 +44,14 @@ namespace JitterDemo.Scenes
 
                 for (int i = 0; i < 12; i++)
                 {
-                    Vector3 position = Vector3.Transform(
+                    var position = Vector3.Transform(
                         new Vector3(0, 0.5f + e, 6.5f), orientation);
 
-                    RigidBody body = new RigidBody(shape);
-                    body.Orientation = Conversion.ToJitterMatrix(orientation);
-                    body.Position = Conversion.ToJitterVector(position);
+                    var body = new RigidBody(shape)
+                    {
+                        Orientation = Conversion.ToJitterMatrix(orientation),
+                        Position = Conversion.ToJitterVector(position)
+                    };
 
                     world.AddBody(body);
 
@@ -120,11 +116,6 @@ namespace JitterDemo.Scenes
             //    }
             //}
 
-
-
-
-
-
             //for (int i = 0; i < 15; i++)
             //{
             //    for (int k = 0; k < 15; k++)
@@ -142,11 +133,8 @@ namespace JitterDemo.Scenes
             //    }
             //}
 
-
             ground.Material.StaticFriction = 1.0f;
             ground.Material.KineticFriction = 1.0f;
         }
-
-
     }
 }

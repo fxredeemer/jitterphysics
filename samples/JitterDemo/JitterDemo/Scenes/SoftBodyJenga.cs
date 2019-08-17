@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Jitter;
-using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework.Graphics;
 using Jitter.Collision;
-using JitterDemo.PhysicsObjects;
 
 namespace JitterDemo.Scenes
 {
-    class SoftBodyJenga : Scene
+    internal class SoftBodyJenga : Scene
     {
-
         public SoftBodyJenga(JitterDemo demo)
             : base(demo)
         {
@@ -24,8 +17,8 @@ namespace JitterDemo.Scenes
         private void RemoveDuplicateVertices(List<TriangleVertexIndices> indices,
                 List<JVector> vertices)
         {
-            Dictionary<JVector, int> unique = new Dictionary<JVector, int>(vertices.Count);
-            Stack<int> tbr = new Stack<int>(vertices.Count / 3);
+            var unique = new Dictionary<JVector, int>(vertices.Count);
+            var tbr = new Stack<int>(vertices.Count / 3);
 
             // get all unique vertices and their indices
             for (int i = 0; i < vertices.Count; i++)
@@ -38,7 +31,7 @@ namespace JitterDemo.Scenes
             // reconnect indices
             for (int i = 0; i < indices.Count; i++)
             {
-                TriangleVertexIndices tvi = indices[i];
+                var tvi = indices[i];
 
                 tvi.I0 = unique[vertices[tvi.I0]];
                 tvi.I1 = unique[vertices[tvi.I1]];
@@ -59,29 +52,29 @@ namespace JitterDemo.Scenes
 
             for (int i = 0; i < 15; i++)
             {
-                bool even = (i % 2 == 0);
+                bool even = i % 2 == 0;
 
                 for (int e = 0; e < 3; e++)
                 {
-                    JVector size = (even) ? new JVector(1, 1, 3) : new JVector(3, 1, 1);
-                    RigidBody body = new RigidBody(new BoxShape(size));
-                    body.Position = new JVector(3.0f + (even ? e : 1.0f), i + 0.5f, -5.0f + (even ? 1.0f : e));
+                    var size = even ? new JVector(1, 1, 3) : new JVector(3, 1, 1);
+                    var body = new RigidBody(new BoxShape(size))
+                    {
+                        Position = new JVector(3.0f + (even ? e : 1.0f), i + 0.5f, -5.0f + (even ? 1.0f : e))
+                    };
 
                     Demo.World.AddBody(body);
                 }
-
             }
 
+            var model = Demo.Content.Load<Model>("torus");
 
-            Model model = this.Demo.Content.Load<Model>("torus");
-
-            List<TriangleVertexIndices> indices = new List<TriangleVertexIndices>();
-            List<JVector> vertices = new List<JVector>();
+            var indices = new List<TriangleVertexIndices>();
+            var vertices = new List<JVector>();
 
             ConvexHullObject.ExtractData(vertices, indices, model);
             RemoveDuplicateVertices(indices, vertices);
 
-            SoftBody softBody = new SoftBody(indices, vertices);
+            var softBody = new SoftBody(indices, vertices);
 
             softBody.Translate(new JVector(10, 5, 0));
             softBody.Pressure = 1000.0f;
@@ -90,7 +83,7 @@ namespace JitterDemo.Scenes
 
             Demo.World.AddBody(softBody);
 
-            SoftBody cloth = new SoftBody(20,20,0.4f);
+            var cloth = new SoftBody(20,20,0.4f);
 
             // ##### Uncomment for selfcollision, all 3 lines
             //cloth.SelfCollision = true;
@@ -116,7 +109,5 @@ namespace JitterDemo.Scenes
 
             Demo.World.AddBody(cloth);
         }
-
-
     }
 }

@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Jitter.Forces
+﻿namespace Jitter.Forces
 {
-
     /// <summary>
     /// Base class for physic effect.
     /// </summary>
     public class ForceGenerator
     {
-
         /// <summary>
         /// 
         /// </summary>
         protected World world;
 
-        private World.WorldStep preStep, postStep;
+        private readonly World.WorldStep preStep, postStep;
 
         /// <summary>
         /// 
@@ -58,7 +51,5 @@ namespace Jitter.Forces
             world.Events.PostStep -= postStep;
             world.Events.PreStep -= preStep;
         }
-
-
     }
 }

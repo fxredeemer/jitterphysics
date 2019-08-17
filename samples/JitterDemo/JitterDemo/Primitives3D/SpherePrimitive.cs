@@ -28,7 +28,6 @@ namespace JitterDemo.Primitives3D
         {
         }
 
-
         /// <summary>
         /// Constructs a new sphere primitive,
         /// with the specified size and tessellation level.
@@ -37,7 +36,7 @@ namespace JitterDemo.Primitives3D
                                float radius, int tessellation)
         {
             if (tessellation < 3)
-                throw new ArgumentOutOfRangeException("tessellation");
+                throw new ArgumentOutOfRangeException(nameof(tessellation));
 
             int verticalSegments = tessellation;
             int horizontalSegments = tessellation * 2;
@@ -48,8 +47,8 @@ namespace JitterDemo.Primitives3D
             // Create rings of vertices at progressively higher latitudes.
             for (int i = 0; i < verticalSegments - 1; i++)
             {
-                float latitude = ((i + 1) * MathHelper.Pi /
-                                            verticalSegments) - MathHelper.PiOver2;
+                float latitude = ((i + 1) * MathHelper.Pi
+                                            / verticalSegments) - MathHelper.PiOver2;
 
                 float dy = (float)Math.Sin(latitude);
                 float dxz = (float)Math.Cos(latitude);
@@ -62,7 +61,7 @@ namespace JitterDemo.Primitives3D
                     float dx = (float)Math.Cos(longitude) * dxz;
                     float dz = (float)Math.Sin(longitude) * dxz;
 
-                    Vector3 normal = new Vector3(dx, dy, dz);
+                    var normal = new Vector3(dx, dy, dz);
 
                     AddVertex(normal * radius, normal);
                 }
@@ -75,7 +74,7 @@ namespace JitterDemo.Primitives3D
             for (int i = 0; i < horizontalSegments; i++)
             {
                 AddIndex(0);
-                AddIndex(1 + (i + 1) % horizontalSegments);
+                AddIndex(1 + ((i + 1) % horizontalSegments));
                 AddIndex(1 + i);
             }
 
@@ -87,13 +86,13 @@ namespace JitterDemo.Primitives3D
                     int nextI = i + 1;
                     int nextJ = (j + 1) % horizontalSegments;
 
-                    AddIndex(1 + i * horizontalSegments + j);
-                    AddIndex(1 + i * horizontalSegments + nextJ);
-                    AddIndex(1 + nextI * horizontalSegments + j);
+                    AddIndex(1 + (i * horizontalSegments) + j);
+                    AddIndex(1 + (i * horizontalSegments) + nextJ);
+                    AddIndex(1 + (nextI * horizontalSegments) + j);
 
-                    AddIndex(1 + i * horizontalSegments + nextJ);
-                    AddIndex(1 + nextI * horizontalSegments + nextJ);
-                    AddIndex(1 + nextI * horizontalSegments + j);
+                    AddIndex(1 + (i * horizontalSegments) + nextJ);
+                    AddIndex(1 + (nextI * horizontalSegments) + nextJ);
+                    AddIndex(1 + (nextI * horizontalSegments) + j);
                 }
             }
 
@@ -101,7 +100,7 @@ namespace JitterDemo.Primitives3D
             for (int i = 0; i < horizontalSegments; i++)
             {
                 AddIndex(CurrentVertex - 1);
-                AddIndex(CurrentVertex - 2 - (i + 1) % horizontalSegments);
+                AddIndex(CurrentVertex - 2 - ((i + 1) % horizontalSegments));
                 AddIndex(CurrentVertex - 2 - i);
             }
 

@@ -28,7 +28,6 @@ namespace JitterDemo.Primitives3D
         {
         }
 
-
         /// <summary>
         /// Constructs a new cube primitive, with the specified size.
         /// </summary>
@@ -39,8 +38,8 @@ namespace JitterDemo.Primitives3D
 
             for (int i = 0; i < tessellation; i++)
             {
-                Vector3 normal = GetCircleVector(i, tessellation);
-                AddVertex(normal * radius + (1.0f / 3.0f) * height * Vector3.Down, normal);
+                var normal = GetCircleVector(i, tessellation);
+                AddVertex((normal * radius) + (1.0f / 3.0f * height * Vector3.Down), normal);
 
                 AddIndex(0);
                 AddIndex(i);
@@ -51,7 +50,7 @@ namespace JitterDemo.Primitives3D
             AddIndex(tessellation);
             AddIndex(1);
 
-            CreateCap(tessellation, (1.0f / 3.0f) * height , radius, Vector3.Down);
+            CreateCap(tessellation, 1.0f / 3.0f * height , radius, Vector3.Down);
 
             InitializePrimitive(graphicsDevice);
         }
@@ -59,7 +58,7 @@ namespace JitterDemo.Primitives3D
         /// <summary>
         /// Helper method creates a triangle fan to close the ends of the cylinder.
         /// </summary>
-        void CreateCap(int tessellation, float height, float radius, Vector3 normal)
+        private void CreateCap(int tessellation, float height, float radius, Vector3 normal)
         {
             // Create cap indices.
             for (int i = 0; i < tessellation - 2; i++)
@@ -67,32 +66,31 @@ namespace JitterDemo.Primitives3D
                 if (normal.Y > 0)
                 {
                     AddIndex(CurrentVertex);
-                    AddIndex(CurrentVertex + (i + 1) % tessellation);
-                    AddIndex(CurrentVertex + (i + 2) % tessellation);
+                    AddIndex(CurrentVertex + ((i + 1) % tessellation));
+                    AddIndex(CurrentVertex + ((i + 2) % tessellation));
                 }
                 else
                 {
                     AddIndex(CurrentVertex);
-                    AddIndex(CurrentVertex + (i + 2) % tessellation);
-                    AddIndex(CurrentVertex + (i + 1) % tessellation);
+                    AddIndex(CurrentVertex + ((i + 2) % tessellation));
+                    AddIndex(CurrentVertex + ((i + 1) % tessellation));
                 }
             }
 
             // Create cap vertices.
             for (int i = 0; i < tessellation; i++)
             {
-                Vector3 position = GetCircleVector(i, tessellation) * radius +
-                                   normal * height;
+                var position = (GetCircleVector(i, tessellation) * radius)
+                                   + (normal * height);
 
                 AddVertex(position, normal);
             }
         }
 
-
         /// <summary>
         /// Helper method computes a point on a circle.
         /// </summary>
-        static Vector3 GetCircleVector(int i, int tessellation)
+        private static Vector3 GetCircleVector(int i, int tessellation)
         {
             float angle = i * MathHelper.TwoPi / tessellation;
 

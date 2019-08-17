@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace JitterDemo.Primitives3D
@@ -25,13 +21,13 @@ namespace JitterDemo.Primitives3D
                 }
             }
 
-            Vector3[] neighbour = new Vector3[4];
+            var neighbour = new Vector3[4];
 
             for (int i = 0; i < 100; i++)
             {
                 for (int e = 0; e < 100; e++)
                 {
-                    Vector3 pos = new Vector3(i, heights[i,e], e);
+                    var pos = new Vector3(i, heights[i,e], e);
 
                     if (i > 0) neighbour[0] = new Vector3(i - 1, heights[i - 1,e], e);
                     else neighbour[0] = pos;
@@ -45,7 +41,7 @@ namespace JitterDemo.Primitives3D
                     if (e < 99) neighbour[3] = new Vector3(i, heights[i,e+1], e+1);
                     else neighbour[3] = pos;
 
-                    Vector3 normal = Vector3.Zero;
+                    var normal = Vector3.Zero;
 
                     normal += Vector3.Cross(neighbour[1] - pos, neighbour[0] - pos);
                     normal += Vector3.Cross(neighbour[2] - pos, neighbour[1] - pos);
@@ -53,7 +49,7 @@ namespace JitterDemo.Primitives3D
                     normal += Vector3.Cross(neighbour[0] - pos, neighbour[3] - pos);
                     normal.Normalize();
 
-                    this.AddVertex(new Vector3(i, heights[i,e], e), normal);
+                    AddVertex(new Vector3(i, heights[i,e], e), normal);
                 }
             }
 
@@ -61,21 +57,18 @@ namespace JitterDemo.Primitives3D
             {
                 for (int e = 1; e < 100; e++)
                 {
-                    this.AddIndex((i - 1) * 100 + e);
-                    this.AddIndex(i * 100 + (e - 1));
-                    this.AddIndex(i * 100 + e);
+                    AddIndex(((i - 1) * 100) + e);
+                    AddIndex((i * 100) + (e - 1));
+                    AddIndex((i * 100) + e);
 
-
-                    this.AddIndex(i * 100 + (e - 1));
-                    this.AddIndex((i - 1) * 100 + e);
-                    this.AddIndex((i - 1) * 100 + (e - 1));
-                    
+                    AddIndex((i * 100) + (e - 1));
+                    AddIndex(((i - 1) * 100) + e);
+                    AddIndex(((i - 1) * 100) + (e - 1));
                 }
             }
             
 
-            this.InitializePrimitive(device);
+            InitializePrimitive(device);
         }
-
     }
 }

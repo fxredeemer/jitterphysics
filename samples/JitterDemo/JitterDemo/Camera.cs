@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -17,8 +15,8 @@ namespace JitterDemo
         private Vector3 position = new Vector3(0, 0, 10);
         private Vector2 angles = Vector2.Zero;
 
-        private int widthOver2;
-        private int heightOver2;
+        private readonly int widthOver2;
+        private readonly int heightOver2;
 
         private float fieldOfView = Microsoft.Xna.Framework.MathHelper.PiOver4;
         private float aspectRatio;
@@ -83,16 +81,16 @@ namespace JitterDemo
         {
             get
             {
-                Matrix cameraRotation = Matrix.CreateRotationX(angles.X) * Matrix.CreateRotationY(angles.Y);
+                var cameraRotation = Matrix.CreateRotationX(angles.X) * Matrix.CreateRotationY(angles.Y);
                 return position + Vector3.Transform(Vector3.Forward, cameraRotation);
             }
             set
             {
-                Vector3 forward = Vector3.Normalize(position - value);
-                Vector3 right = Vector3.Normalize(Vector3.Cross(forward, Vector3.Up));
-                Vector3 up = Vector3.Normalize(Vector3.Cross(right, forward));
+                var forward = Vector3.Normalize(position - value);
+                var right = Vector3.Normalize(Vector3.Cross(forward, Vector3.Up));
+                var up = Vector3.Normalize(Vector3.Cross(right, forward));
 
-                Matrix test = Matrix.Identity;
+                var test = Matrix.Identity;
                 test.Forward = forward;
                 test.Right = right;
                 test.Up = up;
@@ -119,10 +117,10 @@ namespace JitterDemo
 
         private void ProcessInput(float amountOfMovement)
         {
-            Vector3 moveVector = new Vector3();
+            var moveVector = new Vector3();
 
-            KeyboardState keys = Keyboard.GetState();
-            GamePadState buttons = GamePad.GetState(PlayerIndex.One);
+            var keys = Keyboard.GetState();
+            var buttons = GamePad.GetState(PlayerIndex.One);
 
             if (keys.IsKeyDown(Keys.D))
                 moveVector.X += amountOfMovement;
@@ -141,10 +139,10 @@ namespace JitterDemo
             angles.Y -= buttons.ThumbSticks.Right.X * amountOfMovement * 0.05f;
             angles.X += buttons.ThumbSticks.Right.Y * amountOfMovement * 0.05f;
 
-            Matrix cameraRotation = Matrix.CreateRotationX(angles.X) * Matrix.CreateRotationY(angles.Y);
+            var cameraRotation = Matrix.CreateRotationX(angles.X) * Matrix.CreateRotationY(angles.Y);
             position += Vector3.Transform(moveVector, cameraRotation);
 
-            MouseState currentMouseState = Mouse.GetState();
+            var currentMouseState = Mouse.GetState();
 
             if (currentMouseState.RightButton == ButtonState.Pressed && prevMouseState.RightButton == ButtonState.Released)
             {
@@ -175,10 +173,10 @@ namespace JitterDemo
 
         private void UpdateView()
         {
-            Matrix cameraRotation = Matrix.CreateRotationX(angles.X) * Matrix.CreateRotationY(angles.Y);
-            Vector3 targetPos = position + Vector3.Transform(Vector3.Forward, cameraRotation);
+            var cameraRotation = Matrix.CreateRotationX(angles.X) * Matrix.CreateRotationY(angles.Y);
+            var targetPos = position + Vector3.Transform(Vector3.Forward, cameraRotation);
 
-            Vector3 upVector = Vector3.Transform(Vector3.Up, cameraRotation);
+            var upVector = Vector3.Transform(Vector3.Up, cameraRotation);
 
             view = Matrix.CreateLookAt(position, targetPos, upVector);
         }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-
-namespace JitterDemo.Primitives3D
+﻿namespace JitterDemo.Primitives3D
 {
     //public class DrawManager : DrawableGameComponent
     //{

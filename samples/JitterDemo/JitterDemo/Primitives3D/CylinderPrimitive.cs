@@ -28,7 +28,6 @@ namespace JitterDemo.Primitives3D
         {
         }
 
-
         /// <summary>
         /// Constructs a new cylinder primitive,
         /// with the specified size and tessellation level.
@@ -37,25 +36,25 @@ namespace JitterDemo.Primitives3D
                                  float height, float radius, int tessellation)
         {
             if (tessellation < 3)
-                throw new ArgumentOutOfRangeException("tessellation");
+                throw new ArgumentOutOfRangeException(nameof(tessellation));
 
             height /= 2;
 
             // Create a ring of triangles around the outside of the cylinder.
             for (int i = 0; i < tessellation; i++)
             {
-                Vector3 normal = GetCircleVector(i, tessellation);
+                var normal = GetCircleVector(i, tessellation);
 
-                AddVertex(normal * radius + Vector3.Up * height, normal);
-                AddVertex(normal * radius + Vector3.Down * height, normal);
+                AddVertex((normal * radius) + (Vector3.Up * height), normal);
+                AddVertex((normal * radius) + (Vector3.Down * height), normal);
 
                 AddIndex(i * 2);
-                AddIndex(i * 2 + 1);
-                AddIndex((i * 2 + 2) % (tessellation * 2));
+                AddIndex((i * 2) + 1);
+                AddIndex(((i * 2) + 2) % (tessellation * 2));
 
-                AddIndex(i * 2 + 1);
-                AddIndex((i * 2 + 3) % (tessellation * 2));
-                AddIndex((i * 2 + 2) % (tessellation * 2));
+                AddIndex((i * 2) + 1);
+                AddIndex(((i * 2) + 3) % (tessellation * 2));
+                AddIndex(((i * 2) + 2) % (tessellation * 2));
             }
 
             // Create flat triangle fan caps to seal the top and bottom.
@@ -65,11 +64,10 @@ namespace JitterDemo.Primitives3D
             InitializePrimitive(graphicsDevice);
         }
 
-
         /// <summary>
         /// Helper method creates a triangle fan to close the ends of the cylinder.
         /// </summary>
-        void CreateCap(int tessellation, float height, float radius, Vector3 normal)
+        private void CreateCap(int tessellation, float height, float radius, Vector3 normal)
         {
             // Create cap indices.
             for (int i = 0; i < tessellation - 2; i++)
@@ -77,32 +75,31 @@ namespace JitterDemo.Primitives3D
                 if (normal.Y > 0)
                 {
                     AddIndex(CurrentVertex);
-                    AddIndex(CurrentVertex + (i + 1) % tessellation);
-                    AddIndex(CurrentVertex + (i + 2) % tessellation);
+                    AddIndex(CurrentVertex + ((i + 1) % tessellation));
+                    AddIndex(CurrentVertex + ((i + 2) % tessellation));
                 }
                 else
                 {
                     AddIndex(CurrentVertex);
-                    AddIndex(CurrentVertex + (i + 2) % tessellation);
-                    AddIndex(CurrentVertex + (i + 1) % tessellation);
+                    AddIndex(CurrentVertex + ((i + 2) % tessellation));
+                    AddIndex(CurrentVertex + ((i + 1) % tessellation));
                 }
             }
 
             // Create cap vertices.
             for (int i = 0; i < tessellation; i++)
             {
-                Vector3 position = GetCircleVector(i, tessellation) * radius +
-                                   normal * height;
+                var position = (GetCircleVector(i, tessellation) * radius)
+                                   + (normal * height);
 
                 AddVertex(position, normal);
             }
         }
 
-
         /// <summary>
         /// Helper method computes a point on a circle.
         /// </summary>
-        static Vector3 GetCircleVector(int i, int tessellation)
+        private static Vector3 GetCircleVector(int i, int tessellation)
         {
             float angle = i * MathHelper.TwoPi / tessellation;
 

@@ -3,13 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JitterDemo
 {
-
     public class QuadDrawer : DrawableGameComponent
     {
         private Texture2D texture;
         private BasicEffect effect;
 
-        private float size = 100.0f;
+        private readonly float size = 100.0f;
 
         private VertexPositionNormalTexture[] vertices;
         private int[] indices;
@@ -53,8 +52,8 @@ namespace JitterDemo
 
         protected override void LoadContent()
         {
-            texture = this.Game.Content.Load<Texture2D>("checker");
-            effect = new BasicEffect(this.GraphicsDevice);
+            texture = Game.Content.Load<Texture2D>("checker");
+            effect = new BasicEffect(GraphicsDevice);
             effect.EnableDefaultLighting();
             effect.SpecularColor = new Vector3(0.1f, 0.1f, 0.1f);
 
@@ -73,7 +72,7 @@ namespace JitterDemo
 
         public override void Draw(GameTime gameTime)
         {
-            JitterDemo demo = this.Game as JitterDemo;
+            var demo = Game as JitterDemo;
 
             GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
@@ -81,13 +80,12 @@ namespace JitterDemo
             effect.View = demo.Camera.View;
             effect.Projection = demo.Camera.Projection;
 
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            foreach (var pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
 
-                GraphicsDevice.DrawUserIndexedPrimitives
-                    <VertexPositionNormalTexture>(PrimitiveType.TriangleList,
-                    vertices, 0, 4,indices, 0, 2);
+                GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,
+                    vertices, 0, 4, indices, 0, 2);
             }
 
             base.Draw(gameTime);

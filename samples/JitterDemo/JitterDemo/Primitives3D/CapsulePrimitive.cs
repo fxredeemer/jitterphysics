@@ -28,7 +28,6 @@ namespace JitterDemo.Primitives3D
         {
         }
 
-
         /// <summary>
         /// Constructs a new sphere primitive,
         /// with the specified size and tessellation level.
@@ -45,13 +44,13 @@ namespace JitterDemo.Primitives3D
             float radius = diameter / 2;
 
             // Start with a single vertex at the bottom of the sphere.
-            AddVertex(Vector3.Down * radius + Vector3.Down * 0.5f * length, Vector3.Down);
+            AddVertex((Vector3.Down * radius) + (Vector3.Down * 0.5f * length), Vector3.Down);
 
             // Create rings of vertices at progressively higher latitudes.
             for (int i = 0; i < verticalSegments - 1; i++)
             {
-                float latitude = ((i + 1) * MathHelper.Pi /
-                                            verticalSegments) - MathHelper.PiOver2;
+                float latitude = ((i + 1) * MathHelper.Pi
+                                            / verticalSegments) - MathHelper.PiOver2;
                 float dy = (float)Math.Sin(latitude);
                 float dxz = (float)Math.Cos(latitude);
 
@@ -70,8 +69,8 @@ namespace JitterDemo.Primitives3D
                     float dx = (float)Math.Cos(longitude) * dxz;
                     float dz = (float)Math.Sin(longitude) * dxz;
 
-                    Vector3 normal = new Vector3(dx, dy, dz);
-                    Vector3 position = normal * radius;
+                    var normal = new Vector3(dx, dy, dz);
+                    var position = normal * radius;
 
                     if (bla) position += Vector3.Up * 0.5f * length;
                     else position += Vector3.Down * 0.5f * length;
@@ -81,13 +80,13 @@ namespace JitterDemo.Primitives3D
             }
 
             // Finish with a single vertex at the top of the sphere.
-            AddVertex(Vector3.Up * radius + Vector3.Up * 0.5f * length, Vector3.Up);
+            AddVertex((Vector3.Up * radius) + (Vector3.Up * 0.5f * length), Vector3.Up);
 
             // Create a fan connecting the bottom vertex to the bottom latitude ring.
             for (int i = 0; i < horizontalSegments; i++)
             {
                 AddIndex(0);
-                AddIndex(1 + (i + 1) % horizontalSegments);
+                AddIndex(1 + ((i + 1) % horizontalSegments));
                 AddIndex(1 + i);
             }
 
@@ -99,13 +98,13 @@ namespace JitterDemo.Primitives3D
                     int nextI = i + 1;
                     int nextJ = (j + 1) % horizontalSegments;
 
-                    AddIndex(1 + i * horizontalSegments + j);
-                    AddIndex(1 + i * horizontalSegments + nextJ);
-                    AddIndex(1 + nextI * horizontalSegments + j);
+                    AddIndex(1 + (i * horizontalSegments) + j);
+                    AddIndex(1 + (i * horizontalSegments) + nextJ);
+                    AddIndex(1 + (nextI * horizontalSegments) + j);
 
-                    AddIndex(1 + i * horizontalSegments + nextJ);
-                    AddIndex(1 + nextI * horizontalSegments + nextJ);
-                    AddIndex(1 + nextI * horizontalSegments + j);
+                    AddIndex(1 + (i * horizontalSegments) + nextJ);
+                    AddIndex(1 + (nextI * horizontalSegments) + nextJ);
+                    AddIndex(1 + (nextI * horizontalSegments) + j);
                 }
             }
 
@@ -113,7 +112,7 @@ namespace JitterDemo.Primitives3D
             for (int i = 0; i < horizontalSegments; i++)
             {
                 AddIndex(CurrentVertex - 1);
-                AddIndex(CurrentVertex - 2 - (i + 1) % horizontalSegments);
+                AddIndex(CurrentVertex - 2 - ((i + 1) % horizontalSegments));
                 AddIndex(CurrentVertex - 2 - i);
             }
 
