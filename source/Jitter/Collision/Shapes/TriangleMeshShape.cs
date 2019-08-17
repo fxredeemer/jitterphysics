@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Jitter.LinearMath;
+﻿using Jitter.LinearMath;
+using System.Collections.Generic;
 
 namespace Jitter.Collision.Shapes
 {
@@ -130,7 +130,10 @@ namespace Jitter.Collision.Shapes
             JVector.Subtract(ref vecs[2], ref vecs[0], out normal);
             JVector.Cross(ref sum, ref normal, out normal);
 
-            if (FlipNormals) normal.Negate();
+            if (FlipNormals)
+            {
+                normal.Negate();
+            }
         }
 
         private JVector normal = JVector.Up;

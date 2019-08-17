@@ -9,7 +9,7 @@ namespace Jitter.Collision.Shapes
     {
         private float radius = 1.0f;
 
-        public float Radius { get { return radius; } set { radius = value; UpdateShape(); } }
+        public float Radius { get => radius; set { radius = value; UpdateShape(); } }
 
         public SphereShape(float radius)
         {

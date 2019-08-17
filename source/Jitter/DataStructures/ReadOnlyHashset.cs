@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Jitter.DataStructures
 {
@@ -19,7 +19,7 @@ namespace Jitter.DataStructures
             return hashset.GetEnumerator();
         }
 
-        public int Count { get { return hashset.Count; } }
+        public int Count => hashset.Count;
 
         public bool Contains(T item) { return hashset.Contains(item); }
     }

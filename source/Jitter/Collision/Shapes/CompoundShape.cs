@@ -40,7 +40,7 @@ namespace Jitter.Collision.Shapes
                 this.position = position;
                 this.orientation = orientation;
                 JMatrix.Transpose(ref orientation, out invOrientation);
-                this.Shape = shape;
+                Shape = shape;
                 boundingBox = new JBBox();
                 UpdateBoundingBox();
             }
@@ -55,8 +55,8 @@ namespace Jitter.Collision.Shapes
 
         public CompoundShape(List<TransformedShape> shapes)
         {
-            this.Shapes = new TransformedShape[shapes.Count];
-            shapes.CopyTo(this.Shapes);
+            Shapes = new TransformedShape[shapes.Count];
+            shapes.CopyTo(Shapes);
 
             if (!TestValidity())
             {
@@ -68,8 +68,8 @@ namespace Jitter.Collision.Shapes
 
         public CompoundShape(TransformedShape[] shapes)
         {
-            this.Shapes = new TransformedShape[shapes.Length];
-            Array.Copy(shapes, this.Shapes, shapes.Length);
+            Shapes = new TransformedShape[shapes.Length];
+            Array.Copy(shapes, Shapes, shapes.Length);
 
             if (!TestValidity())
             {

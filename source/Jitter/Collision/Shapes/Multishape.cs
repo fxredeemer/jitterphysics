@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Jitter.LinearMath;
+using System.Collections.Generic;
 using System.Diagnostics;
-using Jitter.LinearMath;
 
 namespace Jitter.Collision.Shapes
 {
@@ -16,7 +16,7 @@ namespace Jitter.Collision.Shapes
 
         internal bool isClone = false;
 
-        public bool IsClone { get { return isClone; } }
+        public bool IsClone => isClone;
 
         private Stack<Multishape> workingCloneStack = new Stack<Multishape>();
 
@@ -44,7 +44,11 @@ namespace Jitter.Collision.Shapes
 
         public override void UpdateShape()
         {
-            lock (workingCloneStack) workingCloneStack.Clear();
+            lock (workingCloneStack)
+            {
+                workingCloneStack.Clear();
+            }
+
             base.UpdateShape();
         }
 

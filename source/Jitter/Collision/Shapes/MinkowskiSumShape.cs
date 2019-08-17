@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Jitter.LinearMath;
+using System;
 using System.Collections.Generic;
-using Jitter.LinearMath;
 
 namespace Jitter.Collision.Shapes
 {
@@ -18,7 +18,11 @@ namespace Jitter.Collision.Shapes
         {
             foreach (var shape in shapes)
             {
-                if (shape is Multishape) throw new Exception("Multishapes not supported by MinkowskiSumShape.");
+                if (shape is Multishape)
+                {
+                    throw new Exception("Multishapes not supported by MinkowskiSumShape.");
+                }
+
                 this.shapes.Add(shape);
             }
 
@@ -27,7 +31,11 @@ namespace Jitter.Collision.Shapes
 
         public void AddShape(Shape shape)
         {
-            if (shape is Multishape) throw new Exception("Multishapes not supported by MinkowskiSumShape.");
+            if (shape is Multishape)
+            {
+                throw new Exception("Multishapes not supported by MinkowskiSumShape.");
+            }
+
             shapes.Add(shape);
 
             UpdateShape();
@@ -35,7 +43,11 @@ namespace Jitter.Collision.Shapes
 
         public bool Remove(Shape shape)
         {
-            if (shapes.Count == 1) throw new Exception("There must be at least one shape.");
+            if (shapes.Count == 1)
+            {
+                throw new Exception("There must be at least one shape.");
+            }
+
             bool result = shapes.Remove(shape);
             UpdateShape();
             return result;

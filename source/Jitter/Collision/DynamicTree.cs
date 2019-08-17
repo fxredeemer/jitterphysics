@@ -19,8 +19,7 @@ namespace Jitter.Collision
         public int Root { get; private set; }
         public DynamicTreeNode<T>[] Nodes { get; private set; }
 
-        public DynamicTree()
-            : this(0.1f)
+        public DynamicTree() : this(0.1f)
         {
         }
 

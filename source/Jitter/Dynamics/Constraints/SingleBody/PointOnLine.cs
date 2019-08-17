@@ -1,5 +1,5 @@
-﻿using System;
-using Jitter.LinearMath;
+﻿using Jitter.LinearMath;
+using System;
 
 namespace Jitter.Dynamics.Constraints.SingleBody
 {
@@ -14,7 +14,9 @@ namespace Jitter.Dynamics.Constraints.SingleBody
         public PointOnLine(RigidBody body, JVector localAnchor, JVector lineDirection) : base(body, null)
         {
             if (lineDirection.LengthSquared() == 0.0f)
+            {
                 throw new ArgumentException("Line direction can't be zero", nameof(lineDirection));
+            }
 
             localAnchor1 = localAnchor;
             anchor = body.position + JVector.Transform(localAnchor, body.orientation);
@@ -23,9 +25,9 @@ namespace Jitter.Dynamics.Constraints.SingleBody
             lineNormal.Normalize();
         }
 
-        public JVector Anchor { get { return anchor; } set { anchor = value; } }
+        public JVector Anchor { get => anchor; set => anchor = value; }
 
-        public JVector Axis { get { return lineNormal; } set { lineNormal = value; lineNormal.Normalize(); } }
+        public JVector Axis { get => lineNormal; set { lineNormal = value; lineNormal.Normalize(); } }
 
         public float Softness { get; set; }
 
@@ -48,7 +50,11 @@ namespace Jitter.Dynamics.Constraints.SingleBody
             var l = lineNormal;
 
             var t = (p1 - anchor) % l;
-            if (t.LengthSquared() != 0.0f) t.Normalize();
+            if (t.LengthSquared() != 0.0f)
+            {
+                t.Normalize();
+            }
+
             t = t % l;
 
             jacobian[0] = t;
@@ -60,7 +66,10 @@ namespace Jitter.Dynamics.Constraints.SingleBody
             softnessOverDt = Softness / timestep;
             effectiveMass += softnessOverDt;
 
-            if (effectiveMass != 0) effectiveMass = 1.0f / effectiveMass;
+            if (effectiveMass != 0)
+            {
+                effectiveMass = 1.0f / effectiveMass;
+            }
 
             bias = -(l % (p1 - anchor)).Length() * BiasFactor * (1.0f / timestep);
 

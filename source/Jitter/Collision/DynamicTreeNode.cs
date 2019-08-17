@@ -1,7 +1,4 @@
 ﻿using Jitter.LinearMath;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Jitter.Collision
 {

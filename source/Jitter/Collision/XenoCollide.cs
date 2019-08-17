@@ -52,7 +52,10 @@ namespace Jitter.Collision
 
             JVector.Subtract(ref v02, ref v01, out var v0);
 
-            if (v0.IsNearlyZero()) v0 = new JVector(0.00001f, 0, 0);
+            if (v0.IsNearlyZero())
+            {
+                v0 = new JVector(0.00001f, 0, 0);
+            }
 
             mn = v0;
             JVector.Negate(ref v0, out normal);
@@ -61,7 +64,10 @@ namespace Jitter.Collision
             SupportMapTransformed(support2, ref orientation2, ref position2, ref normal, out var v12);
             JVector.Subtract(ref v12, ref v11, out var v1);
 
-            if (JVector.Dot(ref v1, ref normal) <= 0.0f) return false;
+            if (JVector.Dot(ref v1, ref normal) <= 0.0f)
+            {
+                return false;
+            }
 
             JVector.Cross(ref v1, ref v0, out normal);
 
@@ -86,7 +92,10 @@ namespace Jitter.Collision
             SupportMapTransformed(support2, ref orientation2, ref position2, ref normal, out var v22);
             JVector.Subtract(ref v22, ref v21, out var v2);
 
-            if (JVector.Dot(ref v2, ref normal) <= 0.0f) return false;
+            if (JVector.Dot(ref v2, ref normal) <= 0.0f)
+            {
+                return false;
+            }
 
             JVector.Subtract(ref v1, ref v0, out temp1);
             JVector.Subtract(ref v2, ref v0, out var temp2);
@@ -108,7 +117,10 @@ namespace Jitter.Collision
 
             while (true)
             {
-                if (phase1 > MaximumIterations) return false;
+                if (phase1 > MaximumIterations)
+                {
+                    return false;
+                }
 
                 phase1++;
 
@@ -154,7 +166,10 @@ namespace Jitter.Collision
                     JVector.Subtract(ref v3, ref v1, out temp2);
                     JVector.Cross(ref temp1, ref temp2, out normal);
 
-                    if (normal.IsNearlyZero()) return true;
+                    if (normal.IsNearlyZero())
+                    {
+                        return true;
+                    }
 
                     normal.Normalize();
 

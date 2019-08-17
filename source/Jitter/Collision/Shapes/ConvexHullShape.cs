@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Jitter.LinearMath;
+﻿using Jitter.LinearMath;
+using System.Collections.Generic;
 
 namespace Jitter.Collision.Shapes
 {
@@ -14,7 +14,7 @@ namespace Jitter.Collision.Shapes
             UpdateShape();
         }
 
-        public JVector Shift { get { return -1 * shifted; } }
+        public JVector Shift => -1 * shifted;
 
         public override void CalculateMassInertia()
         {

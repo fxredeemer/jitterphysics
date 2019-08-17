@@ -1,5 +1,5 @@
-﻿using System;
-using Jitter.LinearMath;
+﻿using Jitter.LinearMath;
+using System;
 
 namespace Jitter.Collision.Shapes
 {
@@ -7,9 +7,9 @@ namespace Jitter.Collision.Shapes
     {
         private float height, radius;
 
-        public float Height { get { return height; } set { height = value; UpdateShape(); } }
+        public float Height { get => height; set { height = value; UpdateShape(); } }
 
-        public float Radius { get { return radius; } set { radius = value; UpdateShape(); } }
+        public float Radius { get => radius; set { radius = value; UpdateShape(); } }
 
         public CylinderShape(float height, float radius)
         {
@@ -28,18 +28,18 @@ namespace Jitter.Collision.Shapes
 
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            float sigma = (float)Math.Sqrt((float)((direction.X * direction.X) + (direction.Z * direction.Z)));
+            float sigma = (float)Math.Sqrt((direction.X * direction.X) + (direction.Z * direction.Z));
 
             if (sigma > 0.0f)
             {
                 result.X = direction.X / sigma * radius;
-                result.Y = (float)Math.Sign(direction.Y) * height * 0.5f;
+                result.Y = Math.Sign(direction.Y) * height * 0.5f;
                 result.Z = direction.Z / sigma * radius;
             }
             else
             {
                 result.X = 0.0f;
-                result.Y = (float)Math.Sign(direction.Y) * height * 0.5f;
+                result.Y = Math.Sign(direction.Y) * height * 0.5f;
                 result.Z = 0.0f;
             }
         }

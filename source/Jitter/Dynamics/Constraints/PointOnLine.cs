@@ -45,7 +45,11 @@ namespace Jitter.Dynamics.Constraints
             l.Normalize();
 
             var t = (p1 - p2) % l;
-            if (t.LengthSquared() != 0.0f) t.Normalize();
+            if (t.LengthSquared() != 0.0f)
+            {
+                t.Normalize();
+            }
+
             t %= l;
 
             jacobian[0] = t;
@@ -60,7 +64,10 @@ namespace Jitter.Dynamics.Constraints
             softnessOverDt = Softness / timestep;
             effectiveMass += softnessOverDt;
 
-            if (effectiveMass != 0) effectiveMass = 1.0f / effectiveMass;
+            if (effectiveMass != 0)
+            {
+                effectiveMass = 1.0f / effectiveMass;
+            }
 
             bias = -(l % (p2 - p1)).Length() * BiasFactor * (1.0f / timestep);
 

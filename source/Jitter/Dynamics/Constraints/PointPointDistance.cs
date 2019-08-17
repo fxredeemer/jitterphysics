@@ -31,9 +31,9 @@ namespace Jitter.Dynamics.Constraints
 
         public DistanceBehavior Behavior { get; set; }
 
-        public JVector LocalAnchor1 { get { return localAnchor1; } set { localAnchor1 = value; } }
+        public JVector LocalAnchor1 { get => localAnchor1; set => localAnchor1 = value; }
 
-        public JVector LocalAnchor2 { get { return localAnchor2; } set { localAnchor2 = value; } }
+        public JVector LocalAnchor2 { get => localAnchor2; set => localAnchor2 = value; }
 
         public float Softness { get; set; } = 0.01f;
 
@@ -71,7 +71,10 @@ namespace Jitter.Dynamics.Constraints
                 skipConstraint = false;
 
                 var n = p2 - p1;
-                if (n.LengthSquared() != 0.0f) n.Normalize();
+                if (n.LengthSquared() != 0.0f)
+                {
+                    n.Normalize();
+                }
 
                 jacobian[0] = -1.0f * n;
                 jacobian[1] = -1.0f * (r1 % n);
@@ -105,7 +108,10 @@ namespace Jitter.Dynamics.Constraints
 
         public override void Iterate()
         {
-            if (skipConstraint) return;
+            if (skipConstraint)
+            {
+                return;
+            }
 
             float jv =
                 (body1.linearVelocity * jacobian[0])

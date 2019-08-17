@@ -40,7 +40,10 @@ namespace Jitter.Dynamics.Constraints
             float deltaLength = dp.Length();
 
             var n = p2 - p1;
-            if (n.LengthSquared() != 0.0f) n.Normalize();
+            if (n.LengthSquared() != 0.0f)
+            {
+                n.Normalize();
+            }
 
             jacobian[0] = -1.0f * n;
             jacobian[1] = -1.0f * (r1 % n);

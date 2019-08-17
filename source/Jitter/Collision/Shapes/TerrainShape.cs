@@ -1,8 +1,8 @@
 ﻿
 #region Using Statements
+using Jitter.LinearMath;
 using System;
 using System.Collections.Generic;
-using Jitter.LinearMath;
 #endregion
 
 namespace Jitter.Collision.Shapes
@@ -34,9 +34,13 @@ namespace Jitter.Collision.Shapes
                 for (int e = 0; e < heightsLength1; e++)
                 {
                     if (heights[i, e] > boundings.Max.Y)
+                    {
                         boundings.Max.Y = heights[i, e];
+                    }
                     else if (heights[i, e] < boundings.Min.Y)
+                    {
                         boundings.Min.Y = heights[i, e];
+                    }
                 }
             }
 
@@ -119,31 +123,43 @@ namespace Jitter.Collision.Shapes
 
         public override int Prepare(ref JBBox box)
         {
-            if (box.Min.X < boundings.Min.X) minX = 0;
+            if (box.Min.X < boundings.Min.X)
+            {
+                minX = 0;
+            }
             else
             {
-                minX = (int)Math.Floor((float)((box.Min.X - SphericalExpansion) / scaleX));
+                minX = (int)Math.Floor((box.Min.X - SphericalExpansion) / scaleX);
                 minX = Math.Max(minX, 0);
             }
 
-            if (box.Max.X > boundings.Max.X) maxX = heightsLength0 - 1;
+            if (box.Max.X > boundings.Max.X)
+            {
+                maxX = heightsLength0 - 1;
+            }
             else
             {
-                maxX = (int)Math.Ceiling((float)((box.Max.X + SphericalExpansion) / scaleX));
+                maxX = (int)Math.Ceiling((box.Max.X + SphericalExpansion) / scaleX);
                 maxX = Math.Min(maxX, heightsLength0 - 1);
             }
 
-            if (box.Min.Z < boundings.Min.Z) minZ = 0;
+            if (box.Min.Z < boundings.Min.Z)
+            {
+                minZ = 0;
+            }
             else
             {
-                minZ = (int)Math.Floor((float)((box.Min.Z - SphericalExpansion) / scaleZ));
+                minZ = (int)Math.Floor((box.Min.Z - SphericalExpansion) / scaleZ);
                 minZ = Math.Max(minZ, 0);
             }
 
-            if (box.Max.Z > boundings.Max.Z) maxZ = heightsLength1 - 1;
+            if (box.Max.Z > boundings.Max.Z)
+            {
+                maxZ = heightsLength1 - 1;
+            }
             else
             {
-                maxZ = (int)Math.Ceiling((float)((box.Max.Z + SphericalExpansion) / scaleZ));
+                maxZ = (int)Math.Ceiling((box.Max.Z + SphericalExpansion) / scaleZ);
                 maxZ = Math.Min(maxZ, heightsLength1 - 1);
             }
 

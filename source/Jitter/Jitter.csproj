@@ -50,7 +50,7 @@
     <Compile Include="Collision\CollisionSystemBrute.cs" />
     <Compile Include="Collision\CollisionSystemSAP.cs" />
     <Compile Include="Collision\CollisionSystemPersistentSAP.cs" />
-    <Compile Include="Collision\DynamicTreeNode`1.cs" />
+    <Compile Include="Collision\DynamicTreeNode.cs" />
     <Compile Include="Collision\GJKCollide.cs" />
     <Compile Include="Collision\IBroadphaseEntity.cs" />
     <Compile Include="Collision\IslandManager.cs" />

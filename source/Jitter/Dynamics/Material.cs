@@ -8,20 +8,20 @@
 
         public float Restitution
         {
-            get { return restitution; }
-            set { restitution = value; }
+            get => restitution;
+            set => restitution = value;
         }
 
         public float StaticFriction
         {
-            get { return staticFriction; }
-            set { staticFriction = value; }
+            get => staticFriction;
+            set => staticFriction = value;
         }
 
         public float KineticFriction
         {
-            get { return kineticFriction; }
-            set { kineticFriction = value; }
+            get => kineticFriction;
+            set => kineticFriction = value;
         }
     }
 }

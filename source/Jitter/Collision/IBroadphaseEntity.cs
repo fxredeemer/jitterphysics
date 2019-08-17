@@ -1,8 +1,4 @@
-﻿using Jitter.Collision.Shapes;
-using Jitter.Dynamics;
-using Jitter.LinearMath;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using Jitter.LinearMath;
 
 namespace Jitter.Collision
 {
