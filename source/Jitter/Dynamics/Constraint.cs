@@ -22,7 +22,7 @@ namespace Jitter.Dynamics.Constraints
 
         public RigidBody Body2 => body2;
 
-        private static int instanceCount = 0;
+        private static int instanceCount;
         private readonly int instance;
 
         public Constraint(RigidBody body1, RigidBody body2)

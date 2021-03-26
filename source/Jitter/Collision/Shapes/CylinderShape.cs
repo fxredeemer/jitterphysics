@@ -7,9 +7,23 @@ namespace Jitter.Collision.Shapes
     {
         private float height, radius;
 
-        public float Height { get => height; set { height = value; UpdateShape(); } }
+        public float Height
+        {
+            get => height; set
+            {
+                height = value;
+                UpdateShape();
+            }
+        }
 
-        public float Radius { get => radius; set { radius = value; UpdateShape(); } }
+        public float Radius
+        {
+            get => radius; set
+            {
+                radius = value;
+                UpdateShape();
+            }
+        }
 
         public CylinderShape(float height, float radius)
         {

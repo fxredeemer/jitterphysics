@@ -14,7 +14,7 @@ namespace Jitter.Collision.Shapes
 
         protected abstract Multishape CreateWorkingClone();
 
-        internal bool isClone = false;
+        internal bool isClone;
 
         public bool IsClone => isClone;
 

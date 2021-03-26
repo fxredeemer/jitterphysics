@@ -39,7 +39,7 @@ namespace Jitter.Collision.Shapes
 
         public virtual void MakeHull(ref List<JVector> triangleList, int generationThreshold)
         {
-            float distanceThreshold = 0.0f;
+            const float distanceThreshold = 0.0f;
 
             if (generationThreshold < 0)
             {
@@ -199,7 +199,7 @@ namespace Jitter.Collision.Shapes
             var hullTriangles = new List<JVector>();
             shape.MakeHull(ref hullTriangles, 3);
 
-            float a = 1.0f / 60.0f, b = 1.0f / 120.0f;
+            const float a = 1.0f / 60.0f, b = 1.0f / 120.0f;
             var C = new JMatrix(a, b, b, b, a, b, b, b, a);
 
             for (int i = 0; i < hullTriangles.Count; i += 3)
@@ -225,16 +225,16 @@ namespace Jitter.Collision.Shapes
             }
 
             inertia = JMatrix.Multiply(JMatrix.Identity, inertia.Trace()) - inertia;
-            centerOfMass = centerOfMass * (1.0f / mass);
+            centerOfMass *= (1.0f / mass);
 
             float x = centerOfMass.X;
             float y = centerOfMass.Y;
             float z = centerOfMass.Z;
 
             var t = new JMatrix(
-    -mass * ((y * y) + (z * z)), mass * x * y, mass * x * z,
-    mass * y * x, -mass * ((z * z) + (x * x)), mass * y * z,
-    mass * z * x, mass * z * y, -mass * ((x * x) + (y * y)));
+                -mass * ((y * y) + (z * z)), mass * x * y, mass * x * z,
+                mass * y * x, -mass * ((z * z) + (x * x)), mass * y * z,
+                mass * z * x, mass * z * y, -mass * ((x * x) + (y * y)));
 
             JMatrix.Add(ref inertia, ref t, out inertia);
 
@@ -243,7 +243,7 @@ namespace Jitter.Collision.Shapes
 
         public virtual void CalculateMassInertia()
         {
-            mass = Shape.CalculateMassInertia(this, out geomCen, out inertia);
+            mass = CalculateMassInertia(this, out geomCen, out inertia);
         }
 
         public abstract void SupportMapping(ref JVector direction, out JVector result);

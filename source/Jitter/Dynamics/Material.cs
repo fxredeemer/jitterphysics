@@ -4,7 +4,7 @@
     {
         internal float kineticFriction = 0.3f;
         internal float staticFriction = 0.6f;
-        internal float restitution = 0.0f;
+        internal float restitution;
 
         public float Restitution
         {

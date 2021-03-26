@@ -22,7 +22,7 @@ namespace Jitter.Collision
 
         private readonly IBroadphaseEntityXCompare xComparer;
 
-        private bool swapOrder = false;
+        private bool swapOrder;
 
         public CollisionSystemSAP()
         {
@@ -98,7 +98,7 @@ namespace Jitter.Collision
                         && (bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z)
                         && (bodyBox.Max.Y >= acBox.Min.Y) && (bodyBox.Min.Y <= acBox.Max.Y))
                     {
-                        if (base.RaisePassedBroadphase(ac, body))
+                        if (RaisePassedBroadphase(ac, body))
                         {
                             if (swapOrder)
                             {
@@ -147,7 +147,7 @@ namespace Jitter.Collision
                         && (bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z)
                         && (bodyBox.Max.Y >= acBox.Min.Y) && (bodyBox.Min.Y <= acBox.Max.Y))
                     {
-                        if (base.RaisePassedBroadphase(ac, body))
+                        if (RaisePassedBroadphase(ac, body))
                         {
                             var pair = BroadphasePair.Pool.GetNew();
 

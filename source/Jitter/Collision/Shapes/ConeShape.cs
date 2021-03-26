@@ -7,9 +7,25 @@ namespace Jitter.Collision.Shapes
     {
         private float height, radius;
 
-        public float Height { get => height; set { height = value; UpdateShape(); } }
+        public float Height
+        {
+            get => height;
+            set
+            {
+                height = value;
+                UpdateShape();
+            }
+        }
 
-        public float Radius { get => radius; set { radius = value; UpdateShape(); } }
+        public float Radius
+        {
+            get => radius;
+            set
+            {
+                radius = value;
+                UpdateShape();
+            }
+        }
 
         public ConeShape(float height, float radius)
         {
@@ -25,7 +41,7 @@ namespace Jitter.Collision.Shapes
             base.UpdateShape();
         }
 
-        private float sina = 0.0f;
+        private float sina;
 
         public override void CalculateMassInertia()
         {

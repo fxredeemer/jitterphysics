@@ -193,7 +193,7 @@ namespace Jitter.Collision
             }
         }
 
-        private int addCounter = 0;
+        private int addCounter;
         public override void AddEntity(IBroadphaseEntity body)
         {
             bodyList.Add(body);
@@ -256,7 +256,7 @@ namespace Jitter.Collision
             return true;
         }
 
-        private bool swapOrder = false;
+        private bool swapOrder;
 
         public override void Detect(bool multiThreaded)
         {
@@ -295,7 +295,7 @@ namespace Jitter.Collision
                     continue;
                 }
 
-                if (base.RaisePassedBroadphase(key.Entity1, key.Entity2))
+                if (RaisePassedBroadphase(key.Entity1, key.Entity2))
                 {
                     if (multiThreaded)
                     {

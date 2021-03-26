@@ -86,7 +86,7 @@ namespace Jitter.Collision
             }
         }
 
-        private bool swapOrder = false;
+        private bool swapOrder;
 
         private void DetectCallback(object obj)
         {

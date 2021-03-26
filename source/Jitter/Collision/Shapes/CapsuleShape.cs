@@ -7,9 +7,25 @@ namespace Jitter.Collision.Shapes
     {
         private float length, radius;
 
-        public float Length { get => length; set { length = value; UpdateShape(); } }
+        public float Length
+        {
+            get => length;
+            set
+            {
+                length = value;
+                UpdateShape();
+            }
+        }
 
-        public float Radius { get => radius; set { radius = value; UpdateShape(); } }
+        public float Radius
+        {
+            get => radius;
+            set
+            {
+                radius = value;
+                UpdateShape();
+            }
+        }
 
         public CapsuleShape(float length, float radius)
         {

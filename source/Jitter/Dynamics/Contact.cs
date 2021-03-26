@@ -41,26 +41,26 @@ namespace Jitter.Dynamics
         internal JVector relativePos1, relativePos2;
         internal JVector p1, p2;
 
-        internal float accumulatedNormalImpulse = 0.0f;
-        internal float accumulatedTangentImpulse = 0.0f;
+        internal float accumulatedNormalImpulse;
+        internal float accumulatedTangentImpulse;
 
-        internal float penetration = 0.0f;
-        internal float initialPen = 0.0f;
-        private float friction = 0.0f;
+        internal float penetration;
+        internal float initialPen;
+        private float friction;
 
-        private float massNormal = 0.0f, massTangent = 0.0f;
-        private float restitutionBias = 0.0f;
+        private float massNormal, massTangent;
+        private float restitutionBias;
 
-        private bool newContact = false;
+        private bool newContact;
 
-        private bool treatBody1AsStatic = false;
-        private bool treatBody2AsStatic = false;
+        private bool treatBody1AsStatic;
+        private bool treatBody2AsStatic;
 
         private bool body1IsMassPoint;
         private bool body2IsMassPoint;
 
-        private float lostSpeculativeBounce = 0.0f;
-        private float speculativeVelocity = 0.0f;
+        private float lostSpeculativeBounce;
+        private float speculativeVelocity;
 
         public static readonly ResourcePool<Contact> Pool =
     new ResourcePool<Contact>();

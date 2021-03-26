@@ -33,8 +33,8 @@ namespace Jitter.Dynamics.Constraints.SingleBody
 
         public float BiasFactor { get; set; } = 0.5f;
 
-        private float effectiveMass = 0.0f;
-        private float accumulatedImpulse = 0.0f;
+        private float effectiveMass;
+        private float accumulatedImpulse;
         private float bias;
         private float softnessOverDt;
         private readonly JVector[] jacobian = new JVector[2];

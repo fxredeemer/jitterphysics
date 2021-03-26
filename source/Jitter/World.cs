@@ -112,7 +112,7 @@ namespace Jitter
 
         private int contactIterations = 10;
         private int smallIterations = 4;
-        private float timestep = 0.0f;
+        private float timestep;
 
         private readonly IslandManager islands = new IslandManager();
 
@@ -509,7 +509,7 @@ namespace Jitter
             sw.Stop(); DebugTimes[(int)DebugType.PostStep] = sw.Elapsed.TotalMilliseconds;
         }
 
-        private float accumulatedTime = 0.0f;
+        private float accumulatedTime;
 
         public void Step(float totalTime, bool multithread, float timestep, int maxSteps)
         {

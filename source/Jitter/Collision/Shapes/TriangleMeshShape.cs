@@ -6,7 +6,7 @@ namespace Jitter.Collision.Shapes
     public class TriangleMeshShape : Multishape
     {
         private readonly List<int> potentialTriangles = new List<int>();
-        private readonly Octree octree = null;
+        private readonly Octree octree;
 
         public float SphericalExpansion { get; set; } = 0.05f;
 
@@ -90,7 +90,6 @@ namespace Jitter.Collision.Shapes
             dot = JVector.Dot(ref vecs[2], ref direction);
             if (dot > min)
             {
-                min = dot;
                 minIndex = 2;
             }
 

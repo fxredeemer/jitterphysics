@@ -15,7 +15,15 @@ namespace Jitter.Collision.Shapes
 
             public Shape Shape { get; set; }
 
-            public JVector Position { get => position; set { position = value; UpdateBoundingBox(); } }
+            public JVector Position
+            {
+                get => position;
+                set
+                {
+                    position = value;
+                    UpdateBoundingBox();
+                }
+            }
 
             public JBBox BoundingBox => boundingBox;
 
@@ -127,8 +135,8 @@ namespace Jitter.Collision.Shapes
 
         public override void CalculateMassInertia()
         {
-            base.inertia = JMatrix.Zero;
-            base.mass = 0.0f;
+            inertia = JMatrix.Zero;
+            mass = 0.0f;
 
             for (int i = 0; i < Shapes.Length; i++)
             {
@@ -149,8 +157,8 @@ namespace Jitter.Collision.Shapes
                 currentInertia.M32 += -p.Y * p.Z * m;
                 currentInertia.M23 += -p.Y * p.Z * m;
 
-                base.inertia += currentInertia;
-                base.mass += m;
+                inertia += currentInertia;
+                mass += m;
             }
         }
 
@@ -191,7 +199,7 @@ namespace Jitter.Collision.Shapes
             box.Min = center - temp;
         }
 
-        private int currentShape = 0;
+        private int currentShape;
         private readonly List<int> currentSubShapes = new List<int>();
 
         public override void SetCurrentShape(int index)

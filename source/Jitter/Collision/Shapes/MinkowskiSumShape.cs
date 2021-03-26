@@ -60,7 +60,7 @@ namespace Jitter.Collision.Shapes
 
         public override void CalculateMassInertia()
         {
-            mass = Shape.CalculateMassInertia(this, out shifted, out inertia);
+            mass = CalculateMassInertia(this, out shifted, out inertia);
         }
 
         public override void SupportMapping(ref JVector direction, out JVector result)

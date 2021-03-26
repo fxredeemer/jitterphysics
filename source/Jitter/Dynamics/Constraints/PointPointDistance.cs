@@ -39,12 +39,12 @@ namespace Jitter.Dynamics.Constraints
 
         public float BiasFactor { get; set; } = 0.1f;
 
-        private float effectiveMass = 0.0f;
+        private float effectiveMass;
         private float bias;
         private float softnessOverDt;
         private readonly JVector[] jacobian = new JVector[4];
 
-        private bool skipConstraint = false;
+        private bool skipConstraint;
 
         public override void PrepareForIteration(float timestep)
         {

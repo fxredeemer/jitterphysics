@@ -33,10 +33,10 @@ namespace Jitter.Dynamics
 
         internal JBBox boundingBox;
 
-        internal float inactiveTime = 0.0f;
+        internal float inactiveTime;
 
         internal bool isActive = true;
-        internal bool isStatic = false;
+        internal bool isStatic;
         internal bool affectedByGravity = true;
 
         internal CollisionIsland island;
@@ -46,7 +46,7 @@ namespace Jitter.Dynamics
 
         private readonly int hashCode;
 
-        internal int internalIndex = 0;
+        internal int internalIndex;
 
         private ShapeUpdatedHandler updatedHandler;
 
@@ -54,14 +54,14 @@ namespace Jitter.Dynamics
 
         internal HashSet<Arbiter> arbiters = new HashSet<Arbiter>();
         internal HashSet<Constraint> constraints = new HashSet<Constraint>();
-        internal int marker = 0;
+        internal int marker;
 
         public RigidBody(Shape shape)
             : this(shape, new Material(), false)
         {
         }
 
-        internal bool isParticle = false;
+        internal bool isParticle;
 
         public bool IsParticle
         {
@@ -145,7 +145,7 @@ namespace Jitter.Dynamics
 
         public JBBox BoundingBox => boundingBox;
 
-        private static int instanceCount = 0;
+        private static int instanceCount;
         private readonly int instance;
 
         private int CalculateHash(int a)
@@ -479,7 +479,7 @@ namespace Jitter.Dynamics
 
         public bool IsStaticOrInactive => !isActive || isStatic;
 
-        private bool enableDebugDraw = false;
+        private bool enableDebugDraw;
         public bool EnableDebugDraw
         {
             get => enableDebugDraw;

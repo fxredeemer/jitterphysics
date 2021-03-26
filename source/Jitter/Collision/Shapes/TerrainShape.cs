@@ -1,9 +1,6 @@
-﻿
-#region Using Statements
-using Jitter.LinearMath;
+﻿using Jitter.LinearMath;
 using System;
 using System.Collections.Generic;
-#endregion
 
 namespace Jitter.Collision.Shapes
 {
@@ -26,7 +23,6 @@ namespace Jitter.Collision.Shapes
             heightsLength0 = heights.GetLength(0);
             heightsLength1 = heights.GetLength(1);
 
-            #region Bounding Box
             boundings = JBBox.SmallBox;
 
             for (int i = 0; i < heightsLength0; i++)
@@ -49,8 +45,6 @@ namespace Jitter.Collision.Shapes
 
             boundings.Max.X = checked(heightsLength0 * scaleX);
             boundings.Max.Z = checked(heightsLength1 * scaleZ);
-
-            #endregion
 
             this.heights = heights;
             this.scaleX = scaleX;
@@ -179,14 +173,12 @@ namespace Jitter.Collision.Shapes
         {
             box = boundings;
 
-            #region Expand Spherical
             box.Min.X -= SphericalExpansion;
             box.Min.Y -= SphericalExpansion;
             box.Min.Z -= SphericalExpansion;
             box.Max.X += SphericalExpansion;
             box.Max.Y += SphericalExpansion;
             box.Max.Z += SphericalExpansion;
-            #endregion
 
             box.Transform(ref orientation);
         }
@@ -224,7 +216,6 @@ namespace Jitter.Collision.Shapes
             dot = JVector.Dot(ref points[2], ref direction);
             if (dot > min)
             {
-                min = dot;
                 minIndex = 2;
             }
 
@@ -235,10 +226,8 @@ namespace Jitter.Collision.Shapes
         {
             var box = JBBox.SmallBox;
 
-            #region RayEnd + Expand Spherical
             JVector.Normalize(ref rayDelta, out var rayEnd);
             rayEnd = rayOrigin + rayDelta + (rayEnd * SphericalExpansion);
-            #endregion
 
             box.AddPoint(ref rayOrigin);
             box.AddPoint(ref rayEnd);
