@@ -57,7 +57,7 @@ namespace Jitter.Collision
             {
                 for (int i = 0; i < bodyList.Count; i++)
                 {
-                    AddToActiveMultithreaded(bodyList[i], false);
+                    AddToActiveMultithreaded(bodyList[i]);
                 }
 
                 threadManager.Execute();
@@ -66,12 +66,12 @@ namespace Jitter.Collision
             {
                 for (int i = 0; i < bodyList.Count; i++)
                 {
-                    AddToActive(bodyList[i], false);
+                    AddToActive(bodyList[i]);
                 }
             }
         }
 
-        private void AddToActive(IBroadphaseEntity body, bool addToList)
+        private void AddToActive(IBroadphaseEntity body)
         {
             float xmin = body.BoundingBox.Min.X;
             int n = active.Count;
@@ -95,22 +95,22 @@ namespace Jitter.Collision
                     bodyBox = body.BoundingBox;
 
                     if (!(thisInactive && ac.IsStaticOrInactive)
-                        && (bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z)
-                        && (bodyBox.Max.Y >= acBox.Min.Y) && (bodyBox.Min.Y <= acBox.Max.Y))
+                        && (bodyBox.Max.Z >= acBox.Min.Z)
+                        && (bodyBox.Min.Z <= acBox.Max.Z)
+                        && (bodyBox.Max.Y >= acBox.Min.Y)
+                        && (bodyBox.Min.Y <= acBox.Max.Y)
+                        && RaisePassedBroadphase(ac, body))
                     {
-                        if (RaisePassedBroadphase(ac, body))
+                        if (swapOrder)
                         {
-                            if (swapOrder)
-                            {
-                                Detect(body, ac);
-                            }
-                            else
-                            {
-                                Detect(ac, body);
-                            }
-
-                            swapOrder = !swapOrder;
+                            Detect(body, ac);
                         }
+                        else
+                        {
+                            Detect(ac, body);
+                        }
+
+                        swapOrder = !swapOrder;
                     }
 
                     i++;
@@ -120,7 +120,7 @@ namespace Jitter.Collision
             active.Add(body);
         }
 
-        private void AddToActiveMultithreaded(IBroadphaseEntity body, bool addToList)
+        private void AddToActiveMultithreaded(IBroadphaseEntity body)
         {
             float xmin = body.BoundingBox.Min.X;
             int n = active.Count;
@@ -144,19 +144,27 @@ namespace Jitter.Collision
                     bodyBox = body.BoundingBox;
 
                     if (!(thisInactive && ac.IsStaticOrInactive)
-                        && (bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z)
-                        && (bodyBox.Max.Y >= acBox.Min.Y) && (bodyBox.Min.Y <= acBox.Max.Y))
+                        && (bodyBox.Max.Z >= acBox.Min.Z)
+                        && (bodyBox.Min.Z <= acBox.Max.Z)
+                        && (bodyBox.Max.Y >= acBox.Min.Y)
+                        && (bodyBox.Min.Y <= acBox.Max.Y)
+                        && RaisePassedBroadphase(ac, body))
                     {
-                        if (RaisePassedBroadphase(ac, body))
+                        var pair = BroadphasePair.Pool.GetNew();
+
+                        if (swapOrder)
                         {
-                            var pair = BroadphasePair.Pool.GetNew();
-
-                            if (swapOrder) { pair.Entity1 = body; pair.Entity2 = ac; }
-                            else { pair.Entity2 = body; pair.Entity1 = ac; }
-                            swapOrder = !swapOrder;
-
-                            threadManager.AddTask(detectCallback, pair);
+                            pair.Entity1 = body;
+                            pair.Entity2 = ac;
                         }
+                        else
+                        {
+                            pair.Entity2 = body;
+                            pair.Entity1 = ac;
+                        }
+                        swapOrder = !swapOrder;
+
+                        threadManager.AddTask(detectCallback, pair);
                     }
 
                     i++;
@@ -173,12 +181,6 @@ namespace Jitter.Collision
             BroadphasePair.Pool.GiveBack(pair);
         }
 
-        private int Compare(IBroadphaseEntity body1, IBroadphaseEntity body2)
-        {
-            float f = body1.BoundingBox.Min.X - body2.BoundingBox.Min.X;
-            return (f < 0) ? -1 : (f > 0) ? 1 : 0;
-        }
-
         public override bool Raycast(JVector rayOrigin, JVector rayDirection, RaycastCallback raycast, out RigidBody body, out JVector normal, out float fraction)
         {
             body = null; normal = JVector.Zero; fraction = float.MaxValue;
@@ -193,15 +195,14 @@ namespace Jitter.Collision
                     var softBody = e as SoftBody;
                     foreach (RigidBody b in softBody.VertexBodies)
                     {
-                        if (Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction))
+                        if (Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction)
+                            && tempFraction < fraction
+                            && (raycast == null || raycast(b, tempNormal, tempFraction)))
                         {
-                            if (tempFraction < fraction && (raycast == null || raycast(b, tempNormal, tempFraction)))
-                            {
-                                body = b;
-                                normal = tempNormal;
-                                fraction = tempFraction;
-                                result = true;
-                            }
+                            body = b;
+                            normal = tempNormal;
+                            fraction = tempFraction;
+                            result = true;
                         }
                     }
                 }
@@ -209,15 +210,14 @@ namespace Jitter.Collision
                 {
                     var b = e as RigidBody;
 
-                    if (Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction))
+                    if (Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction)
+                        && tempFraction < fraction
+                        && (raycast == null || raycast(b, tempNormal, tempFraction)))
                     {
-                        if (tempFraction < fraction && (raycast == null || raycast(b, tempNormal, tempFraction)))
-                        {
-                            body = b;
-                            normal = tempNormal;
-                            fraction = tempFraction;
-                            result = true;
-                        }
+                        body = b;
+                        normal = tempNormal;
+                        fraction = tempFraction;
+                        result = true;
                     }
                 }
             }
@@ -250,28 +250,32 @@ namespace Jitter.Collision
                 {
                     ms.SetCurrentShape(i);
 
-                    if (GJKCollide.Raycast(ms, ref body.orientation, ref body.invOrientation, ref body.position,
-                        ref rayOrigin, ref rayDirection, out float tempFraction, out var tempNormal))
+                    if (GJKCollide.Raycast(
+                        ms,
+                        ref body.orientation,
+                        ref body.invOrientation,
+                        ref body.position,
+                        ref rayOrigin,
+                        ref rayDirection,
+                        out float tempFraction,
+                        out var tempNormal) && tempFraction < fraction)
                     {
-                        if (tempFraction < fraction)
+                        if (useTerrainNormal && ms is TerrainShape terrainShape)
                         {
-                            if (useTerrainNormal && ms is TerrainShape)
-                            {
-                                (ms as TerrainShape).CollisionNormal(out tempNormal);
-                                JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
-                                tempNormal.Negate();
-                            }
-                            else if (useTriangleMeshNormal && ms is TriangleMeshShape)
-                            {
-                                (ms as TriangleMeshShape).CollisionNormal(out tempNormal);
-                                JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
-                                tempNormal.Negate();
-                            }
-
-                            normal = tempNormal;
-                            fraction = tempFraction;
-                            multiShapeCollides = true;
+                            terrainShape.CollisionNormal(out tempNormal);
+                            JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
+                            tempNormal.Negate();
                         }
+                        else if (useTriangleMeshNormal && ms is TriangleMeshShape triangleMeshShape)
+                        {
+                            triangleMeshShape.CollisionNormal(out tempNormal);
+                            JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
+                            tempNormal.Negate();
+                        }
+
+                        normal = tempNormal;
+                        fraction = tempFraction;
+                        multiShapeCollides = true;
                     }
                 }
 
@@ -280,8 +284,15 @@ namespace Jitter.Collision
             }
             else
             {
-                return GJKCollide.Raycast(body.Shape, ref body.orientation, ref body.invOrientation, ref body.position,
-                    ref rayOrigin, ref rayDirection, out fraction, out normal);
+                return GJKCollide.Raycast(
+                    body.Shape,
+                    ref body.orientation,
+                    ref body.invOrientation,
+                    ref body.position,
+                    ref rayOrigin,
+                    ref rayDirection,
+                    out fraction,
+                    out normal);
             }
         }
     }

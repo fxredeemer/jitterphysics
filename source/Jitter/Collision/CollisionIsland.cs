@@ -28,14 +28,7 @@ namespace Jitter.Collision
             var enumerator = bodies.GetEnumerator();
             enumerator.MoveNext();
 
-            if (enumerator.Current == null)
-            {
-                return false;
-            }
-            else
-            {
-                return enumerator.Current.isActive;
-            }
+            return enumerator.Current?.isActive == true;
         }
 
         public void SetStatus(bool active)

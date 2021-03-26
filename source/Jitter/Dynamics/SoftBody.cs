@@ -461,9 +461,7 @@ namespace Jitter.Dynamics
 
             for (int i = 0; i < indices.Count; i++)
             {
-                Edge edge;
-
-                edge = new Edge(indices[i].I0, indices[i].I1);
+                Edge edge = new Edge(indices[i].I0, indices[i].I1);
                 if (!edges.Contains(edge))
                 {
                     edges.Add(edge);

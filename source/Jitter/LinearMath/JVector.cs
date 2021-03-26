@@ -288,9 +288,7 @@ namespace Jitter.LinearMath
 
         public static void Swap(ref JVector vector1, ref JVector vector2)
         {
-            float temp;
-
-            temp = vector1.X;
+            float temp = vector1.X;
             vector1.X = vector2.X;
             vector2.X = temp;
 

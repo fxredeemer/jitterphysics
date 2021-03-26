@@ -81,8 +81,8 @@ namespace Jitter.Collision
 
             var b = aabb;
             var r = new JVector(Nodes[proxyId].MinorRandomExtension);
-            b.Min = b.Min - r;
-            b.Max = b.Max + r;
+            b.Min -= r;
+            b.Max += r;
 
             var d = SettingsAABBMultiplier * displacement;
 
@@ -273,34 +273,6 @@ namespace Jitter.Collision
             stackPool.GiveBack(_stack);
         }
 
-        private int CountLeaves(int nodeId)
-        {
-            if (nodeId == NullNode)
-            {
-                return 0;
-            }
-
-            Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
-            var node = Nodes[nodeId];
-
-            if (node.IsLeaf())
-            {
-                Debug.Assert(node.LeafCount == 1);
-                return 1;
-            }
-
-            int count1 = CountLeaves(node.Child1);
-            int count2 = CountLeaves(node.Child2);
-            int count = count1 + count2;
-            Debug.Assert(count == node.LeafCount);
-            return count;
-        }
-
-        private void Validate()
-        {
-            CountLeaves(Root);
-        }
-
         private int AllocateNode()
         {
             if (_freeList == NullNode)
@@ -352,14 +324,14 @@ namespace Jitter.Collision
 
             var leafAABB = Nodes[leaf].AABB;
             int sibling = Root;
-            while (Nodes[sibling].IsLeaf() == false)
+            while (!Nodes[sibling].IsLeaf())
             {
                 int child1 = Nodes[sibling].Child1;
                 int child2 = Nodes[sibling].Child2;
 
                 JBBox.CreateMerged(ref Nodes[sibling].AABB, ref leafAABB, out Nodes[sibling].AABB);
 
-                Nodes[sibling].LeafCount += 1;
+                Nodes[sibling].LeafCount++;
 
                 float siblingArea = Nodes[sibling].AABB.Perimeter;
                 var parentAABB = new JBBox();
@@ -373,14 +345,12 @@ namespace Jitter.Collision
                 float cost2;
                 if (Nodes[child1].IsLeaf())
                 {
-                    var aabb = new JBBox();
-                    JBBox.CreateMerged(ref leafAABB, ref Nodes[child1].AABB, out aabb);
+                    JBBox.CreateMerged(ref leafAABB, ref Nodes[child1].AABB, out var aabb);
                     cost2 = aabb.Perimeter + inheritanceCost;
                 }
                 else
                 {
-                    var aabb = new JBBox();
-                    JBBox.CreateMerged(ref leafAABB, ref Nodes[child1].AABB, out aabb);
+                    JBBox.CreateMerged(ref leafAABB, ref Nodes[child1].AABB, out var aabb);
 
                     float oldArea = Nodes[child1].AABB.Perimeter;
                     float newArea = aabb.Perimeter;
@@ -390,14 +360,12 @@ namespace Jitter.Collision
                 float cost3;
                 if (Nodes[child2].IsLeaf())
                 {
-                    var aabb = new JBBox();
-                    JBBox.CreateMerged(ref leafAABB, ref Nodes[child2].AABB, out aabb);
+                    JBBox.CreateMerged(ref leafAABB, ref Nodes[child2].AABB, out var aabb);
                     cost3 = aabb.Perimeter + inheritanceCost;
                 }
                 else
                 {
-                    var aabb = new JBBox();
-                    JBBox.CreateMerged(ref leafAABB, ref Nodes[child2].AABB, out aabb);
+                    JBBox.CreateMerged(ref leafAABB, ref Nodes[child2].AABB, out var aabb);
                     float oldArea = Nodes[child2].AABB.Perimeter;
                     float newArea = aabb.Perimeter;
                     cost3 = newArea - oldArea + inheritanceCost;
@@ -423,7 +391,7 @@ namespace Jitter.Collision
             int oldParent = Nodes[sibling].ParentOrNext;
             int newParent = AllocateNode();
             Nodes[newParent].ParentOrNext = oldParent;
-            Nodes[newParent].UserData = default(T);
+            Nodes[newParent].UserData = default;
             JBBox.CreateMerged(ref leafAABB, ref Nodes[sibling].AABB, out Nodes[newParent].AABB);
             Nodes[newParent].LeafCount = Nodes[sibling].LeafCount + 1;
 
@@ -493,7 +461,7 @@ namespace Jitter.Collision
                         ref Nodes[Nodes[parent].Child2].AABB, out Nodes[parent].AABB);
 
                     Debug.Assert(Nodes[parent].LeafCount > 0);
-                    Nodes[parent].LeafCount -= 1;
+                    Nodes[parent].LeafCount--;
 
                     parent = Nodes[parent].ParentOrNext;
                 }
