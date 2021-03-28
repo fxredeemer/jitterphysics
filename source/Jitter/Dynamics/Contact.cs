@@ -69,12 +69,10 @@ namespace Jitter.Dynamics
             y = (body2.angularVelocity.Z * relativePos2.X) - (body2.angularVelocity.X * relativePos2.Z) + body2.linearVelocity.Y;
             z = (body2.angularVelocity.X * relativePos2.Y) - (body2.angularVelocity.Y * relativePos2.X) + body2.linearVelocity.Z;
 
-            JVector relVel;
-            relVel.X = x - (body1.angularVelocity.Y * relativePos1.Z) + (body1.angularVelocity.Z * relativePos1.Y) - body1.linearVelocity.X;
-            relVel.Y = y - (body1.angularVelocity.Z * relativePos1.X) + (body1.angularVelocity.X * relativePos1.Z) - body1.linearVelocity.Y;
-            relVel.Z = z - (body1.angularVelocity.X * relativePos1.Y) + (body1.angularVelocity.Y * relativePos1.X) - body1.linearVelocity.Z;
-
-            return relVel;
+            return new JVector(
+                x - (body1.angularVelocity.Y * relativePos1.Z) + (body1.angularVelocity.Z * relativePos1.Y) - body1.linearVelocity.X,
+                y - (body1.angularVelocity.Z * relativePos1.X) + (body1.angularVelocity.X * relativePos1.Z) - body1.linearVelocity.Y,
+                z - (body1.angularVelocity.X * relativePos1.Y) + (body1.angularVelocity.Y * relativePos1.X) - body1.linearVelocity.Z);
         }
 
         public void Iterate()
@@ -136,16 +134,17 @@ namespace Jitter.Dynamics
 
             tangentImpulse = accumulatedTangentImpulse - oldTangentImpulse;
 
-            JVector impulse;
-            impulse.X = (normal.X * normalImpulse) + (tangent.X * tangentImpulse);
-            impulse.Y = (normal.Y * normalImpulse) + (tangent.Y * tangentImpulse);
-            impulse.Z = (normal.Z * normalImpulse) + (tangent.Z * tangentImpulse);
+            var impulse = new JVector(
+                (normal.X * normalImpulse) + (tangent.X * tangentImpulse),
+                (normal.Y * normalImpulse) + (tangent.Y * tangentImpulse),
+                (normal.Z * normalImpulse) + (tangent.Z * tangentImpulse));
 
             if (!treatBody1AsStatic)
             {
-                body1.linearVelocity.X -= impulse.X * body1.inverseMass;
-                body1.linearVelocity.Y -= impulse.Y * body1.inverseMass;
-                body1.linearVelocity.Z -= impulse.Z * body1.inverseMass;
+                body1.linearVelocity = new JVector(
+                    body1.linearVelocity.X - (impulse.X * body1.inverseMass),
+                    body1.linearVelocity.Y - (impulse.Y * body1.inverseMass),
+                    body1.linearVelocity.Z - (impulse.Z * body1.inverseMass));
 
                 if (!body1IsMassPoint)
                 {
@@ -167,24 +166,25 @@ namespace Jitter.Dynamics
                         + (num1 * body1.invInertiaWorld.M23)
                         + (num2 * body1.invInertiaWorld.M33);
 
-                    body1.angularVelocity.X -= num3;
-                    body1.angularVelocity.Y -= num4;
-                    body1.angularVelocity.Z -= num5;
+                    body1.angularVelocity = new JVector(
+                        body1.angularVelocity.X - num3,
+                        body1.angularVelocity.Y - num4,
+                        body1.angularVelocity.Z - num5);
                 }
             }
 
             if (!treatBody2AsStatic)
             {
-                body2.linearVelocity.X += impulse.X * body2.inverseMass;
-                body2.linearVelocity.Y += impulse.Y * body2.inverseMass;
-                body2.linearVelocity.Z += impulse.Z * body2.inverseMass;
+                body2.linearVelocity = new JVector(
+                    body2.linearVelocity.X + (impulse.X * body2.inverseMass),
+                    body2.linearVelocity.Y + (impulse.Y * body2.inverseMass),
+                    body2.linearVelocity.Z + (impulse.Z * body2.inverseMass));
 
                 if (!body2IsMassPoint)
                 {
-                    float num0, num1, num2;
-                    num0 = (relativePos2.Y * impulse.Z) - (relativePos2.Z * impulse.Y);
-                    num1 = (relativePos2.Z * impulse.X) - (relativePos2.X * impulse.Z);
-                    num2 = (relativePos2.X * impulse.Y) - (relativePos2.Y * impulse.X);
+                    var num0 = (relativePos2.Y * impulse.Z) - (relativePos2.Z * impulse.Y);
+                    var num1 = (relativePos2.Z * impulse.X) - (relativePos2.X * impulse.Z);
+                    var num2 = (relativePos2.X * impulse.Y) - (relativePos2.Y * impulse.X);
 
                     float num3 =
                         (num0 * body2.invInertiaWorld.M11)
@@ -199,9 +199,10 @@ namespace Jitter.Dynamics
                         + (num1 * body2.invInertiaWorld.M23)
                         + (num2 * body2.invInertiaWorld.M33);
 
-                    body2.angularVelocity.X += num3;
-                    body2.angularVelocity.Y += num4;
-                    body2.angularVelocity.Z += num5;
+                    body2.angularVelocity = new JVector(
+                        body2.angularVelocity.X + num3,
+                        body2.angularVelocity.Y + num4,
+                        body2.angularVelocity.Z + num5);
                 }
             }
         }
@@ -240,9 +241,10 @@ namespace Jitter.Dynamics
 
             if (!treatBody1AsStatic)
             {
-                body1.linearVelocity.X -= impulse.X * body1.inverseMass;
-                body1.linearVelocity.Y -= impulse.Y * body1.inverseMass;
-                body1.linearVelocity.Z -= impulse.Z * body1.inverseMass;
+                body1.linearVelocity = new JVector(
+                    body1.linearVelocity.X - (impulse.X * body1.inverseMass),
+                    body1.linearVelocity.Y - (impulse.Y * body1.inverseMass),
+                    body1.linearVelocity.Z - (impulse.Z * body1.inverseMass));
 
                 float num0, num1, num2;
                 num0 = (relativePos1.Y * impulse.Z) - (relativePos1.Z * impulse.Y);
@@ -262,16 +264,18 @@ namespace Jitter.Dynamics
                     + (num1 * body1.invInertiaWorld.M23)
                     + (num2 * body1.invInertiaWorld.M33);
 
-                body1.angularVelocity.X -= num3;
-                body1.angularVelocity.Y -= num4;
-                body1.angularVelocity.Z -= num5;
+                body1.angularVelocity = new JVector(
+                    body1.angularVelocity.X - num3,
+                    body1.angularVelocity.Y - num4,
+                    body1.angularVelocity.Z - num5);
             }
 
             if (!treatBody2AsStatic)
             {
-                body2.linearVelocity.X += impulse.X * body2.inverseMass;
-                body2.linearVelocity.Y += impulse.Y * body2.inverseMass;
-                body2.linearVelocity.Z += impulse.Z * body2.inverseMass;
+                body2.LinearVelocity = new JVector(
+                    body2.linearVelocity.X + impulse.X * body2.inverseMass,
+                    body2.linearVelocity.Y + impulse.Y * body2.inverseMass,
+                    body2.linearVelocity.Z + impulse.Z * body2.inverseMass);
 
                 float num0, num1, num2;
                 num0 = (relativePos2.Y * impulse.Z) - (relativePos2.Z * impulse.Y);
@@ -291,9 +295,10 @@ namespace Jitter.Dynamics
                     + (num1 * body2.invInertiaWorld.M23)
                     + (num2 * body2.invInertiaWorld.M33);
 
-                body2.angularVelocity.X += num3;
-                body2.angularVelocity.Y += num4;
-                body2.angularVelocity.Z += num5;
+                body2.angularVelocity = new JVector(
+                    body2.angularVelocity.X + num3,
+                    body2.angularVelocity.Y + num4,
+                    body2.angularVelocity.Z + num5);
             }
         }
 
@@ -302,9 +307,10 @@ namespace Jitter.Dynamics
 
             if (!treatBody1AsStatic)
             {
-                body1.linearVelocity.X -= impulse.X * body1.inverseMass;
-                body1.linearVelocity.Y -= impulse.Y * body1.inverseMass;
-                body1.linearVelocity.Z -= impulse.Z * body1.inverseMass;
+                body1.linearVelocity = new JVector(
+                    body1.linearVelocity.X - (impulse.X * body1.inverseMass),
+                    body1.linearVelocity.Y - (impulse.Y * body1.inverseMass),
+                    body1.linearVelocity.Z - (impulse.Z * body1.inverseMass));
 
                 float num0, num1, num2;
                 num0 = (relativePos1.Y * impulse.Z) - (relativePos1.Z * impulse.Y);
@@ -324,16 +330,17 @@ namespace Jitter.Dynamics
                     + (num1 * body1.invInertiaWorld.M23)
                     + (num2 * body1.invInertiaWorld.M33);
 
-                body1.angularVelocity.X -= num3;
-                body1.angularVelocity.Y -= num4;
-                body1.angularVelocity.Z -= num5;
+                body1.angularVelocity.X = body1.angularVelocity.X - num3;
+                body1.angularVelocity.Y = body1.angularVelocity.Y - num4;
+                body1.angularVelocity.Z = body1.angularVelocity.Z - num5;
             }
 
             if (!treatBody2AsStatic)
             {
-                body2.linearVelocity.X += impulse.X * body2.inverseMass;
-                body2.linearVelocity.Y += impulse.Y * body2.inverseMass;
-                body2.linearVelocity.Z += impulse.Z * body2.inverseMass;
+                body2.linearVelocity = new JVector(
+                    body2.linearVelocity.X + (impulse.X * body2.inverseMass),
+                    body2.linearVelocity.Y + (impulse.Y * body2.inverseMass),
+                    body2.linearVelocity.Z + (impulse.Z * body2.inverseMass));
 
                 float num0, num1, num2;
                 num0 = (relativePos2.Y * impulse.Z) - (relativePos2.Z * impulse.Y);
@@ -353,9 +360,10 @@ namespace Jitter.Dynamics
                     + (num1 * body2.invInertiaWorld.M23)
                     + (num2 * body2.invInertiaWorld.M33);
 
-                body2.angularVelocity.X += num3;
-                body2.angularVelocity.Y += num4;
-                body2.angularVelocity.Z += num5;
+                body2.angularVelocity = new JVector(
+                    body2.angularVelocity.X + num3,
+                    body2.angularVelocity.Y + num4,
+                    body2.angularVelocity.Z + num5);
             }
         }
 
@@ -455,7 +463,7 @@ namespace Jitter.Dynamics
 
             if (treatBody1AsStatic)
             {
-                rantra.MakeZero();
+                rantra = JVector.Zero;
             }
             else
             {
@@ -483,7 +491,7 @@ namespace Jitter.Dynamics
 
             if (treatBody2AsStatic)
             {
-                rbntrb.MakeZero();
+                rbntrb = JVector.Zero;
             }
             else
             {
@@ -577,9 +585,10 @@ namespace Jitter.Dynamics
 
             if (!treatBody1AsStatic)
             {
-                body1.linearVelocity.X -= impulse.X * body1.inverseMass;
-                body1.linearVelocity.Y -= impulse.Y * body1.inverseMass;
-                body1.linearVelocity.Z -= impulse.Z * body1.inverseMass;
+                body1.linearVelocity = new JVector(
+                    body1.linearVelocity.X - (impulse.X * body1.inverseMass),
+                    body1.linearVelocity.Y - (impulse.Y * body1.inverseMass),
+                    body1.linearVelocity.Z - (impulse.Z * body1.inverseMass));
 
                 if (!body1IsMassPoint)
                 {
@@ -601,17 +610,18 @@ namespace Jitter.Dynamics
                         + (num1 * body1.invInertiaWorld.M23)
                         + (num2 * body1.invInertiaWorld.M33);
 
-                    body1.angularVelocity.X -= num3;
-                    body1.angularVelocity.Y -= num4;
-                    body1.angularVelocity.Z -= num5;
+                    body1.angularVelocity.X = body1.angularVelocity.X - num3;
+                    body1.angularVelocity.Y = body1.angularVelocity.Y - num4;
+                    body1.angularVelocity.Z = body1.angularVelocity.Z - num5;
                 }
             }
 
             if (!treatBody2AsStatic)
             {
-                body2.linearVelocity.X += impulse.X * body2.inverseMass;
-                body2.linearVelocity.Y += impulse.Y * body2.inverseMass;
-                body2.linearVelocity.Z += impulse.Z * body2.inverseMass;
+                body2.linearVelocity = new JVector(
+                    body2.linearVelocity.X + (impulse.X * body2.inverseMass),
+                    body2.linearVelocity.Y + (impulse.Y * body2.inverseMass),
+                    body2.linearVelocity.Z + (impulse.Z * body2.inverseMass));
 
                 if (!body2IsMassPoint)
                 {
@@ -633,9 +643,10 @@ namespace Jitter.Dynamics
                         + (num1 * body2.invInertiaWorld.M23)
                         + (num2 * body2.invInertiaWorld.M33);
 
-                    body2.angularVelocity.X += num3;
-                    body2.angularVelocity.Y += num4;
-                    body2.angularVelocity.Z += num5;
+                    body2.angularVelocity = new JVector(
+                        body2.angularVelocity.X + num3,
+                        body2.angularVelocity.Y + num4,
+                        body2.angularVelocity.Z + num5);
                 }
             }
 
@@ -667,7 +678,8 @@ namespace Jitter.Dynamics
             ContactSettings settings)
         {
             this.body1 = body1; this.body2 = body2;
-            normal = n; normal.Normalize();
+            normal = n; 
+            normal.Normalize();
             p1 = point1; p2 = point2;
 
             this.newContact = newContact;

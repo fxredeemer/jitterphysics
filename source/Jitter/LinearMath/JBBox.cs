@@ -37,10 +37,10 @@
             JVector.Subtract(ref Min, ref position, out Min);
 
             JVector.Add(ref Max, ref Min, out var center);
-            center.X *= 0.5f; center.Y *= 0.5f; center.Z *= 0.5f;
+            center *= 0.5f;
 
             JVector.Subtract(ref Max, ref Min, out var halfExtents);
-            halfExtents.X *= 0.5f; halfExtents.Y *= 0.5f; halfExtents.Z *= 0.5f;
+            halfExtents *= 0.5f;
 
             JVector.TransposedTransform(ref center, ref orientation, out center);
 
@@ -164,14 +164,14 @@
 
         public void GetCorners(JVector[] corners)
         {
-            corners[0].Set(Min.X, Max.Y, Max.Z);
-            corners[1].Set(Max.X, Max.Y, Max.Z);
-            corners[2].Set(Max.X, Min.Y, Max.Z);
-            corners[3].Set(Min.X, Min.Y, Max.Z);
-            corners[4].Set(Min.X, Max.Y, Min.Z);
-            corners[5].Set(Max.X, Max.Y, Min.Z);
-            corners[6].Set(Max.X, Min.Y, Min.Z);
-            corners[7].Set(Min.X, Min.Y, Min.Z);
+            corners[0] = new JVector(Min.X, Max.Y, Max.Z);
+            corners[1] = new JVector(Max.X, Max.Y, Max.Z);
+            corners[2] = new JVector(Max.X, Min.Y, Max.Z);
+            corners[3] = new JVector(Min.X, Min.Y, Max.Z);
+            corners[4] = new JVector(Min.X, Max.Y, Min.Z);
+            corners[5] = new JVector(Max.X, Max.Y, Min.Z);
+            corners[6] = new JVector(Max.X, Min.Y, Min.Z);
+            corners[7] = new JVector(Min.X, Min.Y, Min.Z);
         }
 
         public void AddPoint(JVector point)
