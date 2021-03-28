@@ -38,6 +38,12 @@ namespace Jitter.LinearMath
             return value;
         }
 
+        public static JMatrix Absolute(ref JMatrix matrix)
+        {
+            Absolute(ref matrix, out var absolute);
+            return absolute;
+        }
+
         public static void Absolute(ref JMatrix matrix, out JMatrix result)
         {
             result.M11 = Math.Abs(matrix.M11);

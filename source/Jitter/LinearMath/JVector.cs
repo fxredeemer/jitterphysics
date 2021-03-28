@@ -4,14 +4,6 @@ namespace Jitter.LinearMath
 {
     public struct JVector
     {
-        private const float ZeroEpsilonSq = JMath.Epsilon * JMath.Epsilon;
-        internal static JVector InternalZero = new JVector(0, 0, 0);
-        internal static JVector Arbitrary = new JVector(1, 1, 1);
-
-        public float X;
-        public float Y;
-        public float Z;
-
         public static readonly JVector Zero = new JVector(0, 0, 0);
         public static readonly JVector Left = new JVector(1, 0, 0);
         public static readonly JVector Right = new JVector(-1, 0, 0);
@@ -22,6 +14,14 @@ namespace Jitter.LinearMath
         public static readonly JVector One = new JVector(1, 1, 1);
         public static readonly JVector MinValue = new JVector(float.MinValue);
         public static readonly JVector MaxValue = new JVector(float.MaxValue);
+        internal static JVector InternalZero = new JVector(0, 0, 0);
+        internal static JVector Arbitrary = new JVector(1, 1, 1);
+
+        private const float ZeroEpsilonSq = JMath.Epsilon * JMath.Epsilon;
+
+        public float X;
+        public float Y;
+        public float Z;
 
         public JVector(float x, float y, float z)
         {

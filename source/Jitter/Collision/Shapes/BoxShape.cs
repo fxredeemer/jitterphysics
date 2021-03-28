@@ -41,10 +41,8 @@ namespace Jitter.Collision.Shapes
         public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
         {
             JMath.Absolute(ref orientation, out var abs);
-            JVector.Transform(ref halfSize, ref abs, out var temp);
-
-            box.Max = temp;
-            JVector.Negate(ref temp, out box.Min);
+            box.Max = JVector.Transform(halfSize, abs);
+            box.Min = JVector.Negate(box.Max);
         }
 
         public override void CalculateMassInertia()

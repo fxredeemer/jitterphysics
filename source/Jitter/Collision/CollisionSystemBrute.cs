@@ -173,14 +173,15 @@ namespace Jitter.Collision
                     multishape.SetCurrentShape(i);
 
                     if (GJKCollide.Raycast(
-                        multishape,
-                        ref body.orientation,
-                        ref body.invOrientation,
-                        ref body.position,
-                        ref rayOrigin,
-                        ref rayDirection,
-                        out float tempFraction,
-                        out var tempNormal) && tempFraction < fraction)
+                            multishape,
+                            ref body.orientation,
+                            ref body.invOrientation,
+                            ref body.position,
+                            ref rayOrigin,
+                            ref rayDirection,
+                            out float tempFraction,
+                            out var tempNormal)
+                        && tempFraction < fraction)
                     {
                         if (useTerrainNormal && multishape is TerrainShape terrainShape)
                         {
