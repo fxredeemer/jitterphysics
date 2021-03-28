@@ -190,9 +190,8 @@ namespace Jitter.Collision
 
             foreach (var e in bodyList)
             {
-                if (e is SoftBody)
+                if (e is SoftBody softBody)
                 {
-                    var softBody = e as SoftBody;
                     foreach (RigidBody b in softBody.VertexBodies)
                     {
                         if (Raycast(b, rayOrigin, rayDirection, out tempNormal, out tempFraction)

@@ -417,16 +417,17 @@ namespace Jitter.Collision
 
         public override bool Raycast(RigidBody body, JVector rayOrigin, JVector rayDirection, out JVector normal, out float fraction)
         {
-            fraction = float.MaxValue; normal = JVector.Zero;
+            fraction = float.MaxValue;
+            normal = JVector.Zero;
 
             if (!body.BoundingBox.RayIntersect(ref rayOrigin, ref rayDirection))
             {
                 return false;
             }
 
-            if (body.Shape is Multishape)
+            if (body.Shape is Multishape multishape)
             {
-                var ms = (body.Shape as Multishape).RequestWorkingClone();
+                multishape = multishape.RequestWorkingClone();
 
                 bool multiShapeCollides = false;
 
@@ -434,14 +435,14 @@ namespace Jitter.Collision
                 JVector.Transform(ref transformedOrigin, ref body.invOrientation, out transformedOrigin);
                 JVector.Transform(ref rayDirection, ref body.invOrientation, out var transformedDirection);
 
-                int msLength = ms.Prepare(ref transformedOrigin, ref transformedDirection);
+                int msLength = multishape.Prepare(ref transformedOrigin, ref transformedDirection);
 
                 for (int i = 0; i < msLength; i++)
                 {
-                    ms.SetCurrentShape(i);
+                    multishape.SetCurrentShape(i);
 
                     if (GJKCollide.Raycast(
-                        ms,
+                        (ISupportMappable)multishape,
                         ref body.orientation,
                         ref body.invOrientation,
                         ref body.position,
@@ -450,13 +451,13 @@ namespace Jitter.Collision
                         out float tempFraction,
                         out var tempNormal) && tempFraction < fraction)
                     {
-                        if (useTerrainNormal && ms is TerrainShape terrainShape)
+                        if (useTerrainNormal && multishape is TerrainShape terrainShape)
                         {
                             terrainShape.CollisionNormal(out tempNormal);
                             JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
                             tempNormal.Negate();
                         }
-                        else if (useTriangleMeshNormal && ms is TriangleMeshShape triangleMeshShape)
+                        else if (useTriangleMeshNormal && multishape is TriangleMeshShape triangleMeshShape)
                         {
                             triangleMeshShape.CollisionNormal(out tempNormal);
                             JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
@@ -469,7 +470,7 @@ namespace Jitter.Collision
                     }
                 }
 
-                ms.ReturnWorkingClone();
+                multishape.ReturnWorkingClone();
                 return multiShapeCollides;
             }
             else

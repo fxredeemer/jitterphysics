@@ -40,9 +40,17 @@ namespace Jitter.Collision
         internal bool useTerrainNormal = true;
         internal bool useTriangleMeshNormal = true;
 
-        public bool UseTriangleMeshNormal { get => useTriangleMeshNormal; set => useTriangleMeshNormal = value; }
+        public bool UseTriangleMeshNormal
+        {
+            get => useTriangleMeshNormal;
+            set => useTriangleMeshNormal = value;
+        }
 
-        public bool UseTerrainNormal { get => useTerrainNormal; set => useTerrainNormal = value; }
+        public bool UseTerrainNormal
+        {
+            get => useTerrainNormal;
+            set => useTerrainNormal = value;
+        }
 
         public virtual void Detect(IBroadphaseEntity entity1, IBroadphaseEntity entity2)
         {
@@ -120,7 +128,8 @@ namespace Jitter.Collision
                 }
             }
 
-            my.Clear(); other.Clear();
+            my.Clear();
+            other.Clear();
             potentialTriangleLists.GiveBack(my);
             potentialTriangleLists.GiveBack(other);
         }
@@ -137,16 +146,32 @@ namespace Jitter.Collision
 
             if (!b1IsMulti && !b2IsMulti)
             {
-                if (XenoCollide.Detect(body1.Shape, body2.Shape, ref body1.orientation, ref body2.orientation,
-                                       ref body1.position, ref body2.position, out point, out normal, out penetration))
+                if (XenoCollide.Detect(
+                    body1.Shape,
+                    body2.Shape,
+                    ref body1.orientation,
+                    ref body2.orientation,
+                    ref body1.position,
+                    ref body2.position,
+                    out point,
+                    out normal,
+                    out penetration))
                 {
                     FindSupportPoints(body1, body2, body1.Shape, body2.Shape, ref point, ref normal, out var point1, out var point2);
                     RaiseCollisionDetected(body1, body2, ref point1, ref point2, ref normal, penetration);
                 }
                 else if (speculative)
                 {
-                    if (GJKCollide.ClosestPoints(body1.Shape, body2.Shape, ref body1.orientation, ref body2.orientation,
-                        ref body1.position, ref body2.position, out var hit1, out var hit2, out normal))
+                    if (GJKCollide.ClosestPoints(
+                        body1.Shape,
+                        body2.Shape,
+                        ref body1.orientation,
+                        ref body2.orientation,
+                        ref body1.position,
+                        ref body2.position,
+                        out var hit1,
+                        out var hit2,
+                        out normal))
                     {
                         var delta = hit2 - hit1;
 
@@ -252,9 +277,16 @@ namespace Jitter.Collision
                 {
                     multiShape.SetCurrentShape(i);
 
-                    if (XenoCollide.Detect(multiShape, b2.Shape, ref b1.orientation,
-                        ref b2.orientation, ref b1.position, ref b2.position,
-                        out point, out normal, out penetration))
+                    if (XenoCollide.Detect(
+                        multiShape,
+                        b2.Shape,
+                        ref b1.orientation,
+                        ref b2.orientation,
+                        ref b1.position,
+                        ref b2.position,
+                        out point,
+                        out normal,
+                        out penetration))
                     {
                         FindSupportPoints(b1, b2, multiShape, b2.Shape, ref point, ref normal, out var point1, out var point2);
 
@@ -273,8 +305,16 @@ namespace Jitter.Collision
                     }
                     else if (speculative)
                     {
-                        if (GJKCollide.ClosestPoints(multiShape, b2.Shape, ref b1.orientation, ref b2.orientation,
-                            ref b1.position, ref b2.position, out var hit1, out var hit2, out normal))
+                        if (GJKCollide.ClosestPoints(
+                            multiShape,
+                            b2.Shape,
+                            ref b1.orientation,
+                            ref b2.orientation,
+                            ref b1.position,
+                            ref b2.position,
+                            out var hit1,
+                            out var hit2,
+                            out normal))
                         {
                             var delta = hit2 - hit1;
 
@@ -320,8 +360,16 @@ namespace Jitter.Collision
                     {
                         ms.SetCurrentShape(e);
 
-                        result = XenoCollide.Detect(ms, t, ref rigidBody.orientation, ref JMatrix.InternalIdentity,
-                            ref rigidBody.position, ref JVector.InternalZero, out var point, out var normal, out float penetration);
+                        result = XenoCollide.Detect(
+                            ms,
+                            t,
+                            ref rigidBody.orientation,
+                            ref JMatrix.InternalIdentity,
+                            ref rigidBody.position,
+                            ref JVector.InternalZero,
+                            out var point,
+                            out var normal,
+                            out float penetration);
 
                         if (result)
                         {
@@ -417,9 +465,15 @@ namespace Jitter.Collision
             }
         }
 
-        private void FindSupportPoints(RigidBody body1, RigidBody body2,
-            Shape shape1, Shape shape2, ref JVector point, ref JVector normal,
-            out JVector point1, out JVector point2)
+        private void FindSupportPoints(
+            RigidBody body1,
+            RigidBody body2,
+            Shape shape1,
+            Shape shape2,
+            ref JVector point,
+            ref JVector normal,
+            out JVector point1,
+            out JVector point2)
         {
             JVector.Negate(ref normal, out var mn);
 

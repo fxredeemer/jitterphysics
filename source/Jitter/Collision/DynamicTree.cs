@@ -8,10 +8,10 @@ namespace Jitter.Collision
     public class DynamicTree<T>
     {
         internal const int NullNode = -1;
-        private int _freeList;
-        private int _insertionCount;
-        private int _nodeCapacity;
-        private int _nodeCount;
+        private int freeList;
+        private int insertionCount;
+        private int nodeCapacity;
+        private int nodeCount;
         private const float SettingsAABBMultiplier = 2.0f;
 
         private readonly float settingsRndExtension = 0.1f;
@@ -28,14 +28,14 @@ namespace Jitter.Collision
             settingsRndExtension = rndExtension;
             Root = NullNode;
 
-            _nodeCapacity = 16;
-            Nodes = new DynamicTreeNode<T>[_nodeCapacity];
+            nodeCapacity = 16;
+            Nodes = new DynamicTreeNode<T>[nodeCapacity];
 
-            for (int i = 0; i < _nodeCapacity - 1; ++i)
+            for (int i = 0; i < nodeCapacity - 1; ++i)
             {
                 Nodes[i].ParentOrNext = i + 1;
             }
-            Nodes[_nodeCapacity - 1].ParentOrNext = NullNode;
+            Nodes[nodeCapacity - 1].ParentOrNext = NullNode;
         }
 
         private readonly Random rnd = new Random();
@@ -59,7 +59,7 @@ namespace Jitter.Collision
 
         public void RemoveProxy(int proxyId)
         {
-            Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
+            Debug.Assert(0 <= proxyId && proxyId < nodeCapacity);
             Debug.Assert(Nodes[proxyId].IsLeaf());
 
             RemoveLeaf(proxyId);
@@ -68,7 +68,7 @@ namespace Jitter.Collision
 
         public bool MoveProxy(int proxyId, ref JBBox aabb, JVector displacement)
         {
-            Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
+            Debug.Assert(0 <= proxyId && proxyId < nodeCapacity);
 
             Debug.Assert(Nodes[proxyId].IsLeaf());
 
@@ -121,13 +121,13 @@ namespace Jitter.Collision
 
         public T GetUserData(int proxyId)
         {
-            Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
+            Debug.Assert(0 <= proxyId && proxyId < nodeCapacity);
             return Nodes[proxyId].UserData;
         }
 
         public void GetFatAABB(int proxyId, out JBBox fatAABB)
         {
-            Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
+            Debug.Assert(0 <= proxyId && proxyId < nodeCapacity);
             fatAABB = Nodes[proxyId].AABB;
         }
 
@@ -242,13 +242,13 @@ namespace Jitter.Collision
 
         public void Query(List<int> my, ref JBBox aabb)
         {
-            var _stack = stackPool.GetNew();
+            var stack = stackPool.GetNew();
 
-            _stack.Push(Root);
+            stack.Push(Root);
 
-            while (_stack.Count > 0)
+            while (stack.Count > 0)
             {
-                int nodeId = _stack.Pop();
+                int nodeId = stack.Pop();
                 if (nodeId == NullNode)
                 {
                     continue;
@@ -264,56 +264,56 @@ namespace Jitter.Collision
                     }
                     else
                     {
-                        _stack.Push(node.Child1);
-                        _stack.Push(node.Child2);
+                        stack.Push(node.Child1);
+                        stack.Push(node.Child2);
                     }
                 }
             }
 
-            stackPool.GiveBack(_stack);
+            stackPool.GiveBack(stack);
         }
 
         private int AllocateNode()
         {
-            if (_freeList == NullNode)
+            if (freeList == NullNode)
             {
-                Debug.Assert(_nodeCount == _nodeCapacity);
+                Debug.Assert(nodeCount == nodeCapacity);
 
                 var oldNodes = Nodes;
-                _nodeCapacity *= 2;
-                Nodes = new DynamicTreeNode<T>[_nodeCapacity];
-                Array.Copy(oldNodes, Nodes, _nodeCount);
+                nodeCapacity *= 2;
+                Nodes = new DynamicTreeNode<T>[nodeCapacity];
+                Array.Copy(oldNodes, Nodes, nodeCount);
 
-                for (int i = _nodeCount; i < _nodeCapacity - 1; ++i)
+                for (int i = nodeCount; i < nodeCapacity - 1; ++i)
                 {
                     Nodes[i].ParentOrNext = i + 1;
                 }
-                Nodes[_nodeCapacity - 1].ParentOrNext = NullNode;
-                _freeList = _nodeCount;
+                Nodes[nodeCapacity - 1].ParentOrNext = NullNode;
+                freeList = nodeCount;
             }
 
-            int nodeId = _freeList;
-            _freeList = Nodes[nodeId].ParentOrNext;
+            int nodeId = freeList;
+            freeList = Nodes[nodeId].ParentOrNext;
             Nodes[nodeId].ParentOrNext = NullNode;
             Nodes[nodeId].Child1 = NullNode;
             Nodes[nodeId].Child2 = NullNode;
             Nodes[nodeId].LeafCount = 0;
-            ++_nodeCount;
+            ++nodeCount;
             return nodeId;
         }
 
         private void FreeNode(int nodeId)
         {
-            Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
-            Debug.Assert(0 < _nodeCount);
-            Nodes[nodeId].ParentOrNext = _freeList;
-            _freeList = nodeId;
-            --_nodeCount;
+            Debug.Assert(0 <= nodeId && nodeId < nodeCapacity);
+            Debug.Assert(0 < nodeCount);
+            Nodes[nodeId].ParentOrNext = freeList;
+            freeList = nodeId;
+            --nodeCount;
         }
 
         private void InsertLeaf(int leaf)
         {
-            ++_insertionCount;
+            ++insertionCount;
 
             if (Root == NullNode)
             {
@@ -481,7 +481,7 @@ namespace Jitter.Collision
                 return 0;
             }
 
-            Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
+            Debug.Assert(0 <= nodeId && nodeId < nodeCapacity);
             var node = Nodes[nodeId];
             int height1 = ComputeHeight(node.Child1);
             int height2 = ComputeHeight(node.Child2);
