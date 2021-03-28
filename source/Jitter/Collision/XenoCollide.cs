@@ -14,8 +14,12 @@ namespace Jitter.Collision
         private const float CollideEpsilon = 1e-4f;
         private const int MaximumIterations = 34;
 
-        private static void SupportMapTransformed(ISupportMappable support,
-            ref JMatrix orientation, ref JVector position, ref JVector direction, out JVector result)
+        private static void SupportMapTransformed(
+            ISupportMappable support,
+            ref JMatrix orientation,
+            ref JVector position,
+            ref JVector direction,
+            out JVector result)
         {
             result.X = (direction.X * orientation.M11) + (direction.Y * orientation.M12) + (direction.Z * orientation.M13);
             result.Y = (direction.X * orientation.M21) + (direction.Y * orientation.M22) + (direction.Z * orientation.M23);
@@ -32,9 +36,16 @@ namespace Jitter.Collision
             result.Z = position.Z + z;
         }
 
-        public static bool Detect(ISupportMappable support1, ISupportMappable support2, ref JMatrix orientation1,
-     ref JMatrix orientation2, ref JVector position1, ref JVector position2,
-     out JVector point, out JVector normal, out float penetration)
+        public static bool Detect(
+            ISupportMappable support1,
+            ISupportMappable support2,
+            ref JMatrix orientation1,
+            ref JMatrix orientation2,
+            ref JVector position1,
+            ref JVector position2,
+            out JVector point,
+            out JVector normal,
+            out float penetration)
         {
             JVector temp1;
             JVector mn;
