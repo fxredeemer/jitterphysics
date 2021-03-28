@@ -6,11 +6,16 @@ namespace Jitter.Collision.Shapes
     public class BoxShape : Shape
     {
         private JVector size = JVector.Zero;
+        private JVector halfSize = JVector.Zero;
 
         public JVector Size
         {
             get => size;
-            set { size = value; UpdateShape(); }
+            set
+            {
+                size = value;
+                UpdateShape();
+            }
         }
 
         public BoxShape(JVector size)
@@ -26,8 +31,6 @@ namespace Jitter.Collision.Shapes
             size.Z = width;
             UpdateShape();
         }
-
-        private JVector halfSize = JVector.Zero;
 
         public override void UpdateShape()
         {

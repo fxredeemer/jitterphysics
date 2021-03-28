@@ -246,7 +246,7 @@ namespace Jitter.LinearMath
         public void Normalize()
         {
             float num2 = (X * X) + (Y * Y) + (Z * Z);
-            float num = 1f / ((float)Math.Sqrt(num2));
+            float num = 1f / (JMath.Sqrt(num2));
             X *= num;
             Y *= num;
             Z *= num;
@@ -255,7 +255,7 @@ namespace Jitter.LinearMath
         public static void Normalize(ref JVector value, out JVector result)
         {
             float num2 = (value.X * value.X) + (value.Y * value.Y) + (value.Z * value.Z);
-            float num = 1f / ((float)Math.Sqrt(num2));
+            float num = 1f / (JMath.Sqrt(num2));
             result.X = value.X * num;
             result.Y = value.Y * num;
             result.Z = value.Z * num;
@@ -269,7 +269,7 @@ namespace Jitter.LinearMath
         public float Length()
         {
             float num = (X * X) + (Y * Y) + (Z * Z);
-            return (float)Math.Sqrt(num);
+            return JMath.Sqrt(num);
         }
 
         public static void Swap(ref JVector vector1, ref JVector vector2)

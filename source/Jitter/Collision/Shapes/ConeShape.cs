@@ -37,7 +37,7 @@ namespace Jitter.Collision.Shapes
 
         public override void UpdateShape()
         {
-            sina = radius / (float)Math.Sqrt((radius * radius) + (height * height));
+            sina = radius / JMath.Sqrt((radius * radius) + (height * height));
             base.UpdateShape();
         }
 
@@ -57,7 +57,7 @@ namespace Jitter.Collision.Shapes
 
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            float sigma = (float)Math.Sqrt((direction.X * direction.X) + (direction.Z * direction.Z));
+            float sigma = JMath.Sqrt((direction.X * direction.X) + (direction.Z * direction.Z));
 
             if (direction.Y > direction.Length() * sina)
             {

@@ -115,7 +115,7 @@ namespace Jitter.LinearMath
         public void Normalize()
         {
             float num2 = (X * X) + (Y * Y) + (Z * Z) + (W * W);
-            float num = 1f / ((float)Math.Sqrt(num2));
+            float num = 1f / (JMath.Sqrt(num2));
             X *= num;
             Y *= num;
             Z *= num;
@@ -133,7 +133,7 @@ namespace Jitter.LinearMath
             float num8 = matrix.M11 + matrix.M22 + matrix.M33;
             if (num8 > 0f)
             {
-                float num = (float)Math.Sqrt(num8 + 1f);
+                float num = JMath.Sqrt(num8 + 1f);
                 result.W = num * 0.5f;
                 num = 0.5f / num;
                 result.X = (matrix.M23 - matrix.M32) * num;
@@ -142,7 +142,7 @@ namespace Jitter.LinearMath
             }
             else if ((matrix.M11 >= matrix.M22) && (matrix.M11 >= matrix.M33))
             {
-                float num7 = (float)Math.Sqrt(1f + matrix.M11 - matrix.M22 - matrix.M33);
+                float num7 = JMath.Sqrt(1f + matrix.M11 - matrix.M22 - matrix.M33);
                 float num4 = 0.5f / num7;
                 result.X = 0.5f * num7;
                 result.Y = (matrix.M12 + matrix.M21) * num4;
@@ -151,7 +151,7 @@ namespace Jitter.LinearMath
             }
             else if (matrix.M22 > matrix.M33)
             {
-                float num6 = (float)Math.Sqrt(1f + matrix.M22 - matrix.M11 - matrix.M33);
+                float num6 = JMath.Sqrt(1f + matrix.M22 - matrix.M11 - matrix.M33);
                 float num3 = 0.5f / num6;
                 result.X = (matrix.M21 + matrix.M12) * num3;
                 result.Y = 0.5f * num6;
@@ -160,7 +160,7 @@ namespace Jitter.LinearMath
             }
             else
             {
-                float num5 = (float)Math.Sqrt(1f + matrix.M33 - matrix.M11 - matrix.M22);
+                float num5 = JMath.Sqrt(1f + matrix.M33 - matrix.M11 - matrix.M22);
                 float num2 = 0.5f / num5;
                 result.X = (matrix.M31 + matrix.M13) * num2;
                 result.Y = (matrix.M32 + matrix.M23) * num2;
