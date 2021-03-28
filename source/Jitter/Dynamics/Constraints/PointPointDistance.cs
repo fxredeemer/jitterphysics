@@ -11,8 +11,10 @@ namespace Jitter.Dynamics.Constraints
             LimitMinimumDistance,
         }
 
-        private JVector localAnchor1, localAnchor2;
-        private JVector r1, r2;
+        private JVector localAnchor1;
+        private JVector localAnchor2;
+        private JVector r1;
+        private JVector r2;
 
         public PointPointDistance(RigidBody body1, RigidBody body2, JVector anchor1, JVector anchor2) : base(body1, body2)
         {
@@ -31,9 +33,17 @@ namespace Jitter.Dynamics.Constraints
 
         public DistanceBehavior Behavior { get; set; }
 
-        public JVector LocalAnchor1 { get => localAnchor1; set => localAnchor1 = value; }
+        public JVector LocalAnchor1
+        {
+            get => localAnchor1;
+            set => localAnchor1 = value;
+        }
 
-        public JVector LocalAnchor2 { get => localAnchor2; set => localAnchor2 = value; }
+        public JVector LocalAnchor2
+        {
+            get => localAnchor2;
+            set => localAnchor2 = value;
+        }
 
         public float Softness { get; set; } = 0.01f;
 

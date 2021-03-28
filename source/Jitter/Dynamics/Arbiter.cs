@@ -19,7 +19,8 @@ namespace Jitter.Dynamics
 
         public static ResourcePool<Arbiter> Pool = new ResourcePool<Arbiter>();
 
-        internal RigidBody body1, body2;
+        internal RigidBody body1;
+        internal RigidBody body2;
         internal ContactList contactList;
 
         public Arbiter(RigidBody body1, RigidBody body2)
@@ -39,8 +40,12 @@ namespace Jitter.Dynamics
             contactList.Clear();
         }
 
-        public Contact AddContact(JVector point1, JVector point2, JVector normal, float penetration,
-    ContactSettings contactSettings)
+        public Contact AddContact(
+            JVector point1,
+            JVector point2,
+            JVector normal,
+            float penetration,
+            ContactSettings contactSettings)
         {
             JVector.Subtract(ref point1, ref body1.position, out var relPos1);
 
@@ -113,7 +118,10 @@ namespace Jitter.Dynamics
                 }
             }
 
-            float res0 = 0, res1 = 0, res2 = 0, res3 = 0;
+            float res0 = 0;
+            float res1 = 0;
+            float res2 = 0;
+            float res3 = 0;
             if (maxPenetrationIndex != 0)
             {
                 JVector.Subtract(ref realRelPos1, ref contactList[1].relativePos1, out var a0);
@@ -154,10 +162,26 @@ namespace Jitter.Dynamics
             int maxIndex = -1;
             float maxVal = float.MinValue;
 
-            if (x > maxVal) { maxIndex = 0; maxVal = x; }
-            if (y > maxVal) { maxIndex = 1; maxVal = y; }
-            if (z > maxVal) { maxIndex = 2; maxVal = z; }
-            if (w > maxVal) { maxIndex = 3; maxVal = w; }
+            if (x > maxVal)
+            {
+                maxIndex = 0;
+                maxVal = x;
+            }
+            if (y > maxVal)
+            {
+                maxIndex = 1;
+                maxVal = y;
+            }
+            if (z > maxVal)
+            {
+                maxIndex = 2;
+                maxVal = z;
+            }
+            if (w > maxVal)
+            {
+                maxIndex = 3;
+                maxVal = w;
+            }
 
             return maxIndex;
         }

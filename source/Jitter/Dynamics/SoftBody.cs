@@ -27,8 +27,7 @@ namespace Jitter.Dynamics
 
             public SpringType SpringType { get; set; }
 
-            public Spring(RigidBody body1, RigidBody body2)
-    : base(body1, body2)
+            public Spring(RigidBody body1, RigidBody body2) : base(body1, body2)
             {
                 Distance = (body1.position - body2.position).Length();
             }

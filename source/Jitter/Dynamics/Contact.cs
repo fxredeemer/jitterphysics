@@ -4,31 +4,6 @@ using System;
 
 namespace Jitter.Dynamics
 {
-    public class ContactSettings
-    {
-        public enum MaterialCoefficientMixingType { TakeMaximum, TakeMinimum, UseAverage }
-
-        internal float maximumBias = 10.0f;
-        internal float bias = 0.25f;
-        internal float minVelocity = 0.001f;
-        internal float allowedPenetration = 0.01f;
-        internal float breakThreshold = 0.01f;
-
-        internal MaterialCoefficientMixingType materialMode = MaterialCoefficientMixingType.UseAverage;
-
-        public float MaximumBias { get => maximumBias; set => maximumBias = value; }
-
-        public float BiasFactor { get => bias; set => bias = value; }
-
-        public float MinimumVelocity { get => minVelocity; set => minVelocity = value; }
-
-        public float AllowedPenetration { get => allowedPenetration; set => allowedPenetration = value; }
-
-        public float BreakThreshold { get => breakThreshold; set => breakThreshold = value; }
-
-        public MaterialCoefficientMixingType MaterialCoefficientMixing { get => materialMode; set => materialMode = value; }
-    }
-
     public class Contact : IConstraint
     {
         private ContactSettings settings;
@@ -62,8 +37,7 @@ namespace Jitter.Dynamics
         private float lostSpeculativeBounce;
         private float speculativeVelocity;
 
-        public static readonly ResourcePool<Contact> Pool =
-    new ResourcePool<Contact>();
+        public static readonly ResourcePool<Contact> Pool = new ResourcePool<Contact>();
 
         private float lastTimeStep = float.PositiveInfinity;
 
@@ -682,8 +656,15 @@ namespace Jitter.Dynamics
             }
         }
 
-        public void Initialize(RigidBody body1, RigidBody body2, ref JVector point1, ref JVector point2, ref JVector n,
-    float penetration, bool newContact, ContactSettings settings)
+        public void Initialize(
+            RigidBody body1,
+            RigidBody body2,
+            ref JVector point1,
+            ref JVector point2,
+            ref JVector n,
+            float penetration,
+            bool newContact,
+            ContactSettings settings)
         {
             this.body1 = body1; this.body2 = body2;
             normal = n; normal.Normalize();

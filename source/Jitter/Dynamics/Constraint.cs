@@ -3,16 +3,6 @@ using System.Threading;
 
 namespace Jitter.Dynamics.Constraints
 {
-    public interface IConstraint
-    {
-        void PrepareForIteration(float timestep);
-        void Iterate();
-
-        RigidBody Body1 { get; }
-
-        RigidBody Body2 { get; }
-    }
-
     public abstract class Constraint : IConstraint, IDebugDrawable, IComparable<Constraint>
     {
         internal RigidBody body1;

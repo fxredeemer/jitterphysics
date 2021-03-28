@@ -7,7 +7,8 @@ namespace Jitter.Dynamics.Constraints
     {
         private JVector accumulatedImpulse;
 
-        private JMatrix initialOrientation1, initialOrientation2;
+        private JMatrix initialOrientation1;
+        private JMatrix initialOrientation2;
 
         public FixedAngle(RigidBody body1, RigidBody body2) : base(body1, body2)
         {
@@ -17,8 +18,17 @@ namespace Jitter.Dynamics.Constraints
 
         public JVector AppliedImpulse => accumulatedImpulse;
 
-        public JMatrix InitialOrientationBody1 { get => initialOrientation1; set => initialOrientation1 = value; }
-        public JMatrix InitialOrientationBody2 { get => initialOrientation2; set => initialOrientation2 = value; }
+        public JMatrix InitialOrientationBody1
+        {
+            get => initialOrientation1;
+            set => initialOrientation1 = value;
+        }
+
+        public JMatrix InitialOrientationBody2
+        {
+            get => initialOrientation2;
+            set => initialOrientation2 = value;
+        }
 
         public float Softness { get; set; }
 

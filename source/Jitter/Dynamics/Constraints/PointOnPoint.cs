@@ -4,8 +4,10 @@ namespace Jitter.Dynamics.Constraints
 {
     public class PointOnPoint : Constraint
     {
-        private JVector localAnchor1, localAnchor2;
-        private JVector r1, r2;
+        private JVector localAnchor1;
+        private JVector localAnchor2;
+        private JVector r1;
+        private JVector r2;
 
         public PointOnPoint(RigidBody body1, RigidBody body2, JVector anchor) : base(body1, body2)
         {

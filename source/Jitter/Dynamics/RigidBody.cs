@@ -91,8 +91,7 @@ namespace Jitter.Dynamics
             }
         }
 
-        public RigidBody(Shape shape, Material material)
-    : this(shape, material, false)
+        public RigidBody(Shape shape, Material material) : this(shape, material, false)
         {
         }
 
@@ -332,13 +331,21 @@ namespace Jitter.Dynamics
         public JVector Position
         {
             get => position;
-            set { position = value; Update(); }
+            set
+            {
+                position = value;
+                Update();
+            }
         }
 
         public JMatrix Orientation
         {
             get => orientation;
-            set { orientation = value; Update(); }
+            set
+            {
+                orientation = value;
+                Update();
+            }
         }
 
         public bool IsStatic

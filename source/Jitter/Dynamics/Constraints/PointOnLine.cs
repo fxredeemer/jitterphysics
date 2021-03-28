@@ -5,9 +5,10 @@ namespace Jitter.Dynamics.Constraints
     public class PointOnLine : Constraint
     {
         private JVector lineNormal;
-
-        private JVector localAnchor1, localAnchor2;
-        private JVector r1, r2;
+        private JVector localAnchor1;
+        private JVector localAnchor2;
+        private JVector r1;
+        private JVector r2;
 
         public PointOnLine(RigidBody body1, RigidBody body2, JVector lineStartPointBody1, JVector pointBody2) : base(body1, body2)
         {

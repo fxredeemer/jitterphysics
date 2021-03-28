@@ -4,7 +4,10 @@
     {
         public World World { get; }
 
-        public Joint(World world) { World = world; }
+        public Joint(World world)
+        {
+            World = world;
+        }
 
         public abstract void Activate();
 
