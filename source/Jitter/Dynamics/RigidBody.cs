@@ -46,8 +46,6 @@ namespace Jitter.Dynamics
 
         private readonly int hashCode;
 
-        internal int internalIndex;
-
         private ShapeUpdatedHandler updatedHandler;
 
         internal List<RigidBody> connections = new List<RigidBody>();

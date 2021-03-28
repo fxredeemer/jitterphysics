@@ -51,7 +51,9 @@ namespace Jitter.LinearMath
             for (int i = 1; i < allIndices.Count; i++)
             {
                 if (allIndices[i - 1] == allIndices[i])
-                { allIndices.RemoveAt(i - 1); i--; }
+                {
+                    allIndices.RemoveAt(i - 1); i--;
+                }
             }
 
             return allIndices.ToArray();
@@ -69,7 +71,10 @@ namespace Jitter.LinearMath
                 point = points[i];
 
                 value = JVector.Dot(ref point, ref dir);
-                if (value > current) { current = value; index = i; }
+                if (value > current)
+                {
+                    current = value; index = i;
+                }
             }
 
             return index;
