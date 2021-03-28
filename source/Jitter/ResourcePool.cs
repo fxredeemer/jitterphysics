@@ -9,14 +9,20 @@ namespace Jitter
 
         public void ResetResourcePool()
         {
-            lock (stack) { stack.Clear(); }
+            lock (stack)
+            {
+                stack.Clear();
+            }
         }
 
         public int Count => stack.Count;
 
         public void GiveBack(T obj)
         {
-            lock (stack) { stack.Push(obj); }
+            lock (stack)
+            {
+                stack.Push(obj);
+            }
         }
 
         public T GetNew()

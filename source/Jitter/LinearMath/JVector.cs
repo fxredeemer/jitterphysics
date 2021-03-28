@@ -5,39 +5,23 @@ namespace Jitter.LinearMath
     public struct JVector
     {
         private const float ZeroEpsilonSq = JMath.Epsilon * JMath.Epsilon;
-        internal static JVector InternalZero;
-        internal static JVector Arbitrary;
+        internal static JVector InternalZero = new JVector(0, 0, 0);
+        internal static JVector Arbitrary = new JVector(1, 1, 1);
 
         public float X;
         public float Y;
         public float Z;
 
-        public static readonly JVector Zero;
-        public static readonly JVector Left;
-        public static readonly JVector Right;
-        public static readonly JVector Up;
-        public static readonly JVector Down;
-        public static readonly JVector Backward;
-        public static readonly JVector Forward;
-        public static readonly JVector One;
-        public static readonly JVector MinValue;
-        public static readonly JVector MaxValue;
-
-        static JVector()
-        {
-            One = new JVector(1, 1, 1);
-            Zero = new JVector(0, 0, 0);
-            Left = new JVector(1, 0, 0);
-            Right = new JVector(-1, 0, 0);
-            Up = new JVector(0, 1, 0);
-            Down = new JVector(0, -1, 0);
-            Backward = new JVector(0, 0, 1);
-            Forward = new JVector(0, 0, -1);
-            MinValue = new JVector(float.MinValue);
-            MaxValue = new JVector(float.MaxValue);
-            Arbitrary = new JVector(1, 1, 1);
-            InternalZero = Zero;
-        }
+        public static readonly JVector Zero = new JVector(0, 0, 0);
+        public static readonly JVector Left = new JVector(1, 0, 0);
+        public static readonly JVector Right = new JVector(-1, 0, 0);
+        public static readonly JVector Up = new JVector(0, 1, 0);
+        public static readonly JVector Down = new JVector(0, -1, 0);
+        public static readonly JVector Backward = new JVector(0, 0, 1);
+        public static readonly JVector Forward = new JVector(0, 0, -1);
+        public static readonly JVector One = new JVector(1, 1, 1);
+        public static readonly JVector MinValue = new JVector(float.MinValue);
+        public static readonly JVector MaxValue = new JVector(float.MaxValue);
 
         public JVector(float x, float y, float z)
         {
@@ -67,19 +51,21 @@ namespace Jitter.LinearMath
 
         public override bool Equals(object obj)
         {
-            if (!(obj is JVector))
+            if (!(obj is JVector other))
             {
                 return false;
             }
 
-            var other = (JVector)obj;
-
-            return (X == other.X) && (Y == other.Y) && (Z == other.Z);
+            return (X == other.X)
+                && (Y == other.Y)
+                && (Z == other.Z);
         }
 
         public static bool operator ==(JVector value1, JVector value2)
         {
-            return (value1.X == value2.X) && (value1.Y == value2.Y) && (value1.Z == value2.Z);
+            return (value1.X == value2.X)
+                && (value1.Y == value2.Y)
+                && (value1.Z == value2.Z);
         }
 
         public static bool operator !=(JVector value1, JVector value2)
