@@ -26,9 +26,10 @@ namespace Jitter.Collision.Shapes
 
         public BoxShape(float length, float height, float width)
         {
-            size.X = length;
-            size.Y = height;
-            size.Z = width;
+            size = new JVector(
+                length,
+                height,
+                width);
             UpdateShape();
         }
 
@@ -59,9 +60,10 @@ namespace Jitter.Collision.Shapes
 
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            result.X = Math.Sign(direction.X) * halfSize.X;
-            result.Y = Math.Sign(direction.Y) * halfSize.Y;
-            result.Z = Math.Sign(direction.Z) * halfSize.Z;
+            result = new JVector(
+                Math.Sign(direction.X) * halfSize.X,
+                Math.Sign(direction.Y) * halfSize.Y,
+                Math.Sign(direction.Z) * halfSize.Z);
         }
     }
 }

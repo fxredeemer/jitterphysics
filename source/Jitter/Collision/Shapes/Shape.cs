@@ -111,21 +111,21 @@ namespace Jitter.Collision.Shapes
                     tri3.n3 = tri.n3;
 
                     var n = 0.5f * (tri.n1 + tri.n2);
-                    n.Normalize();
+                    n = JVector.Normalize(n);
 
                     tri1.n2 = n;
                     tri2.n1 = n;
                     tri4.n3 = n;
 
                     n = 0.5f * (tri.n2 + tri.n3);
-                    n.Normalize();
+                    n = JVector.Normalize(n);
 
                     tri2.n3 = n;
                     tri3.n2 = n;
                     tri4.n1 = n;
 
                     n = 0.5f * (tri.n3 + tri.n1);
-                    n.Normalize();
+                    n = JVector.Normalize(n);
 
                     tri1.n3 = n;
                     tri3.n1 = n;

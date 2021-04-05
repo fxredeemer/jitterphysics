@@ -5,7 +5,9 @@ namespace Jitter.Collision.Shapes
 {
     public class ConeShape : Shape
     {
-        private float height, radius;
+        private float height;
+        private float radius;
+        private float sina;
 
         public float Height
         {
@@ -41,8 +43,6 @@ namespace Jitter.Collision.Shapes
             base.UpdateShape();
         }
 
-        private float sina;
-
         public override void CalculateMassInertia()
         {
             mass = 1.0f / 3.0f * JMath.Pi * radius * radius * height;
@@ -61,21 +61,24 @@ namespace Jitter.Collision.Shapes
 
             if (direction.Y > direction.Length() * sina)
             {
-                result.X = 0.0f;
-                result.Y = 2.0f / 3.0f * height;
-                result.Z = 0.0f;
+                result = new JVector(
+                    0.0f,
+                    2.0f / 3.0f * height,
+                    0.0f);
             }
             else if (sigma > 0.0f)
             {
-                result.X = radius * direction.X / sigma;
-                result.Y = -(1.0f / 3.0f) * height;
-                result.Z = radius * direction.Z / sigma;
+                result = new JVector(
+                    radius * direction.X / sigma,
+                    -(1.0f / 3.0f) * height,
+                    radius * direction.Z / sigma);
             }
             else
             {
-                result.X = 0.0f;
-                result.Y = -(1.0f / 3.0f) * height;
-                result.Z = 0.0f;
+                result = new JVector(
+                    0.0f,
+                    -(1.0f / 3.0f) * height,
+                    0.0f);
             }
         }
     }

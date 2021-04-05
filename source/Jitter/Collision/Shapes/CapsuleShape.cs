@@ -5,7 +5,8 @@ namespace Jitter.Collision.Shapes
 {
     public class CapsuleShape : Shape
     {
-        private float length, radius;
+        private float length;
+        private float radius;
 
         public float Length
         {
@@ -54,19 +55,22 @@ namespace Jitter.Collision.Shapes
             {
                 JVector.Normalize(ref direction, out var dir);
                 JVector.Multiply(ref dir, radius, out result);
-                result.Y += Math.Sign(direction.Y) * 0.5f * length;
+
+                result = new JVector(
+                    result.X,
+                    result.Y + Math.Sign(direction.Y) * 0.5f * length,
+                    result.Z);
             }
             else if (r > 0.0f)
             {
-                result.X = direction.X / r * radius;
-                result.Y = 0.0f;
-                result.Z = direction.Z / r * radius;
+                result = new JVector(
+                    direction.X / r * radius,
+                    0.0f,
+                    direction.Z / r * radius);
             }
             else
             {
-                result.X = 0.0f;
-                result.Y = 0.0f;
-                result.Z = 0.0f;
+                result = new JVector();
             }
         }
     }
