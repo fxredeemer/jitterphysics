@@ -39,8 +39,9 @@ namespace Jitter.Collision.Shapes
             {
                 Shape.GetBoundingBox(ref orientation, out boundingBox);
 
-                boundingBox.Min += position;
-                boundingBox.Max += position;
+                boundingBox = new JBBox(
+                        boundingBox.Min + position,
+                        boundingBox.Max + position);
             }
 
             public TransformedShape(Shape shape, JMatrix orientation, JVector position)
@@ -110,8 +111,8 @@ namespace Jitter.Collision.Shapes
                 for (int e = 0; e < triangles.Count; e++)
                 {
                     var pos = triangles[e];
-                    JVector.Transform(ref pos, ref Shapes[i].orientation, out pos);
-                    JVector.Add(ref pos, ref Shapes[i].position, out pos);
+                    JVector.Transform(pos, Shapes[i].orientation, out pos);
+                    JVector.Add(pos, Shapes[i].position, out pos);
                     triangleList.Add(pos);
                 }
                 triangles.Clear();
@@ -176,27 +177,29 @@ namespace Jitter.Collision.Shapes
 
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            JVector.Transform(ref direction, ref Shapes[currentShape].invOrientation, out result);
+            JVector.Transform(direction, Shapes[currentShape].invOrientation, out result);
             Shapes[currentShape].Shape.SupportMapping(ref direction, out result);
-            JVector.Transform(ref result, ref Shapes[currentShape].orientation, out result);
-            JVector.Add(ref result, ref Shapes[currentShape].position, out result);
+            JVector.Transform(result, Shapes[currentShape].orientation, out result);
+            JVector.Add(result, Shapes[currentShape].position, out result);
         }
 
         public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
         {
-            box.Min = mInternalBBox.Min;
-            box.Max = mInternalBBox.Max;
+            box = new JBBox(
+                mInternalBBox.Min,
+                mInternalBBox.Max);
 
             var localHalfExtents = 0.5f * (box.Max - box.Min);
             var localCenter = 0.5f * (box.Max + box.Min);
 
-            JVector.Transform(ref localCenter, ref orientation, out var center);
+            JVector.Transform(localCenter, orientation, out var center);
 
             JMath.Absolute(ref orientation, out var abs);
-            JVector.Transform(ref localHalfExtents, ref abs, out var temp);
+            JVector.Transform(localHalfExtents, abs, out var temp);
 
-            box.Max = center + temp;
-            box.Min = center - temp;
+            box = new JBBox(
+                center - temp,
+                center + temp);
         }
 
         private int currentShape;
@@ -228,8 +231,8 @@ namespace Jitter.Collision.Shapes
         {
             var box = JBBox.SmallBox;
 
-            box.AddPoint(ref rayOrigin);
-            box.AddPoint(ref rayEnd);
+            box = box.AddPoint(ref rayOrigin);
+            box = box.AddPoint(ref rayEnd);
 
             return Prepare(ref box);
         }
@@ -243,8 +246,9 @@ namespace Jitter.Collision.Shapes
 
         protected void UpdateInternalBoundingBox()
         {
-            mInternalBBox.Min = new JVector(float.MaxValue);
-            mInternalBBox.Max = new JVector(float.MinValue);
+            mInternalBBox = new JBBox(
+                new JVector(float.MaxValue),
+                new JVector(float.MinValue));
 
             for (int i = 0; i < Shapes.Length; i++)
             {

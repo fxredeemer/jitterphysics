@@ -70,10 +70,10 @@ namespace Jitter.Collision.Shapes
             for (int i = 0; i < shapes.Count; i++)
             {
                 shapes[i].SupportMapping(ref direction, out var temp1);
-                JVector.Add(ref temp1, ref temp2, out temp2);
+                JVector.Add( temp1,  temp2, out temp2);
             }
 
-            JVector.Subtract(ref temp2, ref shifted, out result);
+            JVector.Subtract(temp2, shifted, out result);
         }
     }
 }

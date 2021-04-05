@@ -71,11 +71,11 @@
 
         public static JVector Min(JVector value1, JVector value2)
         {
-            Min(ref value1, ref value2, out var result);
+            Min(in value1, in value2, out var result);
             return result;
         }
 
-        public static void Min(ref JVector value1, ref JVector value2, out JVector result)
+        public static void Min(in JVector value1, in JVector value2, out JVector result)
         {
             result = new JVector(
                 JMath.Min(value1.X, value2.X),
@@ -85,11 +85,11 @@
 
         public static JVector Max(JVector value1, JVector value2)
         {
-            Max(ref value1, ref value2, out var result);
+            Max(in value1, in value2, out var result);
             return result;
         }
 
-        public static void Max(ref JVector value1, ref JVector value2, out JVector result)
+        public static void Max(in JVector value1, in JVector value2, out JVector result)
         {
             result = new JVector(
                 JMath.Max(value1.X, value2.X),
@@ -109,11 +109,11 @@
 
         public static JVector Transform(JVector position, JMatrix matrix)
         {
-            Transform(ref position, ref matrix, out var result);
+            Transform(in position, in matrix, out var result);
             return result;
         }
 
-        public static void Transform(ref JVector position, ref JMatrix matrix, out JVector result)
+        public static void Transform(in JVector position, in JMatrix matrix, out JVector result)
         {
             float x = (position.X * matrix.M11) + (position.Y * matrix.M21) + (position.Z * matrix.M31);
             float y = (position.X * matrix.M12) + (position.Y * matrix.M22) + (position.Z * matrix.M32);
@@ -122,7 +122,7 @@
             result = new JVector(x, y, z);
         }
 
-        public static void TransposedTransform(ref JVector position, ref JMatrix matrix, out JVector result)
+        public static void TransposedTransform(in JVector position, in JMatrix matrix, out JVector result)
         {
             float num0 = (position.X * matrix.M11) + (position.Y * matrix.M12) + (position.Z * matrix.M13);
             float num1 = (position.X * matrix.M21) + (position.Y * matrix.M22) + (position.Z * matrix.M23);
@@ -133,21 +133,21 @@
 
         public static float Dot(JVector vector1, JVector vector2)
         {
-            return Dot(ref vector1, ref vector2);
+            return Dot(in vector1, in vector2);
         }
 
-        public static float Dot(ref JVector vector1, ref JVector vector2)
+        public static float Dot(in JVector vector1, in JVector vector2)
         {
             return (vector1.X * vector2.X) + (vector1.Y * vector2.Y) + (vector1.Z * vector2.Z);
         }
 
         public static JVector Add(JVector value1, JVector value2)
         {
-            Add(ref value1, ref value2, out var result);
+            Add(in value1, in value2, out var result);
             return result;
         }
 
-        public static void Add(ref JVector value1, ref JVector value2, out JVector result)
+        public static void Add(in JVector value1, in JVector value2, out JVector result)
         {
             float num0 = value1.X + value2.X;
             float num1 = value1.Y + value2.Y;
@@ -158,11 +158,11 @@
 
         public static JVector Subtract(JVector value1, JVector value2)
         {
-            Subtract(ref value1, ref value2, out var result);
+            Subtract(in value1, in value2, out var result);
             return result;
         }
 
-        public static void Subtract(ref JVector value1, ref JVector value2, out JVector result)
+        public static void Subtract(in JVector value1, in JVector value2, out JVector result)
         {
             float num0 = value1.X - value2.X;
             float num1 = value1.Y - value2.Y;
@@ -173,11 +173,11 @@
 
         public static JVector Cross(JVector vector1, JVector vector2)
         {
-            Cross(ref vector1, ref vector2, out var result);
+            Cross(in vector1, in vector2, out var result);
             return result;
         }
 
-        public static void Cross(ref JVector vector1, ref JVector vector2, out JVector result)
+        public static void Cross(in JVector vector1, in JVector vector2, out JVector result)
         {
             float num3 = (vector1.Y * vector2.Z) - (vector1.Z * vector2.Y);
             float num2 = (vector1.Z * vector2.X) - (vector1.X * vector2.Z);
@@ -193,11 +193,11 @@
 
         public static JVector Negate(JVector value)
         {
-            Negate(ref value, out var result);
+            Negate(in value, out var result);
             return result;
         }
 
-        public static void Negate(ref JVector value, out JVector result)
+        public static void Negate(in JVector value, out JVector result)
         {
             float num0 = -value.X;
             float num1 = -value.Y;
@@ -208,11 +208,11 @@
 
         public static JVector Normalize(JVector value)
         {
-            Normalize(ref value, out var result);
+            Normalize(in value, out var result);
             return result;
         }
 
-        public static void Normalize(ref JVector value, out JVector result)
+        public static void Normalize(in JVector value, out JVector result)
         {
             float num2 = (value.X * value.X) + (value.Y * value.Y) + (value.Z * value.Z);
             float num = 1f / (JMath.Sqrt(num2));
@@ -243,11 +243,11 @@
 
         public static JVector Multiply(JVector value1, float scaleFactor)
         {
-            Multiply(ref value1, scaleFactor, out var result);
+            Multiply(in value1, scaleFactor, out var result);
             return result;
         }
 
-        public static void Multiply(ref JVector value1, float scaleFactor, out JVector result)
+        public static void Multiply(in JVector value1, float scaleFactor, out JVector result)
         {
             result = new JVector(
                 value1.X * scaleFactor,
@@ -257,36 +257,36 @@
 
         public static JVector operator %(JVector value1, JVector value2)
         {
-            Cross(ref value1, ref value2, out var result);
+            Cross(in value1, in value2, out var result);
             return result;
         }
 
         public static float operator *(JVector value1, JVector value2)
         {
-            return Dot(ref value1, ref value2);
+            return Dot(in value1, in value2);
         }
 
         public static JVector operator *(JVector value1, float value2)
         {
-            Multiply(ref value1, value2, out var result);
+            Multiply(in value1, value2, out var result);
             return result;
         }
 
         public static JVector operator *(float value1, JVector value2)
         {
-            Multiply(ref value2, value1, out var result);
+            Multiply(in value2, value1, out var result);
             return result;
         }
 
         public static JVector operator -(JVector value1, JVector value2)
         {
-            Subtract(ref value1, ref value2, out var result);
+            Subtract(in value1, in value2, out var result);
             return result;
         }
 
         public static JVector operator +(JVector value1, JVector value2)
         {
-            Add(ref value1, ref value2, out var result);
+            Add(in value1, in value2, out var result);
             return result;
         }
     }

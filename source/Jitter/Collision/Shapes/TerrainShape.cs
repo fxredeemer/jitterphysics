@@ -106,14 +106,14 @@ namespace Jitter.Collision.Shapes
             }
 
             var sum = points[0];
-            JVector.Add(ref sum, ref points[1], out sum);
-            JVector.Add(ref sum, ref points[2], out sum);
-            JVector.Multiply(ref sum, 1.0f / 3.0f, out sum);
+            JVector.Add(sum, points[1], out sum);
+            JVector.Add(sum, points[2], out sum);
+            JVector.Multiply(sum, 1.0f / 3.0f, out sum);
             geomCen = sum;
 
-            JVector.Subtract(ref points[1], ref points[0], out sum);
-            JVector.Subtract(ref points[2], ref points[0], out normal);
-            JVector.Cross(ref sum, ref normal, out normal);
+            JVector.Subtract(points[1], points[0], out sum);
+            JVector.Subtract(points[2], points[0], out normal);
+            JVector.Cross(sum, normal, out normal);
         }
 
         public void CollisionNormal(out JVector normal)
@@ -183,7 +183,7 @@ namespace Jitter.Collision.Shapes
                 new JVector(box.Min.X - SphericalExpansion, box.Min.Y - SphericalExpansion, box.Min.Z - SphericalExpansion),
                 new JVector(box.Max.X + SphericalExpansion, box.Max.Y + SphericalExpansion, box.Max.Z + SphericalExpansion));
 
-            box.Transform(ref orientation);
+            box = box.Transform(ref orientation);
         }
 
         public override void MakeHull(ref List<JVector> triangleList, int generationThreshold)
@@ -205,35 +205,35 @@ namespace Jitter.Collision.Shapes
 
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            JVector.Normalize(ref direction, out var expandVector);
-            JVector.Multiply(ref expandVector, SphericalExpansion, out expandVector);
+            JVector.Normalize(direction, out var expandVector);
+            JVector.Multiply(expandVector, SphericalExpansion, out expandVector);
 
             int minIndex = 0;
-            float min = JVector.Dot(ref points[0], ref direction);
-            float dot = JVector.Dot(ref points[1], ref direction);
+            float min = JVector.Dot(points[0], direction);
+            float dot = JVector.Dot(points[1], direction);
             if (dot > min)
             {
                 min = dot;
                 minIndex = 1;
             }
-            dot = JVector.Dot(ref points[2], ref direction);
+            dot = JVector.Dot(points[2], direction);
             if (dot > min)
             {
                 minIndex = 2;
             }
 
-            JVector.Add(ref points[minIndex], ref expandVector, out result);
+            JVector.Add(points[minIndex], expandVector, out result);
         }
 
         public override int Prepare(ref JVector rayOrigin, ref JVector rayDelta)
         {
             var box = JBBox.SmallBox;
 
-            JVector.Normalize(ref rayDelta, out var rayEnd);
+            JVector.Normalize(rayDelta, out var rayEnd);
             rayEnd = rayOrigin + rayDelta + (rayEnd * SphericalExpansion);
 
-            box.AddPoint(ref rayOrigin);
-            box.AddPoint(ref rayEnd);
+            box = box.AddPoint(ref rayOrigin);
+            box = box.AddPoint(ref rayEnd);
 
             return Prepare(ref box);
         }

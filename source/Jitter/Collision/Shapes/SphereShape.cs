@@ -26,7 +26,7 @@ namespace Jitter.Collision.Shapes
             result = direction;
             result = JVector.Normalize(result);
 
-            JVector.Multiply(ref result, radius, out result);
+            JVector.Multiply(result, radius, out result);
         }
 
         public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)

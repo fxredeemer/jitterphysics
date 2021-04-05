@@ -70,7 +70,7 @@ namespace Jitter.LinearMath
             {
                 point = points[i];
 
-                value = JVector.Dot(ref point, ref dir);
+                value = JVector.Dot(point, dir);
                 if (value > current)
                 {
                     current = value; index = i;

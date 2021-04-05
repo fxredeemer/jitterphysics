@@ -293,12 +293,12 @@ namespace Jitter.Collision
                         if (useTerrainNormal && multiShape is TerrainShape terrainShape)
                         {
                             terrainShape.CollisionNormal(out normal);
-                            JVector.Transform(ref normal, ref b1.orientation, out normal);
+                            JVector.Transform(in normal, in b1.orientation, out normal);
                         }
                         else if (useTriangleMeshNormal && multiShape is TriangleMeshShape triangleMeshShape)
                         {
                             triangleMeshShape.CollisionNormal(out normal);
-                            JVector.Transform(ref normal, ref b1.orientation, out normal);
+                            JVector.Transform(in normal, in b1.orientation, out normal);
                         }
 
                         RaiseCollisionDetected(b1, b2, ref point1, ref point2, ref normal, penetration);
@@ -427,17 +427,17 @@ namespace Jitter.Collision
         {
             var triangle = softBody.dynamicTree.GetUserData(id);
             var p = softBody.VertexBodies[triangle.indices.I0].position;
-            JVector.Subtract(ref p, ref point, out p);
+            JVector.Subtract(in p, in point, out p);
 
             float length0 = p.LengthSquared();
 
             p = softBody.VertexBodies[triangle.indices.I1].position;
-            JVector.Subtract(ref p, ref point, out p);
+            JVector.Subtract(in p, in point, out p);
 
             float length1 = p.LengthSquared();
 
             p = softBody.VertexBodies[triangle.indices.I2].position;
-            JVector.Subtract(ref p, ref point, out p);
+            JVector.Subtract(in p, in point, out p);
 
             float length2 = p.LengthSquared();
 
@@ -475,42 +475,42 @@ namespace Jitter.Collision
             out JVector point1,
             out JVector point2)
         {
-            JVector.Negate(ref normal, out var mn);
+            JVector.Negate(in normal, out var mn);
 
             SupportMapping(body1, shape1, ref mn, out var sA);
             SupportMapping(body2, shape2, ref normal, out var sB);
 
-            JVector.Subtract(ref sA, ref point, out sA);
-            JVector.Subtract(ref sB, ref point, out sB);
+            JVector.Subtract(in sA, in point, out sA);
+            JVector.Subtract(in sB, in point, out sB);
 
-            float dot1 = JVector.Dot(ref sA, ref normal);
-            float dot2 = JVector.Dot(ref sB, ref normal);
+            float dot1 = JVector.Dot(in sA, in normal);
+            float dot2 = JVector.Dot(in sB, in normal);
 
-            JVector.Multiply(ref normal, dot1, out sA);
-            JVector.Multiply(ref normal, dot2, out sB);
+            JVector.Multiply(in normal, dot1, out sA);
+            JVector.Multiply(in normal, dot2, out sB);
 
-            JVector.Add(ref point, ref sA, out point1);
-            JVector.Add(ref point, ref sB, out point2);
+            JVector.Add(in point, in sA, out point1);
+            JVector.Add(in point, in sB, out point2);
         }
 
         private void SupportMapping(RigidBody body, Shape workingShape, ref JVector direction, out JVector result)
         {
-            JVector.Transform(ref direction, ref body.invOrientation, out result);
+            JVector.Transform(in direction, in body.invOrientation, out result);
             workingShape.SupportMapping(ref result, out result);
-            JVector.Transform(ref result, ref body.orientation, out result);
-            JVector.Add(ref result, ref body.position, out result);
+            JVector.Transform(in result, in body.orientation, out result);
+            JVector.Add(in result, in body.position, out result);
         }
 
         public abstract bool Raycast(JVector rayOrigin, JVector rayDirection, RaycastCallback raycast, out RigidBody body, out JVector normal, out float fraction);
 
         public abstract bool Raycast(RigidBody body, JVector rayOrigin, JVector rayDirection, out JVector normal, out float fraction);
 
-        public bool CheckBothStaticOrInactive(IBroadphaseEntity entity1, IBroadphaseEntity entity2)
+        public static bool CheckBothStaticOrInactive(IBroadphaseEntity entity1, IBroadphaseEntity entity2)
         {
             return entity1.IsStaticOrInactive && entity2.IsStaticOrInactive;
         }
 
-        public bool CheckBoundingBoxes(IBroadphaseEntity entity1, IBroadphaseEntity entity2)
+        public static bool CheckBoundingBoxes(IBroadphaseEntity entity1, IBroadphaseEntity entity2)
         {
             var box1 = entity1.BoundingBox;
             var box2 = entity2.BoundingBox;

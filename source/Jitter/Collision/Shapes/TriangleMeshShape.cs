@@ -61,7 +61,7 @@ namespace Jitter.Collision.Shapes
         {
             potentialTriangles.Clear();
 
-            JVector.Normalize(ref rayDelta, out var expDelta);
+            JVector.Normalize(rayDelta, out var expDelta);
             expDelta = rayDelta + (expDelta * SphericalExpansion);
 
             octree.GetTrianglesIntersectingRay(potentialTriangles, rayOrigin, expDelta);
@@ -73,18 +73,18 @@ namespace Jitter.Collision.Shapes
 
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            JVector.Normalize(ref direction, out var exp);
+            JVector.Normalize(direction, out var exp);
             exp *= SphericalExpansion;
 
-            float min = JVector.Dot(ref vecs[0], ref direction);
+            float min = JVector.Dot(vecs[0], direction);
             int minIndex = 0;
-            float dot = JVector.Dot(ref vecs[1], ref direction);
+            float dot = JVector.Dot(vecs[1], direction);
             if (dot > min)
             {
                 min = dot;
                 minIndex = 1;
             }
-            dot = JVector.Dot(ref vecs[2], ref direction);
+            dot = JVector.Dot(vecs[2], direction);
             if (dot > min)
             {
                 minIndex = 2;
@@ -101,7 +101,7 @@ namespace Jitter.Collision.Shapes
                 new JVector(box.Min.X - SphericalExpansion, box.Min.Y - SphericalExpansion, box.Min.Z - SphericalExpansion),
                 new JVector(box.Max.X + SphericalExpansion, box.Max.Y + SphericalExpansion, box.Max.Z + SphericalExpansion));
 
-            box.Transform(ref orientation);
+            box = box.Transform(ref orientation);
         }
 
         public bool FlipNormals { get; set; }
@@ -113,15 +113,15 @@ namespace Jitter.Collision.Shapes
             vecs[2] = octree.GetVertex(octree.tris[potentialTriangles[index]].I2);
 
             var sum = vecs[0];
-            JVector.Add(ref sum, ref vecs[1], out sum);
-            JVector.Add(ref sum, ref vecs[2], out sum);
-            JVector.Multiply(ref sum, 1.0f / 3.0f, out sum);
+            JVector.Add(sum, vecs[1], out sum);
+            JVector.Add(sum, vecs[2], out sum);
+            JVector.Multiply(sum, 1.0f / 3.0f, out sum);
 
             geomCen = sum;
 
-            JVector.Subtract(ref vecs[1], ref vecs[0], out sum);
-            JVector.Subtract(ref vecs[2], ref vecs[0], out normal);
-            JVector.Cross(ref sum, ref normal, out normal);
+            JVector.Subtract(vecs[1], vecs[0], out sum);
+            JVector.Subtract(vecs[2], vecs[0], out normal);
+            JVector.Cross(sum, normal, out normal);
 
             if (FlipNormals)
             {

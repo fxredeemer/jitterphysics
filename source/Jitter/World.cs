@@ -218,7 +218,7 @@ namespace Jitter
 
         public CollisionSystem CollisionSystem { set; get; }
 
-        public void ResetResourcePools()
+        public static void ResetResourcePools()
         {
             IslandManager.Pool.ResetResourcePool();
             Arbiter.Pool.ResetResourcePool();
@@ -454,13 +454,13 @@ namespace Jitter
             sw.Stop(); DebugTimes[(int)DebugType.UpdateContacts] = sw.Elapsed.TotalMilliseconds;
 
             sw.Restart();
-            double ms = 0;
             while (removedArbiterQueue.Count > 0)
             {
                 islands.ArbiterRemoved(removedArbiterQueue.Dequeue());
             }
 
-            sw.Stop(); ms = sw.Elapsed.TotalMilliseconds;
+            sw.Stop();
+            double ms = sw.Elapsed.TotalMilliseconds;
 
             sw.Restart();
             foreach (var body in softbodies)
@@ -468,11 +468,13 @@ namespace Jitter
                 body.Update(timestep);
                 body.DoSelfCollision(collisionDetectionHandler);
             }
-            sw.Stop(); DebugTimes[(int)DebugType.ClothUpdate] = sw.Elapsed.TotalMilliseconds;
+            sw.Stop();
+            DebugTimes[(int)DebugType.ClothUpdate] = sw.Elapsed.TotalMilliseconds;
 
             sw.Restart();
             CollisionSystem.Detect(multithread);
-            sw.Stop(); DebugTimes[(int)DebugType.CollisionDetect] = sw.Elapsed.TotalMilliseconds;
+            sw.Stop();
+            DebugTimes[(int)DebugType.CollisionDetect] = sw.Elapsed.TotalMilliseconds;
 
             sw.Restart();
 
@@ -492,7 +494,7 @@ namespace Jitter
             sw.Stop(); DebugTimes[(int)DebugType.IntegrateForces] = sw.Elapsed.TotalMilliseconds;
 
             sw.Restart();
-            HandleArbiter(contactIterations, multithread);
+            HandleArbiter(multithread);
             sw.Stop(); DebugTimes[(int)DebugType.HandleArbiter] = sw.Elapsed.TotalMilliseconds;
 
             sw.Restart();
@@ -552,10 +554,10 @@ namespace Jitter
                 }
                 else
                 {
-                    JVector.Subtract(ref c.p1, ref c.p2, out var diff);
-                    float distance = JVector.Dot(ref diff, ref c.normal);
+                    JVector.Subtract(c.p1, c.p2, out var diff);
+                    float distance = JVector.Dot(diff, c.normal);
 
-                    diff = diff - (distance * c.normal);
+                    diff -= (distance * c.normal);
                     distance = diff.LengthSquared();
 
                     if (distance > ContactSettings.breakThreshold * ContactSettings.breakThreshold * 100)
@@ -639,7 +641,7 @@ namespace Jitter
             }
         }
 
-        private void HandleArbiter(int iterations, bool multiThreaded)
+        private void HandleArbiter(bool multiThreaded)
         {
             if (multiThreaded)
             {
@@ -671,20 +673,20 @@ namespace Jitter
             {
                 if (!body.isStatic && body.IsActive)
                 {
-                    JVector.Multiply(ref body.force, body.inverseMass * timestep, out var temp);
-                    JVector.Add(ref temp, ref body.linearVelocity, out body.linearVelocity);
+                    JVector.Multiply(body.force, body.inverseMass * timestep, out var temp);
+                    JVector.Add(temp, body.linearVelocity, out body.linearVelocity);
 
                     if (!body.isParticle)
                     {
-                        JVector.Multiply(ref body.torque, timestep, out temp);
-                        JVector.Transform(ref temp, ref body.invInertiaWorld, out temp);
-                        JVector.Add(ref temp, ref body.angularVelocity, out body.angularVelocity);
+                        JVector.Multiply(body.torque, timestep, out temp);
+                        JVector.Transform(temp, body.invInertiaWorld, out temp);
+                        JVector.Add(temp, body.angularVelocity, out body.angularVelocity);
                     }
 
                     if (body.affectedByGravity)
                     {
-                        JVector.Multiply(ref gravity, timestep, out temp);
-                        JVector.Add(ref body.linearVelocity, ref temp, out body.linearVelocity);
+                        JVector.Multiply(gravity, timestep, out temp);
+                        JVector.Add(body.linearVelocity, temp, out body.linearVelocity);
                     }
                 }
 
@@ -697,8 +699,8 @@ namespace Jitter
         {
             var body = obj as RigidBody;
 
-            JVector.Multiply(ref body.linearVelocity, timestep, out var temp);
-            JVector.Add(ref temp, ref body.position, out body.position);
+            JVector.Multiply(body.linearVelocity, timestep, out var temp);
+            JVector.Add(temp, body.position, out body.position);
 
             if (!body.isParticle)
             {
@@ -707,11 +709,11 @@ namespace Jitter
 
                 if (angle < 0.001f)
                 {
-                    JVector.Multiply(ref body.angularVelocity, (0.5f * timestep) - (timestep * timestep * timestep * 0.020833333333f * angle * angle), out axis);
+                    JVector.Multiply(body.angularVelocity, (0.5f * timestep) - (timestep * timestep * timestep * 0.020833333333f * angle * angle), out axis);
                 }
                 else
                 {
-                    JVector.Multiply(ref body.angularVelocity, (float)Math.Sin(0.5f * angle * timestep) / angle, out axis);
+                    JVector.Multiply(body.angularVelocity, (float)Math.Sin(0.5f * angle * timestep) / angle, out axis);
                 }
 
                 var dorn = new JQuaternion(axis.X, axis.Y, axis.Z, (float)Math.Cos(angle * timestep * 0.5f));
@@ -724,12 +726,12 @@ namespace Jitter
 
             if ((body.Damping & RigidBody.DampingType.Linear) != 0)
             {
-                JVector.Multiply(ref body.linearVelocity, currentLinearDampFactor, out body.linearVelocity);
+                JVector.Multiply(body.linearVelocity, currentLinearDampFactor, out body.linearVelocity);
             }
 
             if ((body.Damping & RigidBody.DampingType.Angular) != 0)
             {
-                JVector.Multiply(ref body.angularVelocity, currentAngularDampFactor, out body.angularVelocity);
+                JVector.Multiply(body.angularVelocity, currentAngularDampFactor, out body.angularVelocity);
             }
 
             body.Update();
@@ -774,6 +776,7 @@ namespace Jitter
         private void CollisionDetected(RigidBody body1, RigidBody body2, JVector point1, JVector point2, JVector normal, float penetration)
         {
             Arbiter arbiter = null;
+            Contact contact;
 
             lock (ArbiterMap)
             {
@@ -790,11 +793,9 @@ namespace Jitter
                 }
             }
 
-            Contact contact = null;
-
             if (arbiter.body1 == body1)
             {
-                JVector.Negate(ref normal, out normal);
+                JVector.Negate(normal, out normal);
                 contact = arbiter.AddContact(point1, point2, normal, penetration, ContactSettings);
             }
             else

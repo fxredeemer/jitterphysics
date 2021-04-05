@@ -51,7 +51,7 @@ namespace Jitter.Dynamics
 
             public override void PrepareForIteration(float timestep)
             {
-                JVector.Subtract(ref body2.position, ref body1.position, out var dp);
+                JVector.Subtract(body2.position, body1.position, out var dp);
 
                 float deltaLength = dp.Length() - Distance;
 
@@ -104,8 +104,8 @@ namespace Jitter.Dynamics
                     return;
                 }
 
-                float jv = JVector.Dot(ref body1.linearVelocity, ref jacobian[0]);
-                jv += JVector.Dot(ref body2.linearVelocity, ref jacobian[1]);
+                float jv = JVector.Dot( body1.linearVelocity,  jacobian[0]);
+                jv += JVector.Dot(body2.linearVelocity, jacobian[1]);
 
                 float softnessScalar = AppliedImpulse * softnessOverDt;
 
@@ -132,14 +132,14 @@ namespace Jitter.Dynamics
 
                 if (!body1.isStatic)
                 {
-                    JVector.Multiply(ref jacobian[0], lambda * body1.inverseMass, out temp);
-                    JVector.Add(ref temp, ref body1.linearVelocity, out body1.linearVelocity);
+                    JVector.Multiply(jacobian[0], lambda * body1.inverseMass, out temp);
+                    JVector.Add(temp, body1.linearVelocity, out body1.linearVelocity);
                 }
 
                 if (!body2.isStatic)
                 {
-                    JVector.Multiply(ref jacobian[1], lambda * body2.inverseMass, out temp);
-                    JVector.Add(ref temp, ref body2.linearVelocity, out body2.linearVelocity);
+                    JVector.Multiply(jacobian[1], lambda * body2.inverseMass, out temp);
+                    JVector.Add(temp, body2.linearVelocity, out body2.linearVelocity);
                 }
             }
 
@@ -184,20 +184,21 @@ namespace Jitter.Dynamics
 
             public void GetNormal(out JVector normal)
             {
-                JVector.Subtract(ref Owner.points[indices.I1].position, ref Owner.points[indices.I0].position, out var sum);
-                JVector.Subtract(ref Owner.points[indices.I2].position, ref Owner.points[indices.I0].position, out normal);
-                JVector.Cross(ref sum, ref normal, out normal);
+                JVector.Subtract(Owner.points[indices.I1].position, Owner.points[indices.I0].position, out var sum);
+                JVector.Subtract(Owner.points[indices.I2].position, Owner.points[indices.I0].position, out normal);
+                JVector.Cross(sum, normal, out normal);
             }
 
             public void UpdateBoundingBox()
             {
                 boundingBox = JBBox.SmallBox;
-                boundingBox.AddPoint(ref Owner.points[indices.I0].position);
-                boundingBox.AddPoint(ref Owner.points[indices.I1].position);
-                boundingBox.AddPoint(ref Owner.points[indices.I2].position);
+                boundingBox = boundingBox.AddPoint(ref Owner.points[indices.I0].position);
+                boundingBox = boundingBox.AddPoint(ref Owner.points[indices.I1].position);
+                boundingBox = boundingBox.AddPoint(ref Owner.points[indices.I2].position);
 
-                boundingBox.Min -= new JVector(Owner.triangleExpansion);
-                boundingBox.Max += new JVector(Owner.triangleExpansion);
+                boundingBox = new JBBox(
+                    boundingBox.Min - new JVector(Owner.triangleExpansion),
+                    boundingBox.Max + new JVector(Owner.triangleExpansion));
             }
 
             public float CalculateArea()
@@ -208,8 +209,8 @@ namespace Jitter.Dynamics
 
             public void SupportMapping(ref JVector direction, out JVector result)
             {
-                float min = JVector.Dot(ref Owner.points[indices.I0].position, ref direction);
-                float dot = JVector.Dot(ref Owner.points[indices.I1].position, ref direction);
+                float min = JVector.Dot(Owner.points[indices.I0].position, direction);
+                float dot = JVector.Dot(Owner.points[indices.I1].position, direction);
 
                 var minVertex = Owner.points[indices.I0].position;
 
@@ -218,13 +219,13 @@ namespace Jitter.Dynamics
                     min = dot;
                     minVertex = Owner.points[indices.I1].position;
                 }
-                dot = JVector.Dot(ref Owner.points[indices.I2].position, ref direction);
+                dot = JVector.Dot(Owner.points[indices.I2].position, direction);
                 if (dot > min)
                 {
                     minVertex = Owner.points[indices.I2].position;
                 }
 
-                JVector.Normalize(ref direction, out var exp);
+                JVector.Normalize(direction, out var exp);
                 exp *= Owner.triangleExpansion;
                 result = minVertex + exp;
             }
@@ -232,9 +233,9 @@ namespace Jitter.Dynamics
             public void SupportCenter(out JVector center)
             {
                 center = Owner.points[indices.I0].position;
-                JVector.Add(ref center, ref Owner.points[indices.I1].position, out center);
-                JVector.Add(ref center, ref Owner.points[indices.I2].position, out center);
-                JVector.Multiply(ref center, 1.0f / 3.0f, out center);
+                JVector.Add(center, Owner.points[indices.I1].position, out center);
+                JVector.Add(center, Owner.points[indices.I2].position, out center);
+                JVector.Multiply(center, 1.0f / 3.0f, out center);
             }
         }
 
@@ -538,9 +539,9 @@ namespace Jitter.Dynamics
                 triangles.Add(t);
 
                 t.boundingBox = JBBox.SmallBox;
-                t.boundingBox.AddPoint(points[t.indices.I0].position);
-                t.boundingBox.AddPoint(points[t.indices.I1].position);
-                t.boundingBox.AddPoint(points[t.indices.I2].position);
+                t.boundingBox = t.boundingBox.AddPoint(ref points[t.indices.I0].position);
+                t.boundingBox = t.boundingBox.AddPoint(ref points[t.indices.I1].position);
+                t.boundingBox = t.boundingBox.AddPoint(ref points[t.indices.I2].position);
 
                 t.dynamicTreeID = dynamicTree.AddProxy(ref t.boundingBox, t);
             }
@@ -601,11 +602,12 @@ namespace Jitter.Dynamics
             foreach (var point in points)
             {
                 mass += point.Mass;
-                box.AddPoint(point.position);
+                box = box.AddPoint(ref point.position);
             }
 
-            box.Min -= new JVector(TriangleExpansion);
-            box.Max += new JVector(TriangleExpansion);
+            box = new JBBox(
+                box.Min - new JVector(TriangleExpansion),
+                box.Max + new JVector(TriangleExpansion));
 
             foreach (var t in triangles)
             {

@@ -5,7 +5,7 @@ namespace Jitter.Dynamics.Constraints.SingleBody
 {
     public class PointOnLine : Constraint
     {
-        private JVector localAnchor1;
+        private readonly JVector localAnchor1;
         private JVector r1;
 
         private JVector lineNormal = JVector.Right;
@@ -49,11 +49,11 @@ namespace Jitter.Dynamics.Constraints.SingleBody
 
         public override void PrepareForIteration(float timestep)
         {
-            JVector.Transform(ref localAnchor1, ref body1.orientation, out r1);
+            JVector.Transform(localAnchor1, body1.orientation, out r1);
 
-            JVector.Add(ref body1.position, ref r1, out var p1);
+            JVector.Add(body1.position, r1, out var p1);
 
-            JVector.Subtract(ref p1, ref anchor, out var dp);
+            JVector.Subtract(p1, anchor, out var dp);
 
             var l = lineNormal;
 

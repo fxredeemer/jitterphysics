@@ -30,17 +30,17 @@ namespace Jitter.Collision
         public static bool Pointcast(ISupportMappable support, ref JMatrix orientation, ref JVector position, ref JVector point)
         {
             SupportMapTransformed(support, ref orientation, ref position, ref point, out var arbitraryPoint);
-            JVector.Subtract(ref point, ref arbitraryPoint, out arbitraryPoint);
+            JVector.Subtract(point, arbitraryPoint, out arbitraryPoint);
 
             support.SupportCenter(out var r);
-            JVector.Transform(ref r, ref orientation, out r);
-            JVector.Add(ref position, ref r, out r);
-            JVector.Subtract(ref point, ref r, out r);
+            JVector.Transform(r, orientation, out r);
+            JVector.Add(position, r, out r);
+            JVector.Subtract(point, r, out r);
 
             var x = point;
             float VdotR;
 
-            JVector.Subtract(ref x, ref arbitraryPoint, out var v);
+            JVector.Subtract(x, arbitraryPoint, out var v);
             float dist = v.LengthSquared();
             const float epsilon = 0.0001f;
 
@@ -53,15 +53,19 @@ namespace Jitter.Collision
             while ((dist > epsilon) && (maxIter-- != 0))
             {
                 SupportMapTransformed(support, ref orientation, ref position, ref v, out var p);
-                JVector.Subtract(ref x, ref p, out var w);
+                JVector.Subtract(x, p, out var w);
 
-                float VdotW = JVector.Dot(ref v, ref w);
+                float VdotW = JVector.Dot(v, w);
 
                 if (VdotW > 0.0f)
                 {
-                    VdotR = JVector.Dot(ref v, ref r);
+                    VdotR = JVector.Dot(v, r);
 
-                    if (VdotR >= -(JMath.Epsilon * JMath.Epsilon)) { simplexSolverPool.GiveBack(simplexSolver); return false; }
+                    if (VdotR >= -(JMath.Epsilon * JMath.Epsilon))
+                    {
+                        simplexSolverPool.GiveBack(simplexSolver);
+                        return false;
+                    }
                     else
                     {
                         simplexSolver.Reset();
@@ -171,7 +175,7 @@ namespace Jitter.Collision
             var x = origin;
 
             SupportMapTransformed(support, ref orientation, ref position, ref r, out var arbitraryPoint);
-            JVector.Subtract(ref x, ref arbitraryPoint, out var v);
+            JVector.Subtract(x, arbitraryPoint, out var v);
 
             int maxIter = MaxIterations;
 
@@ -183,13 +187,13 @@ namespace Jitter.Collision
             while ((distSq > epsilon) && (maxIter-- != 0))
             {
                 SupportMapTransformed(support, ref orientation, ref position, ref v, out var p);
-                JVector.Subtract(ref x, ref p, out var w);
+                JVector.Subtract(x, p, out var w);
 
-                float VdotW = JVector.Dot(ref v, ref w);
+                float VdotW = JVector.Dot(v, w);
 
                 if (VdotW > 0.0f)
                 {
-                    VdotR = JVector.Dot(ref v, ref r);
+                    VdotR = JVector.Dot(v, r);
 
                     if (VdotR >= -JMath.Epsilon)
                     {
@@ -199,9 +203,9 @@ namespace Jitter.Collision
                     else
                     {
                         lambda -= (VdotW / VdotR);
-                        JVector.Multiply(ref r, lambda, out x);
-                        JVector.Add(ref origin, ref x, out x);
-                        JVector.Subtract(ref x, ref p, out w);
+                        JVector.Multiply(r, lambda, out x);
+                        JVector.Add(origin, x, out x);
+                        JVector.Subtract(x, p, out w);
                         normal = v;
                     }
                 }
@@ -563,8 +567,8 @@ namespace Jitter.Collision
 
             public bool ClosestPtPointTriangle(
                 JVector p,
-                JVector a, 
-                JVector b, 
+                JVector a,
+                JVector b,
                 JVector c,
                 ref SubSimplexClosestResult result)
             {

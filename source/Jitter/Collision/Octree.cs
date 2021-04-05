@@ -72,14 +72,16 @@ namespace Jitter.Collision
 
             for (int i = 0; i < tris.Length; i++)
             {
-                JVector.Min(ref positions[tris[i].I1], ref positions[tris[i].I2], out triBoxes[i].Min);
-                JVector.Min(ref positions[tris[i].I0], ref triBoxes[i].Min, out triBoxes[i].Min);
+                var min = JVector.Min(positions[tris[i].I1], positions[tris[i].I2]);
+                min = JVector.Min(positions[tris[i].I0], min);
 
-                JVector.Max(ref positions[tris[i].I1], ref positions[tris[i].I2], out triBoxes[i].Max);
-                JVector.Max(ref positions[tris[i].I0], ref triBoxes[i].Max, out triBoxes[i].Max);
+                var max = JVector.Max(positions[tris[i].I1], positions[tris[i].I2]);
+                max = JVector.Max(positions[tris[i].I0], max);
 
-                JVector.Min(ref rootNodeBox.Min, ref triBoxes[i].Min, out rootNodeBox.Min);
-                JVector.Max(ref rootNodeBox.Max, ref triBoxes[i].Max, out rootNodeBox.Max);
+                min = JVector.Min(rootNodeBox.Min, min);
+                max = JVector.Max(rootNodeBox.Max, max);
+
+                triBoxes[i] = new JBBox(min, max);
             }
 
             var buildNodes = new List<BuildNode>
@@ -160,7 +162,7 @@ namespace Jitter.Collision
                 buildNodes[i].triIndices.CopyTo(nodes[i].triIndices);
                 nodes[i].box = buildNodes[i].box;
             }
-            buildNodes.Clear(); buildNodes = null;
+            buildNodes.Clear();
         }
 
         public Octree(List<JVector> positions, List<TriangleVertexIndices> tris)
@@ -169,42 +171,60 @@ namespace Jitter.Collision
             BuildOctree();
         }
 
-        private void CreateAABox(ref JBBox aabb, EChild child, out JBBox result)
+        private static void CreateAABox(ref JBBox aabb, EChild child, out JBBox result)
         {
-            JVector.Subtract(ref aabb.Max, ref aabb.Min, out var dims);
-            JVector.Multiply(ref dims, 0.5f, out dims);
+            var dims = JVector.Subtract(aabb.Max, aabb.Min);
+            dims = JVector.Multiply(dims, 0.5f);
 
             var offset = JVector.Zero;
 
             switch (child)
             {
-                case EChild.PPP: offset = new JVector(1, 1, 1); break;
-                case EChild.PPM: offset = new JVector(1, 1, 0); break;
-                case EChild.PMP: offset = new JVector(1, 0, 1); break;
-                case EChild.PMM: offset = new JVector(1, 0, 0); break;
-                case EChild.MPP: offset = new JVector(0, 1, 1); break;
-                case EChild.MPM: offset = new JVector(0, 1, 0); break;
-                case EChild.MMP: offset = new JVector(0, 0, 1); break;
-                case EChild.MMM: offset = new JVector(0, 0, 0); break;
-
+                case EChild.PPP:
+                    offset = new JVector(1, 1, 1);
+                    break;
+                case EChild.PPM:
+                    offset = new JVector(1, 1, 0);
+                    break;
+                case EChild.PMP:
+                    offset = new JVector(1, 0, 1);
+                    break;
+                case EChild.PMM:
+                    offset = new JVector(1, 0, 0);
+                    break;
+                case EChild.MPP:
+                    offset = new JVector(0, 1, 1);
+                    break;
+                case EChild.MPM:
+                    offset = new JVector(0, 1, 0);
+                    break;
+                case EChild.MMP:
+                    offset = new JVector(0, 0, 1);
+                    break;
+                case EChild.MMM:
+                    offset = new JVector(0, 0, 0);
+                    break;
                 default:
-                    System.Diagnostics.Debug.WriteLine("Octree.CreateAABox  got impossible child");
+                    System.Diagnostics.Debug.WriteLine("Octree.CreateAABox got impossible child");
                     break;
             }
 
-            result = new JBBox
-            {
-                Min = new JVector(offset.X * dims.X, offset.Y * dims.Y, offset.Z * dims.Z)
-            };
-            JVector.Add(ref result.Min, ref aabb.Min, out result.Min);
+            var min = new JVector(
+                offset.X * dims.X,
+                offset.Y * dims.Y, 
+                offset.Z * dims.Z);
 
-            JVector.Add(ref result.Min, ref dims, out result.Max);
+            min = JVector.Add(min, aabb.Min);
+            var max = JVector.Add(min, dims);
 
             float extra = 0.00001f;
 
-            JVector.Multiply(ref dims, extra, out var temp);
-            JVector.Subtract(ref result.Min, ref temp, out result.Min);
-            JVector.Add(ref result.Max, ref temp, out result.Max);
+            var temp = JVector.Multiply(dims, extra);
+
+            min = JVector.Subtract(min, temp);
+            max = JVector.Add(max, temp);
+
+            result = new JBBox(min, max);
         }
 
         private void GatherTriangles(int nodeIndex, ref List<int> tris)

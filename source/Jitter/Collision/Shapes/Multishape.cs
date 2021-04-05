@@ -83,7 +83,7 @@ namespace Jitter.Collision.Shapes
 
             inertia = JMatrix.Identity;
 
-            JVector.Subtract(ref boundingBox.Max, ref boundingBox.Min, out var size);
+            JVector.Subtract(boundingBox.Max, boundingBox.Min, out var size);
 
             mass = size.X * size.Y * size.Z;
 

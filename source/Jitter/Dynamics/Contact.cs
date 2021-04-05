@@ -210,26 +210,26 @@ namespace Jitter.Dynamics
         {
             if (body1IsMassPoint)
             {
-                JVector.Add(ref realRelPos1, ref body1.position, out p1);
+                JVector.Add(realRelPos1, body1.position, out p1);
             }
             else
             {
-                JVector.Transform(ref realRelPos1, ref body1.orientation, out p1);
-                JVector.Add(ref p1, ref body1.position, out p1);
+                JVector.Transform(realRelPos1, body1.orientation, out p1);
+                JVector.Add(p1, body1.position, out p1);
             }
 
             if (body2IsMassPoint)
             {
-                JVector.Add(ref realRelPos2, ref body2.position, out p2);
+                JVector.Add(realRelPos2, body2.position, out p2);
             }
             else
             {
-                JVector.Transform(ref realRelPos2, ref body2.orientation, out p2);
-                JVector.Add(ref p2, ref body2.position, out p2);
+                JVector.Transform(realRelPos2, body2.orientation, out p2);
+                JVector.Add(p2, body2.position, out p2);
             }
 
-            JVector.Subtract(ref p1, ref p2, out var dist);
-            penetration = JVector.Dot(ref dist, ref normal);
+            JVector.Subtract(p1, p2, out var dist);
+            penetration = JVector.Dot(dist, normal);
         }
 
         public void ApplyImpulse(ref JVector impulse)
@@ -521,12 +521,12 @@ namespace Jitter.Dynamics
 
             if (!treatBody1AsStatic)
             {
-                kTangent += JVector.Dot(ref rantra, ref tangent);
+                kTangent += JVector.Dot(rantra, tangent);
             }
 
             if (!treatBody2AsStatic)
             {
-                kTangent += JVector.Dot(ref rbntrb, ref tangent);
+                kTangent += JVector.Dot(rbntrb, tangent);
             }
 
             massTangent = 1.0f / kTangent;
@@ -688,10 +688,10 @@ namespace Jitter.Dynamics
 
             this.newContact = newContact;
 
-            JVector.Subtract(ref p1, ref body1.position, out relativePos1);
-            JVector.Subtract(ref p2, ref body2.position, out relativePos2);
-            JVector.Transform(ref relativePos1, ref body1.invOrientation, out realRelPos1);
-            JVector.Transform(ref relativePos2, ref body2.invOrientation, out realRelPos2);
+            JVector.Subtract(p1, body1.position, out relativePos1);
+            JVector.Subtract(p2, body2.position, out relativePos2);
+            JVector.Transform(relativePos1, body1.invOrientation, out realRelPos1);
+            JVector.Transform(relativePos2, body2.invOrientation, out realRelPos2);
 
             initialPen = penetration;
             this.penetration = penetration;

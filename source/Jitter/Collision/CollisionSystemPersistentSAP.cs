@@ -431,9 +431,9 @@ namespace Jitter.Collision
 
                 bool multiShapeCollides = false;
 
-                JVector.Subtract(ref rayOrigin, ref body.position, out var transformedOrigin);
-                JVector.Transform(ref transformedOrigin, ref body.invOrientation, out transformedOrigin);
-                JVector.Transform(ref rayDirection, ref body.invOrientation, out var transformedDirection);
+                JVector.Subtract(in rayOrigin, in body.position, out var transformedOrigin);
+                JVector.Transform(in transformedOrigin, in body.invOrientation, out transformedOrigin);
+                JVector.Transform(in rayDirection, in body.invOrientation, out var transformedDirection);
 
                 int msLength = multishape.Prepare(ref transformedOrigin, ref transformedDirection);
 
@@ -453,13 +453,13 @@ namespace Jitter.Collision
                         if (useTerrainNormal && multishape is TerrainShape terrainShape)
                         {
                             terrainShape.CollisionNormal(out tempNormal);
-                            JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
+                            JVector.Transform(in tempNormal, in body.orientation, out tempNormal);
                             tempNormal = JVector.Negate(tempNormal);
                         }
                         else if (useTriangleMeshNormal && multishape is TriangleMeshShape triangleMeshShape)
                         {
                             triangleMeshShape.CollisionNormal(out tempNormal);
-                            JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
+                            JVector.Transform(in tempNormal, in body.orientation, out tempNormal);
                             tempNormal = JVector.Negate(tempNormal);
                         }
 

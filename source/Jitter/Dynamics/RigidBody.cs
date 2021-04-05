@@ -184,8 +184,8 @@ namespace Jitter.Dynamics
                 throw new InvalidOperationException("Can't apply an impulse to a static body.");
             }
 
-            JVector.Multiply(ref impulse, inverseMass, out var temp);
-            JVector.Add(ref linearVelocity, ref temp, out linearVelocity);
+            JVector.Multiply(impulse, inverseMass, out var temp);
+            JVector.Add(linearVelocity, temp, out linearVelocity);
         }
 
         public void ApplyImpulse(JVector impulse, JVector relativePosition)
@@ -195,25 +195,24 @@ namespace Jitter.Dynamics
                 throw new InvalidOperationException("Can't apply an impulse to a static body.");
             }
 
-            JVector.Multiply(ref impulse, inverseMass, out var temp);
-            JVector.Add(ref linearVelocity, ref temp, out linearVelocity);
-
-            JVector.Cross(ref relativePosition, ref impulse, out temp);
-            JVector.Transform(ref temp, ref invInertiaWorld, out temp);
-            JVector.Add(ref angularVelocity, ref temp, out angularVelocity);
+            JVector.Multiply(impulse, inverseMass, out var temp);
+            JVector.Add(linearVelocity, temp, out linearVelocity);
+            JVector.Cross(relativePosition, impulse, out temp);
+            JVector.Transform(temp, invInertiaWorld, out temp);
+            JVector.Add(angularVelocity, temp, out angularVelocity);
         }
 
         public void AddForce(JVector force)
         {
-            JVector.Add(ref force, ref this.force, out this.force);
+            JVector.Add(force, this.force, out this.force);
         }
 
         public void AddForce(JVector force, JVector pos)
         {
-            JVector.Add(ref this.force, ref force, out this.force);
-            JVector.Subtract(ref pos, ref position, out pos);
-            JVector.Cross(ref pos, ref force, out pos);
-            JVector.Add(ref pos, ref torque, out torque);
+            JVector.Add(this.force, force, out this.force);
+            JVector.Subtract(pos, position, out pos);
+            JVector.Cross(pos, force, out pos);
+            JVector.Add(pos, torque, out torque);
         }
 
         public JVector Torque => torque;
@@ -222,7 +221,7 @@ namespace Jitter.Dynamics
 
         public void AddTorque(JVector torque)
         {
-            JVector.Add(ref torque, ref this.torque, out this.torque);
+            JVector.Add(torque, this.torque, out this.torque);
         }
 
         protected bool useShapeMassProperties = true;
@@ -442,8 +441,10 @@ namespace Jitter.Dynamics
                 invInertia = invInertiaWorld = JMatrix.Zero;
                 invOrientation = orientation = JMatrix.Identity;
                 boundingBox = shape.boundingBox;
-                JVector.Add(ref boundingBox.Min, ref position, out boundingBox.Min);
-                JVector.Add(ref boundingBox.Max, ref position, out boundingBox.Max);
+
+                boundingBox = new JBBox(
+                    JVector.Add(boundingBox.Min, position),
+                    JVector.Add(boundingBox.Max, position));
 
                 angularVelocity = new JVector();
             }
@@ -451,8 +452,10 @@ namespace Jitter.Dynamics
             {
                 JMatrix.Transpose(ref orientation, out invOrientation);
                 Shape.GetBoundingBox(ref orientation, out boundingBox);
-                JVector.Add(ref boundingBox.Min, ref position, out boundingBox.Min);
-                JVector.Add(ref boundingBox.Max, ref position, out boundingBox.Max);
+                
+                boundingBox = new JBBox(
+                    JVector.Add(boundingBox.Min, position),
+                    JVector.Add(boundingBox.Max, position));
 
                 if (!isStatic)
                 {
@@ -528,14 +531,14 @@ namespace Jitter.Dynamics
                 pos2 = hullPoints[i + 1];
                 pos3 = hullPoints[i + 2];
 
-                JVector.Transform(ref pos1, ref orientation, out pos1);
-                JVector.Add(ref pos1, ref position, out pos1);
+                JVector.Transform(pos1, orientation, out pos1);
+                JVector.Add(pos1, position, out pos1);
 
-                JVector.Transform(ref pos2, ref orientation, out pos2);
-                JVector.Add(ref pos2, ref position, out pos2);
+                JVector.Transform(pos2, orientation, out pos2);
+                JVector.Add(pos2, position, out pos2);
 
-                JVector.Transform(ref pos3, ref orientation, out pos3);
-                JVector.Add(ref pos3, ref position, out pos3);
+                JVector.Transform(pos3, orientation, out pos3);
+                JVector.Add(pos3, position, out pos3);
 
                 drawer.DrawTriangle(pos1, pos2, pos3);
             }
