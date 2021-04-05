@@ -395,50 +395,43 @@ namespace Jitter.Dynamics
         {
             sweptDirection = linearVelocity * timestep;
 
+            float deltaMinX = 0.0f;
+            float deltaMaxX = 0.0f;
+            float deltaMinY = 0.0f;
+            float deltaMaxY = 0.0f;
+            float deltaMinZ = 0.0f;
+            float deltaMaxZ = 0.0f;
+
             if (sweptDirection.X < 0.0f)
             {
-                boundingBox.Min = new JVector(
-                    boundingBox.Min.X + sweptDirection.X,
-                    boundingBox.Min.Y,
-                    boundingBox.Min.Z);
+                deltaMinX = sweptDirection.X;
             }
             else
             {
-                boundingBox.Max = new JVector(
-                    boundingBox.Max.X + sweptDirection.X,
-                    boundingBox.Max.Y,
-                    boundingBox.Max.Z);
+                deltaMaxX = sweptDirection.X;
             }
 
             if (sweptDirection.Y < 0.0f)
             {
-                boundingBox.Min = new JVector(
-                    boundingBox.Min.X,
-                    boundingBox.Min.Y + sweptDirection.Y,
-                    boundingBox.Min.Z);
+                deltaMinY = sweptDirection.Y;
             }
             else
             {
-                boundingBox.Max = new JVector(
-                    boundingBox.Max.X,
-                    boundingBox.Max.Y + sweptDirection.Y,
-                    boundingBox.Max.Z);
+                deltaMaxY = sweptDirection.Y;
             }
 
             if (sweptDirection.Z < 0.0f)
             {
-                boundingBox.Min = new JVector(
-                    boundingBox.Min.X,
-                    boundingBox.Min.Y,
-                    boundingBox.Min.Z + sweptDirection.Z);
+                deltaMinZ = sweptDirection.Z;
             }
             else
             {
-                boundingBox.Max = new JVector(
-                    boundingBox.Max.X,
-                    boundingBox.Max.Y,
-                    boundingBox.Max.Z + sweptDirection.Z);
+                deltaMaxZ = sweptDirection.Z;
             }
+
+            boundingBox = new JBBox(
+                new JVector(boundingBox.Min.X + deltaMinX, boundingBox.Min.Y + deltaMinY, boundingBox.Min.Z + deltaMinZ),
+                new JVector(boundingBox.Max.X + deltaMaxX, boundingBox.Max.Y + deltaMaxY, boundingBox.Max.Z + deltaMaxZ));
         }
 
         public virtual void Update()

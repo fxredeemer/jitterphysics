@@ -85,52 +85,43 @@ namespace Jitter.Collision
 
             var d = SettingsAABBMultiplier * displacement;
 
+            float deltaMinX = 0.0f;
+            float deltaMaxX = 0.0f;
+            float deltaMinY = 0.0f;
+            float deltaMaxY = 0.0f;
+            float deltaMinZ = 0.0f;
+            float deltaMaxZ = 0.0f;
+
             if (d.X < 0.0f)
             {
-                b.Min = new JVector(
-                    b.Min.X + d.X,
-                    b.Min.Y,
-                    b.Min.Z);
+                deltaMinX = d.X;
             }
             else
             {
-                b.Max = new JVector(
-                    b.Max.X + d.X,
-                    b.Max.Y,
-                    b.Max.Z);
+                deltaMaxX = d.X;
             }
 
             if (d.Y < 0.0f)
             {
-                b.Min = new JVector(
-                    b.Min.X,
-                    b.Min.Y + d.Y,
-                    b.Min.Z);
+                deltaMinY = d.Y;
             }
             else
             {
-                b.Max = new JVector(
-                    b.Max.X,
-                    b.Max.Y + d.Y,
-                    b.Max.Z);
+                deltaMaxY = d.Y;
             }
 
             if (d.Z < 0.0f)
             {
-                b.Min = new JVector(
-                    b.Min.X,
-                    b.Min.Y,
-                    b.Min.Z + d.Z);
+                deltaMinZ = d.Z;
             }
             else
             {
-                b.Max = new JVector(
-                    b.Max.X,
-                    b.Max.Y,
-                    b.Max.Z + d.Z);
+                deltaMaxZ = d.Z;
             }
 
-            Nodes[proxyId].AABB = b;
+            Nodes[proxyId].AABB = new JBBox(
+                new JVector(b.Min.X + deltaMinX, b.Min.Y + deltaMinY, b.Min.Z + deltaMinZ),
+                new JVector(b.Max.X + deltaMaxX, b.Max.Y + deltaMaxY, b.Max.Z + deltaMaxZ));
 
             InsertLeaf(proxyId);
             return true;
