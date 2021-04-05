@@ -426,7 +426,7 @@ namespace Jitter.Collision
         public static int FindNearestTrianglePoint(SoftBody softBody, int id, ref JVector point)
         {
             var triangle = softBody.dynamicTree.GetUserData(id);
-            JVector p = softBody.VertexBodies[triangle.indices.I0].position;
+            var p = softBody.VertexBodies[triangle.indices.I0].position;
             JVector.Subtract(ref p, ref point, out p);
 
             float length0 = p.LengthSquared();

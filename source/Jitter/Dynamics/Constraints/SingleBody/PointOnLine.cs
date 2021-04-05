@@ -63,7 +63,7 @@ namespace Jitter.Dynamics.Constraints.SingleBody
                 t = JVector.Normalize(t);
             }
 
-            t = t % l;
+            t %= l;
 
             jacobian[0] = t;
             jacobian[1] = r1 % t;

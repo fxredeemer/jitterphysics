@@ -153,7 +153,6 @@ namespace Jitter.Collision
         public static bool Raycast(
             ISupportMappable support,
             ref JMatrix orientation,
-            ref JMatrix invOrientation,
             ref JVector position,
             ref JVector origin,
             ref JVector direction,

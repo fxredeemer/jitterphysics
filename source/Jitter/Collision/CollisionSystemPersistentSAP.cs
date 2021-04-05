@@ -442,9 +442,8 @@ namespace Jitter.Collision
                     multishape.SetCurrentShape(i);
 
                     if (GJKCollide.Raycast(
-                        (ISupportMappable)multishape,
+                        multishape,
                         ref body.orientation,
-                        ref body.invOrientation,
                         ref body.position,
                         ref rayOrigin,
                         ref rayDirection,
@@ -478,7 +477,6 @@ namespace Jitter.Collision
                 return GJKCollide.Raycast(
                     body.Shape,
                     ref body.orientation,
-                    ref body.invOrientation,
                     ref body.position,
                     ref rayOrigin,
                     ref rayDirection,

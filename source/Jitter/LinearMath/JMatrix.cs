@@ -14,24 +14,11 @@ namespace Jitter.LinearMath
         public float M32;
         public float M33;
 
-        internal static JMatrix InternalIdentity;
+        public static readonly JMatrix Identity = new JMatrix { M11 = 1.0f, M22 = 1.0f, M33 = 1.0f };
 
-        public static readonly JMatrix Identity;
-        public static readonly JMatrix Zero;
+        internal static JMatrix InternalIdentity = Identity;
 
-        static JMatrix()
-        {
-            Zero = new JMatrix();
-
-            Identity = new JMatrix
-            {
-                M11 = 1.0f,
-                M22 = 1.0f,
-                M33 = 1.0f
-            };
-
-            InternalIdentity = Identity;
-        }
+        public static readonly JMatrix Zero = new JMatrix();
 
         public static JMatrix CreateFromYawPitchRoll(float yaw, float pitch, float roll)
         {

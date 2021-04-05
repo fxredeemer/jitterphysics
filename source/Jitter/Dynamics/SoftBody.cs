@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace Jitter.Dynamics
 {
-    public partial class SoftBody : IBroadphaseEntity
+    public class SoftBody : IBroadphaseEntity
     {
         [Flags]
         public enum SpringType
@@ -221,7 +221,6 @@ namespace Jitter.Dynamics
                 dot = JVector.Dot(ref Owner.points[indices.I2].position, ref direction);
                 if (dot > min)
                 {
-                    min = dot;
                     minVertex = Owner.points[indices.I2].position;
                 }
 
@@ -418,7 +417,6 @@ namespace Jitter.Dynamics
                 var v3 = points[t.indices.I2].position;
 
                 var cross = (v3 - v1) % (v2 - v1);
-                var center = (v1 + v2 + v3) * (1.0f / 3.0f);
 
                 points[t.indices.I0].AddForce(invVolume * cross * Pressure);
                 points[t.indices.I1].AddForce(invVolume * cross * Pressure);
@@ -460,7 +458,7 @@ namespace Jitter.Dynamics
 
             for (int i = 0; i < indices.Count; i++)
             {
-                Edge edge = new Edge(indices[i].I0, indices[i].I1);
+                var edge = new Edge(indices[i].I0, indices[i].I1);
                 if (!edges.Contains(edge))
                 {
                     edges.Add(edge);

@@ -39,8 +39,7 @@ namespace Jitter.Dynamics.Constraints
 
             JVector.Add(ref body1.position, ref r1, out var p1);
             JVector.Add(ref body2.position, ref r2, out var p2);
-
-            JVector.Subtract(ref p2, ref p1, out var dp);
+            JVector.Subtract(ref p2, ref p1, out _);
 
             var l = JVector.Transform(lineNormal, body1.orientation);
             l = JVector.Normalize(l);
