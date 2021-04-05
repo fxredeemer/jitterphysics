@@ -32,12 +32,17 @@ namespace Jitter.Collision.Shapes
             public JMatrix Orientation
             {
                 get => orientation;
-                set { orientation = value; JMatrix.Transpose(ref orientation, out invOrientation); UpdateBoundingBox(); }
+                set
+                {
+                    orientation = value;
+                    JMatrix.Transpose(orientation, out invOrientation);
+                    UpdateBoundingBox();
+                }
             }
 
             public void UpdateBoundingBox()
             {
-                Shape.GetBoundingBox(ref orientation, out boundingBox);
+                Shape.GetBoundingBox(orientation, out boundingBox);
 
                 boundingBox = new JBBox(
                         boundingBox.Min + position,
@@ -48,7 +53,7 @@ namespace Jitter.Collision.Shapes
             {
                 this.position = position;
                 this.orientation = orientation;
-                JMatrix.Transpose(ref orientation, out invOrientation);
+                JMatrix.Transpose(orientation, out invOrientation);
                 Shape = shape;
                 boundingBox = new JBBox();
                 UpdateBoundingBox();
@@ -175,15 +180,15 @@ namespace Jitter.Collision.Shapes
             };
         }
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
             JVector.Transform(direction, Shapes[currentShape].invOrientation, out result);
-            Shapes[currentShape].Shape.SupportMapping(ref direction, out result);
+            Shapes[currentShape].Shape.SupportMapping(direction, out result);
             JVector.Transform(result, Shapes[currentShape].orientation, out result);
             JVector.Add(result, Shapes[currentShape].position, out result);
         }
 
-        public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public override void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
             box = new JBBox(
                 mInternalBBox.Min,
@@ -194,7 +199,7 @@ namespace Jitter.Collision.Shapes
 
             JVector.Transform(localCenter, orientation, out var center);
 
-            JMath.Absolute(ref orientation, out var abs);
+            JMath.Absolute(orientation, out var abs);
             JVector.Transform(localHalfExtents, abs, out var temp);
 
             box = new JBBox(
@@ -218,7 +223,7 @@ namespace Jitter.Collision.Shapes
 
             for (int i = 0; i < Shapes.Length; i++)
             {
-                if (Shapes[i].boundingBox.Contains(ref box) != JBBox.ContainmentType.Disjoint)
+                if (Shapes[i].boundingBox.Contains( box) != JBBox.ContainmentType.Disjoint)
                 {
                     currentSubShapes.Add(i);
                 }
@@ -231,8 +236,8 @@ namespace Jitter.Collision.Shapes
         {
             var box = JBBox.SmallBox;
 
-            box = box.AddPoint(ref rayOrigin);
-            box = box.AddPoint(ref rayEnd);
+            box = box.AddPoint(rayOrigin);
+            box = box.AddPoint(rayEnd);
 
             return Prepare(ref box);
         }
@@ -254,7 +259,7 @@ namespace Jitter.Collision.Shapes
             {
                 Shapes[i].UpdateBoundingBox();
 
-                JBBox.CreateMerged(ref mInternalBBox, ref Shapes[i].boundingBox, out mInternalBBox);
+                JBBox.CreateMerged(mInternalBBox, Shapes[i].boundingBox, out mInternalBBox);
             }
         }
     }

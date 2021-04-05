@@ -4,7 +4,7 @@ namespace Jitter.Collision
 {
     public interface ISupportMappable
     {
-        void SupportMapping(ref JVector direction, out JVector result);
+        void SupportMapping(in JVector direction, out JVector result);
 
         void SupportCenter(out JVector center);
     }
@@ -16,9 +16,9 @@ namespace Jitter.Collision
 
         private static void SupportMapTransformed(
             ISupportMappable support,
-            ref JMatrix orientation,
-            ref JVector position,
-            ref JVector direction,
+            in JMatrix orientation,
+            in JVector position,
+            in JVector direction,
             out JVector result)
         {
             result = new JVector(
@@ -26,7 +26,7 @@ namespace Jitter.Collision
                 (direction.X * orientation.M21) + (direction.Y * orientation.M22) + (direction.Z * orientation.M23),
                 (direction.X * orientation.M31) + (direction.Y * orientation.M32) + (direction.Z * orientation.M33));
 
-            support.SupportMapping(ref result, out result);
+            support.SupportMapping(result, out result);
 
             float x = (result.X * orientation.M11) + (result.Y * orientation.M21) + (result.Z * orientation.M31);
             float y = (result.X * orientation.M12) + (result.Y * orientation.M22) + (result.Z * orientation.M32);
@@ -41,10 +41,10 @@ namespace Jitter.Collision
         public static bool Detect(
             ISupportMappable support1,
             ISupportMappable support2,
-            ref JMatrix orientation1,
-            ref JMatrix orientation2,
-            ref JVector position1,
-            ref JVector position2,
+            in JMatrix orientation1,
+            in JMatrix orientation2,
+            in JVector position1,
+            in JVector position2,
             out JVector point,
             out JVector normal,
             out float penetration)
@@ -73,8 +73,8 @@ namespace Jitter.Collision
             mn = v0;
             JVector.Negate(v0, out normal);
 
-            SupportMapTransformed(support1, ref orientation1, ref position1, ref mn, out var v11);
-            SupportMapTransformed(support2, ref orientation2, ref position2, ref normal, out var v12);
+            SupportMapTransformed(support1, orientation1, position1, mn, out var v11);
+            SupportMapTransformed(support2, orientation2, position2, normal, out var v12);
             JVector.Subtract(v12, v11, out var v1);
 
             if (JVector.Dot(v1, normal) <= 0.0f)
@@ -101,8 +101,8 @@ namespace Jitter.Collision
             }
 
             JVector.Negate(normal, out mn);
-            SupportMapTransformed(support1, ref orientation1, ref position1, ref mn, out var v21);
-            SupportMapTransformed(support2, ref orientation2, ref position2, ref normal, out var v22);
+            SupportMapTransformed(support1, orientation1, position1, mn, out var v21);
+            SupportMapTransformed(support2, orientation2, position2, normal, out var v22);
             JVector.Subtract(v22, v21, out var v2);
 
             if (JVector.Dot(v2, normal) <= 0.0f)
@@ -138,8 +138,8 @@ namespace Jitter.Collision
                 phase1++;
 
                 JVector.Negate(normal, out mn);
-                SupportMapTransformed(support1, ref orientation1, ref position1, ref mn, out var v31);
-                SupportMapTransformed(support2, ref orientation2, ref position2, ref normal, out var v32);
+                SupportMapTransformed(support1,  orientation1,  position1, mn, out var v31);
+                SupportMapTransformed(support2,  orientation2,  position2, normal, out var v32);
                 JVector.Subtract(v32, v31, out var v3);
 
                 if (JVector.Dot(v3, normal) <= 0.0f)
@@ -194,8 +194,8 @@ namespace Jitter.Collision
                     }
 
                     JVector.Negate(normal, out mn);
-                    SupportMapTransformed(support1, ref orientation1, ref position1, ref mn, out var v41);
-                    SupportMapTransformed(support2, ref orientation2, ref position2, ref normal, out var v42);
+                    SupportMapTransformed(support1, orientation1, position1, mn, out var v41);
+                    SupportMapTransformed(support2, orientation2, position2, normal, out var v42);
                     JVector.Subtract(v42, v41, out var v4);
 
                     JVector.Subtract(v4, v3, out temp1);

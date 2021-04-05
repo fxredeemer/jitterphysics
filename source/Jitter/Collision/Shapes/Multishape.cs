@@ -58,7 +58,7 @@ namespace Jitter.Collision.Shapes
             lock (workingCloneStack) { workingCloneStack.Push(this); }
         }
 
-        public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public override void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
             var helpBox = JBBox.LargeBox;
             int length = Prepare(ref helpBox);
@@ -68,8 +68,8 @@ namespace Jitter.Collision.Shapes
             for (int i = 0; i < length; i++)
             {
                 SetCurrentShape(i);
-                base.GetBoundingBox(ref orientation, out helpBox);
-                JBBox.CreateMerged(ref box, ref helpBox, out box);
+                base.GetBoundingBox(orientation, out helpBox);
+                JBBox.CreateMerged(box, helpBox, out box);
             }
         }
 

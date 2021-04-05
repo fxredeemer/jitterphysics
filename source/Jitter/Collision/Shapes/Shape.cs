@@ -86,9 +86,9 @@ namespace Jitter.Collision.Shapes
             {
                 var tri = activeTriList.Pop();
 
-                SupportMapping(ref tri.n1, out var p1);
-                SupportMapping(ref tri.n2, out var p2);
-                SupportMapping(ref tri.n3, out var p3);
+                SupportMapping(tri.n1, out var p1);
+                SupportMapping(tri.n2, out var p2);
+                SupportMapping(tri.n3, out var p3);
 
                 float d1 = (p2 - p1).LengthSquared();
                 float d2 = (p3 - p2).LengthSquared();
@@ -148,30 +148,30 @@ namespace Jitter.Collision.Shapes
             }
         }
 
-        public virtual void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public virtual void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
             var vec = new JVector(orientation.M11, orientation.M21, orientation.M31);
-            SupportMapping(ref vec, out vec);
+            SupportMapping(vec, out vec);
             float maxX = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
 
             vec = new JVector(orientation.M12, orientation.M22, orientation.M32);
-            SupportMapping(ref vec, out vec);
+            SupportMapping(vec, out vec);
             float maxY = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
 
             vec = new JVector(orientation.M13, orientation.M23, orientation.M33);
-            SupportMapping(ref vec, out vec);
+            SupportMapping(vec, out vec);
             float maxZ = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
 
             vec = new JVector(-orientation.M11, -orientation.M21, -orientation.M31);
-            SupportMapping(ref vec, out vec);
+            SupportMapping(vec, out vec);
             float minX = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
 
             vec = new JVector(-orientation.M12, -orientation.M22, -orientation.M32);
-            SupportMapping(ref vec, out vec);
+            SupportMapping(vec, out vec);
             float minY = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
 
             vec = new JVector(-orientation.M13, -orientation.M23, -orientation.M33);
-            SupportMapping(ref vec, out vec);
+            SupportMapping(vec, out vec);
             float minZ = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
 
             box = new JBBox(
@@ -181,13 +181,15 @@ namespace Jitter.Collision.Shapes
 
         public virtual void UpdateShape()
         {
-            GetBoundingBox(ref JMatrix.InternalIdentity, out boundingBox);
+            GetBoundingBox(JMatrix.InternalIdentity, out boundingBox);
 
             CalculateMassInertia();
             RaiseShapeUpdated();
         }
 
-        public static float CalculateMassInertia(Shape shape, out JVector centerOfMass,
+        public static float CalculateMassInertia(
+            Shape shape,
+            out JVector centerOfMass,
             out JMatrix inertia)
         {
             float mass = 0.0f;
@@ -227,7 +229,7 @@ namespace Jitter.Collision.Shapes
             }
 
             inertia = JMatrix.Multiply(JMatrix.Identity, inertia.Trace()) - inertia;
-            centerOfMass *= (1.0f / mass);
+            centerOfMass *= 1.0f / mass;
 
             float x = centerOfMass.X;
             float y = centerOfMass.Y;
@@ -238,7 +240,7 @@ namespace Jitter.Collision.Shapes
                 mass * y * x, -mass * ((z * z) + (x * x)), mass * y * z,
                 mass * z * x, mass * z * y, -mass * ((x * x) + (y * y)));
 
-            JMatrix.Add(ref inertia, ref t, out inertia);
+            JMatrix.Add(inertia, t, out inertia);
 
             return mass;
         }
@@ -248,7 +250,7 @@ namespace Jitter.Collision.Shapes
             mass = CalculateMassInertia(this, out geomCen, out inertia);
         }
 
-        public abstract void SupportMapping(ref JVector direction, out JVector result);
+        public abstract void SupportMapping(in JVector direction, out JVector result);
 
         public void SupportCenter(out JVector geomCenter)
         {

@@ -23,7 +23,7 @@ namespace Jitter.LinearMath
         public static JMatrix CreateFromYawPitchRoll(float yaw, float pitch, float roll)
         {
             JQuaternion.CreateFromYawPitchRoll(yaw, pitch, roll, out var quaternion);
-            CreateFromQuaternion(ref quaternion, out var matrix);
+            CreateFromQuaternion(quaternion, out var matrix);
             return matrix;
         }
 
@@ -138,11 +138,11 @@ namespace Jitter.LinearMath
 
         public static JMatrix Multiply(JMatrix matrix1, JMatrix matrix2)
         {
-            Multiply(ref matrix1, ref matrix2, out var result);
+            Multiply(matrix1, matrix2, out var result);
             return result;
         }
 
-        public static void Multiply(ref JMatrix matrix1, ref JMatrix matrix2, out JMatrix result)
+        public static void Multiply(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
         {
             float num0 = (matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21) + (matrix1.M13 * matrix2.M31);
             float num1 = (matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22) + (matrix1.M13 * matrix2.M32);
@@ -167,11 +167,11 @@ namespace Jitter.LinearMath
 
         public static JMatrix Add(JMatrix matrix1, JMatrix matrix2)
         {
-            Add(ref matrix1, ref matrix2, out var result);
+            Add(matrix1, matrix2, out var result);
             return result;
         }
 
-        public static void Add(ref JMatrix matrix1, ref JMatrix matrix2, out JMatrix result)
+        public static void Add(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
         {
             result.M11 = matrix1.M11 + matrix2.M11;
             result.M12 = matrix1.M12 + matrix2.M12;
@@ -186,7 +186,7 @@ namespace Jitter.LinearMath
 
         public static JMatrix Inverse(JMatrix matrix)
         {
-            Inverse(ref matrix, out var result);
+            Inverse(matrix, out var result);
             return result;
         }
 
@@ -196,7 +196,7 @@ namespace Jitter.LinearMath
                    - (M31 * M22 * M13) - (M32 * M23 * M11) - (M33 * M21 * M12);
         }
 
-        public static void Invert(ref JMatrix matrix, out JMatrix result)
+        public static void Invert(in JMatrix matrix, out JMatrix result)
         {
             float determinantInverse = 1 / matrix.Determinant();
             float m11 = ((matrix.M22 * matrix.M33) - (matrix.M23 * matrix.M32)) * determinantInverse;
@@ -224,7 +224,7 @@ namespace Jitter.LinearMath
             result.M33 = m33;
         }
 
-        public static void Inverse(ref JMatrix matrix, out JMatrix result)
+        public static void Inverse(in JMatrix matrix, out JMatrix result)
         {
             float det = (matrix.M11 * matrix.M22 * matrix.M33)
                 - (matrix.M11 * matrix.M23 * matrix.M32)
@@ -258,11 +258,11 @@ namespace Jitter.LinearMath
 
         public static JMatrix Multiply(JMatrix matrix1, float scaleFactor)
         {
-            Multiply(ref matrix1, scaleFactor, out var result);
+            Multiply(matrix1, scaleFactor, out var result);
             return result;
         }
 
-        public static void Multiply(ref JMatrix matrix1, float scaleFactor, out JMatrix result)
+        public static void Multiply(in JMatrix matrix1, float scaleFactor, out JMatrix result)
         {
             float num = scaleFactor;
             result.M11 = matrix1.M11 * num;
@@ -278,11 +278,11 @@ namespace Jitter.LinearMath
 
         public static JMatrix CreateFromQuaternion(JQuaternion quaternion)
         {
-            CreateFromQuaternion(ref quaternion, out var result);
+            CreateFromQuaternion(quaternion, out var result);
             return result;
         }
 
-        public static void CreateFromQuaternion(ref JQuaternion quaternion, out JMatrix result)
+        public static void CreateFromQuaternion(in JQuaternion quaternion, out JMatrix result)
         {
             float num9 = quaternion.X * quaternion.X;
             float num8 = quaternion.Y * quaternion.Y;
@@ -293,6 +293,7 @@ namespace Jitter.LinearMath
             float num3 = quaternion.Y * quaternion.W;
             float num2 = quaternion.Y * quaternion.Z;
             float num = quaternion.X * quaternion.W;
+
             result.M11 = 1f - (2f * (num8 + num7));
             result.M12 = 2f * (num6 + num5);
             result.M13 = 2f * (num4 - num3);
@@ -306,11 +307,11 @@ namespace Jitter.LinearMath
 
         public static JMatrix Transpose(JMatrix matrix)
         {
-            Transpose(ref matrix, out var result);
+            Transpose(matrix, out var result);
             return result;
         }
 
-        public static void Transpose(ref JMatrix matrix, out JMatrix result)
+        public static void Transpose(in JMatrix matrix, out JMatrix result)
         {
             result.M11 = matrix.M11;
             result.M12 = matrix.M21;
@@ -325,7 +326,7 @@ namespace Jitter.LinearMath
 
         public static JMatrix operator *(JMatrix value1, JMatrix value2)
         {
-            Multiply(ref value1, ref value2, out var result);
+            Multiply(value1, value2, out var result);
             return result;
         }
 
@@ -336,18 +337,18 @@ namespace Jitter.LinearMath
 
         public static JMatrix operator +(JMatrix value1, JMatrix value2)
         {
-            Add(ref value1, ref value2, out var result);
+            Add(value1, value2, out var result);
             return result;
         }
 
         public static JMatrix operator -(JMatrix value1, JMatrix value2)
         {
-            Multiply(ref value2, -1.0f, out value2);
-            Add(ref value1, ref value2, out var result);
+            Multiply(value2, -1.0f, out value2);
+            Add(value1, value2, out var result);
             return result;
         }
 
-        public static void CreateFromAxisAngle(ref JVector axis, float angle, out JMatrix result)
+        public static void CreateFromAxisAngle(in JVector axis, float angle, out JMatrix result)
         {
             float x = axis.X;
             float y = axis.Y;
@@ -373,7 +374,7 @@ namespace Jitter.LinearMath
 
         public static JMatrix CreateFromAxisAngle(JVector axis, float angle)
         {
-            CreateFromAxisAngle(ref axis, angle, out var result);
+            CreateFromAxisAngle(axis, angle, out var result);
             return result;
         }
     }

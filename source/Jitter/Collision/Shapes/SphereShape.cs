@@ -21,7 +21,7 @@ namespace Jitter.Collision.Shapes
             UpdateShape();
         }
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
             result = direction;
             result = JVector.Normalize(result);
@@ -29,7 +29,7 @@ namespace Jitter.Collision.Shapes
             JVector.Multiply(result, radius, out result);
         }
 
-        public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public override void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
             box = new JBBox(
                 new JVector(-radius, -radius, -radius),

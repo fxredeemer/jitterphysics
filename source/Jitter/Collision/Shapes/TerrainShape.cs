@@ -25,7 +25,7 @@ namespace Jitter.Collision.Shapes
 
             boundings = JBBox.SmallBox;
             float minY = 0.0f;
-            float maxY = 0.0f; 
+            float maxY = 0.0f;
 
             for (int i = 0; i < heightsLength0; i++)
             {
@@ -175,7 +175,7 @@ namespace Jitter.Collision.Shapes
             Mass = 1.0f;
         }
 
-        public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public override void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
             box = boundings;
 
@@ -183,7 +183,7 @@ namespace Jitter.Collision.Shapes
                 new JVector(box.Min.X - SphericalExpansion, box.Min.Y - SphericalExpansion, box.Min.Z - SphericalExpansion),
                 new JVector(box.Max.X + SphericalExpansion, box.Max.Y + SphericalExpansion, box.Max.Z + SphericalExpansion));
 
-            box = box.Transform(ref orientation);
+            box = box.Transform(orientation);
         }
 
         public override void MakeHull(ref List<JVector> triangleList, int generationThreshold)
@@ -203,7 +203,7 @@ namespace Jitter.Collision.Shapes
             }
         }
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
             JVector.Normalize(direction, out var expandVector);
             JVector.Multiply(expandVector, SphericalExpansion, out expandVector);
@@ -232,8 +232,8 @@ namespace Jitter.Collision.Shapes
             JVector.Normalize(rayDelta, out var rayEnd);
             rayEnd = rayOrigin + rayDelta + (rayEnd * SphericalExpansion);
 
-            box = box.AddPoint(ref rayOrigin);
-            box = box.AddPoint(ref rayEnd);
+            box = box.AddPoint(rayOrigin);
+            box = box.AddPoint(rayEnd);
 
             return Prepare(ref box);
         }

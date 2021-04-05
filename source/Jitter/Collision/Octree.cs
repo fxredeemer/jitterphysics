@@ -96,13 +96,13 @@ namespace Jitter.Collision
                 int nodeIndex = 0;
                 var box = rootNodeBox;
 
-                while (box.Contains(ref triBoxes[triNum]) == JBBox.ContainmentType.Contains)
+                while (box.Contains( triBoxes[triNum]) == JBBox.ContainmentType.Contains)
                 {
                     int childCon = -1;
                     for (int i = 0; i < 8; ++i)
                     {
                         CreateAABox(ref box, (EChild)i, out children[i]);
-                        if (children[i].Contains(ref triBoxes[triNum]) == JBBox.ContainmentType.Contains)
+                        if (children[i].Contains( triBoxes[triNum]) == JBBox.ContainmentType.Contains)
                         {
                             childCon = i;
                             break;
@@ -259,11 +259,11 @@ namespace Jitter.Collision
             {
                 ushort nodeIndex = nodeStack[curStackIndex];
                 curStackIndex++;
-                if (nodes[nodeIndex].box.Contains(ref testBox) != JBBox.ContainmentType.Disjoint)
+                if (nodes[nodeIndex].box.Contains(testBox) != JBBox.ContainmentType.Disjoint)
                 {
                     for (int i = 0; i < nodes[nodeIndex].triIndices.Length; ++i)
                     {
-                        if (triBoxes[nodes[nodeIndex].triIndices[i]].Contains(ref testBox) != JBBox.ContainmentType.Disjoint)
+                        if (triBoxes[nodes[nodeIndex].triIndices[i]].Contains(testBox) != JBBox.ContainmentType.Disjoint)
                         {
                             triangles.Add(nodes[nodeIndex].triIndices[i]);
                             triCount++;
@@ -304,11 +304,11 @@ namespace Jitter.Collision
             {
                 ushort nodeIndex = nodeStack[curStackIndex];
                 curStackIndex++;
-                if (nodes[nodeIndex].box.SegmentIntersect(ref rayOrigin, ref rayDelta))
+                if (nodes[nodeIndex].box.SegmentIntersect(rayOrigin, rayDelta))
                 {
                     for (int i = 0; i < nodes[nodeIndex].triIndices.Length; ++i)
                     {
-                        if (triBoxes[nodes[nodeIndex].triIndices[i]].SegmentIntersect(ref rayOrigin, ref rayDelta))
+                        if (triBoxes[nodes[nodeIndex].triIndices[i]].SegmentIntersect(rayOrigin, rayDelta))
                         {
                             triangles.Add(nodes[nodeIndex].triIndices[i]);
                             triCount++;

@@ -39,9 +39,9 @@ namespace Jitter.Collision.Shapes
             base.UpdateShape();
         }
 
-        public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public override void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
-            JMath.Absolute(ref orientation, out var abs);
+            JMath.Absolute(orientation, out var abs);
             var max = JVector.Transform(halfSize, abs);
 
             box = new JBBox(
@@ -61,7 +61,7 @@ namespace Jitter.Collision.Shapes
             geomCen = JVector.Zero;
         }
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
             result = new JVector(
                 Math.Sign(direction.X) * halfSize.X,

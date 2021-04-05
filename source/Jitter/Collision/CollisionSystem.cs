@@ -110,10 +110,10 @@ namespace Jitter.Collision
                 bool result = XenoCollide.Detect(
                     myTriangle,
                     otherTriangle,
-                    ref JMatrix.InternalIdentity,
-                    ref JMatrix.InternalIdentity,
-                    ref JVector.InternalZero,
-                    ref JVector.InternalZero,
+                    JMatrix.InternalIdentity,
+                    JMatrix.InternalIdentity,
+                    JVector.InternalZero,
+                    JVector.InternalZero,
                     out var point,
                     out var normal,
                     out float penetration);
@@ -149,10 +149,10 @@ namespace Jitter.Collision
                 if (XenoCollide.Detect(
                     body1.Shape,
                     body2.Shape,
-                    ref body1.orientation,
-                    ref body2.orientation,
-                    ref body1.position,
-                    ref body2.position,
+                    body1.orientation,
+                    body2.orientation,
+                    body1.position,
+                    body2.position,
                     out point,
                     out normal,
                     out penetration))
@@ -196,12 +196,12 @@ namespace Jitter.Collision
                 ms2 = ms2.RequestWorkingClone();
 
                 var transformedBoundingBox = body2.boundingBox;
-                transformedBoundingBox.InverseTransform(ref body1.position, ref body1.orientation);
+                transformedBoundingBox.InverseTransform(body1.position, body1.orientation);
 
                 int ms1Length = ms1.Prepare(ref transformedBoundingBox);
 
                 transformedBoundingBox = body1.boundingBox;
-                transformedBoundingBox.InverseTransform(ref body2.position, ref body2.orientation);
+                transformedBoundingBox.InverseTransform(body2.position, body2.orientation);
 
                 int ms2Length = ms2.Prepare(ref transformedBoundingBox);
 
@@ -220,9 +220,16 @@ namespace Jitter.Collision
                     {
                         ms2.SetCurrentShape(e);
 
-                        if (XenoCollide.Detect(ms1, ms2, ref body1.orientation,
-                            ref body2.orientation, ref body1.position, ref body2.position,
-                            out point, out normal, out penetration))
+                        if (XenoCollide.Detect(
+                            ms1,
+                            ms2,
+                            body1.orientation,
+                            body2.orientation,
+                            body1.position,
+                            body2.position,
+                            out point,
+                            out normal,
+                            out penetration))
                         {
                             FindSupportPoints(body1, body2, ms1, ms2, ref point, ref normal, out var point1, out var point2);
                             RaiseCollisionDetected(body1, body2, ref point1, ref point2, ref normal, penetration);
@@ -263,7 +270,7 @@ namespace Jitter.Collision
                 multiShape = multiShape.RequestWorkingClone();
 
                 var transformedBoundingBox = b2.boundingBox;
-                transformedBoundingBox.InverseTransform(ref b1.position, ref b1.orientation);
+                transformedBoundingBox.InverseTransform(b1.position, b1.orientation);
 
                 int msLength = multiShape.Prepare(ref transformedBoundingBox);
 
@@ -280,10 +287,7 @@ namespace Jitter.Collision
                     if (XenoCollide.Detect(
                         multiShape,
                         b2.Shape,
-                        ref b1.orientation,
-                        ref b2.orientation,
-                        ref b1.position,
-                        ref b2.position,
+                        b1.orientation, b2.orientation, b1.position, b2.position,
                         out point,
                         out normal,
                         out penetration))
@@ -293,12 +297,12 @@ namespace Jitter.Collision
                         if (useTerrainNormal && multiShape is TerrainShape terrainShape)
                         {
                             terrainShape.CollisionNormal(out normal);
-                            JVector.Transform(in normal, in b1.orientation, out normal);
+                            normal = JVector.Transform(in normal, in b1.orientation);
                         }
                         else if (useTriangleMeshNormal && multiShape is TriangleMeshShape triangleMeshShape)
                         {
                             triangleMeshShape.CollisionNormal(out normal);
-                            JVector.Transform(in normal, in b1.orientation, out normal);
+                            normal = JVector.Transform(in normal, in b1.orientation);
                         }
 
                         RaiseCollisionDetected(b1, b2, ref point1, ref point2, ref normal, penetration);
@@ -343,7 +347,7 @@ namespace Jitter.Collision
                 ms = ms.RequestWorkingClone();
 
                 var transformedBoundingBox = softBody.BoundingBox;
-                transformedBoundingBox.InverseTransform(ref rigidBody.position, ref rigidBody.orientation);
+                transformedBoundingBox.InverseTransform(rigidBody.position, rigidBody.orientation);
 
                 int msLength = ms.Prepare(ref transformedBoundingBox);
 
@@ -363,10 +367,7 @@ namespace Jitter.Collision
                         result = XenoCollide.Detect(
                             ms,
                             t,
-                            ref rigidBody.orientation,
-                            ref JMatrix.InternalIdentity,
-                            ref rigidBody.position,
-                            ref JVector.InternalZero,
+                            rigidBody.orientation, JMatrix.InternalIdentity, rigidBody.position, JVector.InternalZero,
                             out var point,
                             out var normal,
                             out float penetration);
@@ -401,10 +402,7 @@ namespace Jitter.Collision
                     bool result = XenoCollide.Detect(
                         rigidBody.Shape,
                         t,
-                        ref rigidBody.orientation,
-                        ref JMatrix.InternalIdentity,
-                        ref rigidBody.position,
-                        ref JVector.InternalZero,
+                        rigidBody.orientation, JMatrix.InternalIdentity, rigidBody.position, JVector.InternalZero,
                         out var point,
                         out var normal,
                         out float penetration);
@@ -465,7 +463,7 @@ namespace Jitter.Collision
             }
         }
 
-        private void FindSupportPoints(
+        private static void FindSupportPoints(
             RigidBody body1,
             RigidBody body2,
             Shape shape1,
@@ -493,11 +491,11 @@ namespace Jitter.Collision
             JVector.Add(in point, in sB, out point2);
         }
 
-        private void SupportMapping(RigidBody body, Shape workingShape, ref JVector direction, out JVector result)
+        private static void SupportMapping(RigidBody body, Shape workingShape, ref JVector direction, out JVector result)
         {
-            JVector.Transform(in direction, in body.invOrientation, out result);
-            workingShape.SupportMapping(ref result, out result);
-            JVector.Transform(in result, in body.orientation, out result);
+            result = JVector.Transform(in direction, in body.invOrientation);
+            workingShape.SupportMapping(result, out result);
+            result = JVector.Transform(in result, in body.orientation);
             JVector.Add(in result, in body.position, out result);
         }
 

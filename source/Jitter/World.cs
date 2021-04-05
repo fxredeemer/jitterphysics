@@ -557,7 +557,7 @@ namespace Jitter
                     JVector.Subtract(c.p1, c.p2, out var diff);
                     float distance = JVector.Dot(diff, c.normal);
 
-                    diff -= (distance * c.normal);
+                    diff -= distance * c.normal;
                     distance = diff.LengthSquared();
 
                     if (distance > ContactSettings.breakThreshold * ContactSettings.breakThreshold * 100)
@@ -717,11 +717,12 @@ namespace Jitter
                 }
 
                 var dorn = new JQuaternion(axis.X, axis.Y, axis.Z, (float)Math.Cos(angle * timestep * 0.5f));
-                JQuaternion.CreateFromMatrix(ref body.orientation, out var ornA);
 
+                JQuaternion.CreateFromMatrix(ref body.orientation, out var ornA);
                 JQuaternion.Multiply(ref dorn, ref ornA, out dorn);
 
-                dorn.Normalize(); JMatrix.CreateFromQuaternion(ref dorn, out body.orientation);
+                dorn.Normalize();
+                JMatrix.CreateFromQuaternion(dorn, out body.orientation);
             }
 
             if ((body.Damping & RigidBody.DampingType.Linear) != 0)

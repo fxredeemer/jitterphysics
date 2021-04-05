@@ -71,7 +71,7 @@ namespace Jitter.Collision.Shapes
 
         private readonly JVector[] vecs = new JVector[3];
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
             JVector.Normalize(direction, out var exp);
             exp *= SphericalExpansion;
@@ -93,7 +93,7 @@ namespace Jitter.Collision.Shapes
             result = vecs[minIndex] + exp;
         }
 
-        public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public override void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
             box = octree.rootNodeBox;
 
@@ -101,7 +101,7 @@ namespace Jitter.Collision.Shapes
                 new JVector(box.Min.X - SphericalExpansion, box.Min.Y - SphericalExpansion, box.Min.Z - SphericalExpansion),
                 new JVector(box.Max.X + SphericalExpansion, box.Max.Y + SphericalExpansion, box.Max.Z + SphericalExpansion));
 
-            box = box.Transform(ref orientation);
+            box = box.Transform(orientation);
         }
 
         public bool FlipNormals { get; set; }

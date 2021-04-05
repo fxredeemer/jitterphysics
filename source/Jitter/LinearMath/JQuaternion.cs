@@ -115,7 +115,7 @@ namespace Jitter.LinearMath
         public void Normalize()
         {
             float num2 = (X * X) + (Y * Y) + (Z * Z) + (W * W);
-            float num = 1f / (JMath.Sqrt(num2));
+            float num = 1f / JMath.Sqrt(num2);
             X *= num;
             Y *= num;
             Z *= num;

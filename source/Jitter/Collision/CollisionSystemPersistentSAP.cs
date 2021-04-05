@@ -420,7 +420,7 @@ namespace Jitter.Collision
             fraction = float.MaxValue;
             normal = JVector.Zero;
 
-            if (!body.BoundingBox.RayIntersect(ref rayOrigin, ref rayDirection))
+            if (!body.BoundingBox.RayIntersect(rayOrigin, rayDirection))
             {
                 return false;
             }

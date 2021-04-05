@@ -41,7 +41,7 @@ namespace Jitter.Collision.Shapes
             inertia.M33 = (1.0f / 4.0f * mass * radius * radius) + (1.0f / 12.0f * mass * height * height);
         }
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
             float sigma = JMath.Sqrt((direction.X * direction.X) + (direction.Z * direction.Z));
 

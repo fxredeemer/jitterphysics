@@ -148,10 +148,10 @@ namespace Jitter.Dynamics
         private int CalculateHash(int a)
         {
             a = a ^ 61 ^ (a >> 16);
-            a += (a << 3);
-            a ^= (a >> 4);
+            a += a << 3;
+            a ^= a >> 4;
             a *= 0x27d4eb2d;
-            a ^= (a >> 15);
+            a ^= a >> 15;
             return a;
         }
 
@@ -229,7 +229,7 @@ namespace Jitter.Dynamics
         public void SetMassProperties()
         {
             inertia = Shape.inertia;
-            JMatrix.Inverse(ref inertia, out invInertia);
+            JMatrix.Inverse(inertia, out invInertia);
             inverseMass = 1.0f / Shape.mass;
             useShapeMassProperties = true;
         }
@@ -241,7 +241,7 @@ namespace Jitter.Dynamics
                 if (!isParticle)
                 {
                     invInertia = inertia;
-                    JMatrix.Inverse(ref inertia, out this.inertia);
+                    JMatrix.Inverse(inertia, out this.inertia);
                 }
                 inverseMass = mass;
             }
@@ -250,7 +250,7 @@ namespace Jitter.Dynamics
                 if (!isParticle)
                 {
                     this.inertia = inertia;
-                    JMatrix.Inverse(ref inertia, out invInertia);
+                    JMatrix.Inverse(inertia, out invInertia);
                 }
                 inverseMass = 1.0f / mass;
             }
@@ -380,8 +380,8 @@ namespace Jitter.Dynamics
 
                 if (!isParticle)
                 {
-                    JMatrix.Multiply(ref Shape.inertia, value / Shape.mass, out inertia);
-                    JMatrix.Inverse(ref inertia, out invInertia);
+                    JMatrix.Multiply(Shape.inertia, value / Shape.mass, out inertia);
+                    JMatrix.Inverse(inertia, out invInertia);
                 }
 
                 inverseMass = 1.0f / value;
@@ -450,8 +450,8 @@ namespace Jitter.Dynamics
             }
             else
             {
-                JMatrix.Transpose(ref orientation, out invOrientation);
-                Shape.GetBoundingBox(ref orientation, out boundingBox);
+                JMatrix.Transpose(orientation, out invOrientation);
+                Shape.GetBoundingBox( orientation, out boundingBox);
                 
                 boundingBox = new JBBox(
                     JVector.Add(boundingBox.Min, position),
@@ -459,8 +459,8 @@ namespace Jitter.Dynamics
 
                 if (!isStatic)
                 {
-                    JMatrix.Multiply(ref invOrientation, ref invInertia, out invInertiaWorld);
-                    JMatrix.Multiply(ref invInertiaWorld, ref orientation, out invInertiaWorld);
+                    JMatrix.Multiply(invOrientation, invInertia, out invInertiaWorld);
+                    JMatrix.Multiply(invInertiaWorld, orientation, out invInertiaWorld);
                 }
             }
         }
