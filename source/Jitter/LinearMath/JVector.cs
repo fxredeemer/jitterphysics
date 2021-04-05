@@ -1,6 +1,6 @@
 ﻿namespace Jitter.LinearMath
 {
-    public struct JVector
+    public readonly struct JVector
     {
         public static readonly JVector Zero = new JVector(0, 0, 0);
         public static readonly JVector Left = new JVector(1, 0, 0);
