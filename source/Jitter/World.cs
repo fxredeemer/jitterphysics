@@ -718,8 +718,8 @@ namespace Jitter
 
                 var dorn = new JQuaternion(axis.X, axis.Y, axis.Z, (float)Math.Cos(angle * timestep * 0.5f));
 
-                JQuaternion.CreateFromMatrix(ref body.orientation, out var ornA);
-                JQuaternion.Multiply(ref dorn, ref ornA, out dorn);
+                JQuaternion.CreateFromMatrix(body.orientation, out var ornA);
+                JQuaternion.Multiply(dorn, ornA, out dorn);
 
                 dorn.Normalize();
                 JMatrix.CreateFromQuaternion(dorn, out body.orientation);
@@ -774,7 +774,7 @@ namespace Jitter
             }
         }
 
-        private void CollisionDetected(RigidBody body1, RigidBody body2, JVector point1, JVector point2, JVector normal, float penetration)
+        private void CollisionDetected(RigidBody body1, RigidBody body2, in JVector point1, in JVector point2, in JVector normal, float penetration)
         {
             Arbiter arbiter = null;
             Contact contact;
@@ -796,8 +796,7 @@ namespace Jitter
 
             if (arbiter.body1 == body1)
             {
-                JVector.Negate(normal, out normal);
-                contact = arbiter.AddContact(point1, point2, normal, penetration, ContactSettings);
+                contact = arbiter.AddContact(point1, point2, JVector.Negate(normal), penetration, ContactSettings);
             }
             else
             {

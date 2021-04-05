@@ -27,27 +27,25 @@ namespace Jitter.Collision.Shapes
             return clone;
         }
 
-        public override int Prepare(ref JBBox box)
+        public override int Prepare(in JBBox box)
         {
             potentialTriangles.Clear();
 
-            var exp = box;
+            var exp = new JBBox(
+                new JVector(box.Min.X - SphericalExpansion, box.Min.Y - SphericalExpansion, box.Min.Z - SphericalExpansion),
+                new JVector(box.Max.X + SphericalExpansion, box.Max.Y + SphericalExpansion, box.Max.Z + SphericalExpansion));
 
-            box = new JBBox(
-                new JVector(exp.Min.X - SphericalExpansion, exp.Min.Y - SphericalExpansion, exp.Min.Z - SphericalExpansion),
-                new JVector(exp.Max.X + SphericalExpansion, exp.Max.Y + SphericalExpansion, exp.Max.Z + SphericalExpansion));
-
-            octree.GetTrianglesIntersectingtAABox(potentialTriangles, ref exp);
+            octree.GetTrianglesIntersectingtAABox(potentialTriangles, exp);
 
             return potentialTriangles.Count;
         }
 
-        public override void MakeHull(ref List<JVector> triangleList, int generationThreshold)
+        public override void MakeHull(List<JVector> triangleList, int generationThreshold)
         {
             var large = JBBox.LargeBox;
 
             var indices = new List<int>();
-            octree.GetTrianglesIntersectingtAABox(indices, ref large);
+            octree.GetTrianglesIntersectingtAABox(indices, large);
 
             for (int i = 0; i < indices.Count; i++)
             {
@@ -57,7 +55,7 @@ namespace Jitter.Collision.Shapes
             }
         }
 
-        public override int Prepare(ref JVector rayOrigin, ref JVector rayDelta)
+        public override int Prepare(in JVector rayOrigin, in JVector rayDelta)
         {
             potentialTriangles.Clear();
 

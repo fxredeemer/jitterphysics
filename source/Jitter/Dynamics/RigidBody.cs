@@ -517,7 +517,7 @@ namespace Jitter.Dynamics
 
             if (enableDebugDraw)
             {
-                shape.MakeHull(ref hullPoints, 3);
+                shape.MakeHull(hullPoints, 3);
             }
         }
 

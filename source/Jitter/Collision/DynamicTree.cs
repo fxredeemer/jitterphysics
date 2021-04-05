@@ -253,7 +253,7 @@ namespace Jitter.Collision
 
         private readonly ResourcePool<Stack<int>> stackPool = new ResourcePool<Stack<int>>();
 
-        public void Query(List<int> my, ref JBBox aabb)
+        public void Query(List<int> my, in JBBox aabb)
         {
             var stack = stackPool.GetNew();
 

@@ -239,11 +239,11 @@ namespace Jitter.Collision
 
                 bool multiShapeCollides = false;
 
-                JVector.Subtract(in rayOrigin, in body.position, out var transformedOrigin);
-                JVector.Transform(in transformedOrigin, in body.invOrientation, out transformedOrigin);
-                JVector.Transform(in rayDirection, in body.invOrientation, out var transformedDirection);
+                JVector.Subtract(rayOrigin, body.position, out var transformedOrigin);
+                JVector.Transform(transformedOrigin, body.invOrientation, out transformedOrigin);
+                JVector.Transform(rayDirection, body.invOrientation, out var transformedDirection);
 
-                int msLength = ms.Prepare(ref transformedOrigin, ref transformedDirection);
+                int msLength = ms.Prepare(transformedOrigin, transformedDirection);
 
                 for (int i = 0; i < msLength; i++)
                 {
@@ -251,23 +251,23 @@ namespace Jitter.Collision
 
                     if (GJKCollide.Raycast(
                         ms,
-                        ref body.orientation,
-                        ref body.position,
-                        ref rayOrigin,
-                        ref rayDirection,
+                        body.orientation,
+                        body.position,
+                        rayOrigin,
+                        rayDirection,
                         out float tempFraction,
                         out var tempNormal) && tempFraction < fraction)
                     {
                         if (useTerrainNormal && ms is TerrainShape terrainShape)
                         {
                             terrainShape.CollisionNormal(out tempNormal);
-                            JVector.Transform(in tempNormal, in body.orientation, out tempNormal);
+                            JVector.Transform(tempNormal, body.orientation, out tempNormal);
                             tempNormal = JVector.Negate(tempNormal);
                         }
                         else if (useTriangleMeshNormal && ms is TriangleMeshShape triangleMeshShape)
                         {
                             triangleMeshShape.CollisionNormal(out tempNormal);
-                            JVector.Transform(in tempNormal, in body.orientation, out tempNormal);
+                            JVector.Transform(tempNormal, body.orientation, out tempNormal);
                             tempNormal = JVector.Negate(tempNormal);
                         }
 
@@ -284,10 +284,10 @@ namespace Jitter.Collision
             {
                 return GJKCollide.Raycast(
                     body.Shape,
-                    ref body.orientation,
-                    ref body.position,
-                    ref rayOrigin,
-                    ref rayDirection,
+                    body.orientation,
+                    body.position,
+                    rayOrigin,
+                    rayDirection,
                     out fraction,
                     out normal);
             }

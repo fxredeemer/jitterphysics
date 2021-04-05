@@ -47,7 +47,7 @@ namespace Jitter.Dynamics
             float penetration,
             ContactSettings contactSettings)
         {
-            JVector.Subtract(in point1, in body1.position, out var relPos1);
+            JVector.Subtract(point1, body1.position, out var relPos1);
 
             int index;
 
@@ -55,46 +55,51 @@ namespace Jitter.Dynamics
             {
                 if (contactList.Count == 4)
                 {
-                    index = SortCachedPoints(ref relPos1, penetration);
-                    ReplaceContact(ref point1, ref point2, ref normal, penetration, index, contactSettings);
+                    index = SortCachedPoints(relPos1, penetration);
+                    ReplaceContact(point1, point2, normal, penetration, index, contactSettings);
                     return null;
                 }
 
-                index = GetCacheEntry(ref relPos1, contactSettings.breakThreshold);
+                index = GetCacheEntry(relPos1, contactSettings.breakThreshold);
 
                 if (index >= 0)
                 {
-                    ReplaceContact(ref point1, ref point2, ref normal, penetration, index, contactSettings);
+                    ReplaceContact(point1, point2, normal, penetration, index, contactSettings);
                     return null;
                 }
                 else
                 {
                     var contact = Contact.Pool.GetNew();
-                    contact.Initialize(body1, body2, ref point1, ref point2, ref normal, penetration, true, contactSettings);
+                    contact.Initialize(body1, body2, point1, point2, normal, penetration, true, contactSettings);
                     contactList.Add(contact);
                     return contact;
                 }
             }
         }
 
-        private void ReplaceContact(ref JVector point1, ref JVector point2, ref JVector n, float p, int index,
+        private void ReplaceContact(
+            in JVector point1,
+            in JVector point2,
+            in JVector n,
+            float p,
+            int index,
             ContactSettings contactSettings)
         {
             var contact = contactList[index];
 
             Debug.Assert(body1 == contact.body1, "Body1 and Body2 not consistent.");
 
-            contact.Initialize(body1, body2, ref point1, ref point2, ref n, p, false, contactSettings);
+            contact.Initialize(body1, body2, point1, point2, n, p, false, contactSettings);
         }
 
-        private int GetCacheEntry(ref JVector realRelPos1, float contactBreakThreshold)
+        private int GetCacheEntry(in JVector realRelPos1, float contactBreakThreshold)
         {
             float shortestDist = contactBreakThreshold * contactBreakThreshold;
             int size = contactList.Count;
             int nearestPoint = -1;
             for (int i = 0; i < size; i++)
             {
-                JVector.Subtract(in contactList[i].relativePos1, in realRelPos1, out var diffA);
+                JVector.Subtract(contactList[i].relativePos1, realRelPos1, out var diffA);
                 float distToManiPoint = diffA.LengthSquared();
                 if (distToManiPoint < shortestDist)
                 {
@@ -105,7 +110,7 @@ namespace Jitter.Dynamics
             return nearestPoint;
         }
 
-        private int SortCachedPoints(ref JVector realRelPos1, float pen)
+        private int SortCachedPoints(in JVector realRelPos1, float pen)
         {
             int maxPenetrationIndex = -1;
             float maxPenetration = pen;
@@ -124,32 +129,32 @@ namespace Jitter.Dynamics
             float res3 = 0;
             if (maxPenetrationIndex != 0)
             {
-                JVector.Subtract(in realRelPos1, in contactList[1].relativePos1, out var a0);
-                JVector.Subtract(in contactList[3].relativePos1, in contactList[2].relativePos1, out var b0);
-                JVector.Cross(in a0, in b0, out var cross);
+                JVector.Subtract(realRelPos1, contactList[1].relativePos1, out var a0);
+                JVector.Subtract(contactList[3].relativePos1, contactList[2].relativePos1, out var b0);
+                JVector.Cross(a0, b0, out var cross);
                 res0 = cross.LengthSquared();
             }
             if (maxPenetrationIndex != 1)
             {
-                JVector.Subtract(in realRelPos1, in contactList[0].relativePos1, out var a0);
-                JVector.Subtract(in contactList[3].relativePos1, in contactList[2].relativePos1, out var b0);
-                JVector.Cross(in a0, in b0, out var cross);
+                JVector.Subtract(realRelPos1, contactList[0].relativePos1, out var a0);
+                JVector.Subtract(contactList[3].relativePos1, contactList[2].relativePos1, out var b0);
+                JVector.Cross(a0, b0, out var cross);
                 res1 = cross.LengthSquared();
             }
 
             if (maxPenetrationIndex != 2)
             {
-                JVector.Subtract(in realRelPos1, in contactList[0].relativePos1, out var a0);
-                JVector.Subtract(in contactList[3].relativePos1, in contactList[1].relativePos1, out var b0);
-                JVector.Cross(in a0, in b0, out var cross);
+                JVector.Subtract(realRelPos1, contactList[0].relativePos1, out var a0);
+                JVector.Subtract(contactList[3].relativePos1, contactList[1].relativePos1, out var b0);
+                JVector.Cross(a0, b0, out var cross);
                 res2 = cross.LengthSquared();
             }
 
             if (maxPenetrationIndex != 3)
             {
-                JVector.Subtract(in realRelPos1, in contactList[0].relativePos1, out var a0);
-                JVector.Subtract(in contactList[2].relativePos1, in contactList[1].relativePos1, out var b0);
-                JVector.Cross(in a0, in b0, out var cross);
+                JVector.Subtract(realRelPos1, contactList[0].relativePos1, out var a0);
+                JVector.Subtract(contactList[2].relativePos1, contactList[1].relativePos1, out var b0);
+                JVector.Cross(a0, b0, out var cross);
                 res3 = cross.LengthSquared();
             }
 

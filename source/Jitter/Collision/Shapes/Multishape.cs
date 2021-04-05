@@ -8,9 +8,9 @@ namespace Jitter.Collision.Shapes
     {
         public abstract void SetCurrentShape(int index);
 
-        public abstract int Prepare(ref JBBox box);
+        public abstract int Prepare(in JBBox box);
 
-        public abstract int Prepare(ref JVector rayOrigin, ref JVector rayDelta);
+        public abstract int Prepare(in JVector rayOrigin, in JVector rayDelta);
 
         protected abstract Multishape CreateWorkingClone();
 
@@ -61,7 +61,7 @@ namespace Jitter.Collision.Shapes
         public override void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
             var helpBox = JBBox.LargeBox;
-            int length = Prepare(ref helpBox);
+            int length = Prepare(helpBox);
 
             box = JBBox.SmallBox;
 
@@ -73,7 +73,7 @@ namespace Jitter.Collision.Shapes
             }
         }
 
-        public override void MakeHull(ref List<JVector> triangleList, int generationThreshold)
+        public override void MakeHull(List<JVector> triangleList, int generationThreshold)
         {
         }
 

@@ -121,7 +121,7 @@ namespace Jitter.Collision.Shapes
             normal = this.normal;
         }
 
-        public override int Prepare(ref JBBox box)
+        public override int Prepare(in JBBox box)
         {
             if (box.Min.X < boundings.Min.X)
             {
@@ -186,7 +186,7 @@ namespace Jitter.Collision.Shapes
             box = box.Transform(orientation);
         }
 
-        public override void MakeHull(ref List<JVector> triangleList, int generationThreshold)
+        public override void MakeHull(List<JVector> triangleList, int generationThreshold)
         {
             for (int index = 0; index < (heightsLength0 - 1) * (heightsLength1 - 1); index++)
             {
@@ -225,7 +225,7 @@ namespace Jitter.Collision.Shapes
             JVector.Add(points[minIndex], expandVector, out result);
         }
 
-        public override int Prepare(ref JVector rayOrigin, ref JVector rayDelta)
+        public override int Prepare(in JVector rayOrigin, in JVector rayDelta)
         {
             var box = JBBox.SmallBox;
 
@@ -235,7 +235,7 @@ namespace Jitter.Collision.Shapes
             box = box.AddPoint(rayOrigin);
             box = box.AddPoint(rayEnd);
 
-            return Prepare(ref box);
+            return Prepare(box);
         }
     }
 }

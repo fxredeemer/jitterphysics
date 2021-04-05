@@ -106,13 +106,13 @@ namespace Jitter.Collision.Shapes
             return true;
         }
 
-        public override void MakeHull(ref List<JVector> triangleList, int generationThreshold)
+        public override void MakeHull(List<JVector> triangleList, int generationThreshold)
         {
             var triangles = new List<JVector>();
 
             for (int i = 0; i < Shapes.Length; i++)
             {
-                Shapes[i].Shape.MakeHull(ref triangles, 4);
+                Shapes[i].Shape.MakeHull(triangles, 4);
                 for (int e = 0; e < triangles.Count; e++)
                 {
                     var pos = triangles[e];
@@ -217,7 +217,7 @@ namespace Jitter.Collision.Shapes
             geomCen += Shapes[currentShape].Position;
         }
 
-        public override int Prepare(ref JBBox box)
+        public override int Prepare(in JBBox box)
         {
             currentSubShapes.Clear();
 
@@ -232,14 +232,14 @@ namespace Jitter.Collision.Shapes
             return currentSubShapes.Count;
         }
 
-        public override int Prepare(ref JVector rayOrigin, ref JVector rayEnd)
+        public override int Prepare(in JVector rayOrigin, in JVector rayEnd)
         {
             var box = JBBox.SmallBox;
 
             box = box.AddPoint(rayOrigin);
             box = box.AddPoint(rayEnd);
 
-            return Prepare(ref box);
+            return Prepare(box);
         }
 
         public override void UpdateShape()

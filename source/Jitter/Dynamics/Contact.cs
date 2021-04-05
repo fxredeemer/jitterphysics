@@ -232,7 +232,7 @@ namespace Jitter.Dynamics
             penetration = JVector.Dot(dist, normal);
         }
 
-        public void ApplyImpulse(ref JVector impulse)
+        public void ApplyImpulse(in JVector impulse)
         {
 
             if (!treatBody1AsStatic)
@@ -672,9 +672,9 @@ namespace Jitter.Dynamics
         public void Initialize(
             RigidBody body1,
             RigidBody body2,
-            ref JVector point1,
-            ref JVector point2,
-            ref JVector n,
+            in JVector point1,
+            in JVector point2,
+            in JVector n,
             float penetration,
             bool newContact,
             ContactSettings settings)

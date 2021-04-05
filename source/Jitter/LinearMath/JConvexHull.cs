@@ -41,7 +41,7 @@ namespace Jitter.LinearMath
 
                     var dir = new JVector(sinTheta * cosPhi, cosTheta, sinTheta * sinPhi);
 
-                    int index = FindExtremePoint(pointCloud, ref dir);
+                    int index = FindExtremePoint(pointCloud, dir);
                     allIndices.Add(index);
                 }
             }
@@ -59,12 +59,13 @@ namespace Jitter.LinearMath
             return allIndices.ToArray();
         }
 
-        private static int FindExtremePoint(List<JVector> points, ref JVector dir)
+        private static int FindExtremePoint(List<JVector> points, in JVector dir)
         {
             int index = 0;
             float current = float.MinValue;
 
-            JVector point; float value;
+            JVector point;
+            float value;
 
             for (int i = 1; i < points.Count; i++)
             {

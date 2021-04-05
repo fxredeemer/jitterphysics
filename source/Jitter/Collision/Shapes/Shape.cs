@@ -16,9 +16,17 @@ namespace Jitter.Collision.Shapes
 
         public event ShapeUpdatedHandler ShapeUpdated;
 
-        public JMatrix Inertia { get => inertia; protected set => inertia = value; }
+        public JMatrix Inertia
+        {
+            get => inertia;
+            protected set => inertia = value;
+        }
 
-        public float Mass { get => mass; protected set => mass = value; }
+        public float Mass
+        {
+            get => mass;
+            protected set => mass = value;
+        }
 
         protected void RaiseShapeUpdated()
         {
@@ -37,7 +45,7 @@ namespace Jitter.Collision.Shapes
             public int generation;
         };
 
-        public virtual void MakeHull(ref List<JVector> triangleList, int generationThreshold)
+        public virtual void MakeHull(List<JVector> triangleList, int generationThreshold)
         {
             const float distanceThreshold = 0.0f;
 
@@ -201,7 +209,7 @@ namespace Jitter.Collision.Shapes
             }
 
             var hullTriangles = new List<JVector>();
-            shape.MakeHull(ref hullTriangles, 3);
+            shape.MakeHull(hullTriangles, 3);
 
             const float a = 1.0f / 60.0f, b = 1.0f / 120.0f;
             var C = new JMatrix(a, b, b, b, a, b, b, b, a);

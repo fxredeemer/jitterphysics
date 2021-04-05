@@ -19,7 +19,7 @@ namespace Jitter.LinearMath
 
         public static JQuaternion Add(JQuaternion quaternion1, JQuaternion quaternion2)
         {
-            Add(ref quaternion1, ref quaternion2, out var result);
+            Add(quaternion1, quaternion2, out var result);
             return result;
         }
 
@@ -40,7 +40,7 @@ namespace Jitter.LinearMath
             result.W = (num * num3 * num5) + (num2 * num4 * num6);
         }
 
-        public static void Add(ref JQuaternion quaternion1, ref JQuaternion quaternion2, out JQuaternion result)
+        public static void Add(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
         {
             result.X = quaternion1.X + quaternion2.X;
             result.Y = quaternion1.Y + quaternion2.Y;
@@ -60,11 +60,11 @@ namespace Jitter.LinearMath
 
         public static JQuaternion Subtract(JQuaternion quaternion1, JQuaternion quaternion2)
         {
-            Subtract(ref quaternion1, ref quaternion2, out var result);
+            Subtract(quaternion1, quaternion2, out var result);
             return result;
         }
 
-        public static void Subtract(ref JQuaternion quaternion1, ref JQuaternion quaternion2, out JQuaternion result)
+        public static void Subtract(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
         {
             result.X = quaternion1.X - quaternion2.X;
             result.Y = quaternion1.Y - quaternion2.Y;
@@ -74,11 +74,11 @@ namespace Jitter.LinearMath
 
         public static JQuaternion Multiply(JQuaternion quaternion1, JQuaternion quaternion2)
         {
-            Multiply(ref quaternion1, ref quaternion2, out var result);
+            Multiply(quaternion1, quaternion2, out var result);
             return result;
         }
 
-        public static void Multiply(ref JQuaternion quaternion1, ref JQuaternion quaternion2, out JQuaternion result)
+        public static void Multiply(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
         {
             float x = quaternion1.X;
             float y = quaternion1.Y;
@@ -100,11 +100,11 @@ namespace Jitter.LinearMath
 
         public static JQuaternion Multiply(JQuaternion quaternion1, float scaleFactor)
         {
-            Multiply(ref quaternion1, scaleFactor, out var result);
+            Multiply(quaternion1, scaleFactor, out var result);
             return result;
         }
 
-        public static void Multiply(ref JQuaternion quaternion1, float scaleFactor, out JQuaternion result)
+        public static void Multiply(in JQuaternion quaternion1, float scaleFactor, out JQuaternion result)
         {
             result.X = quaternion1.X * scaleFactor;
             result.Y = quaternion1.Y * scaleFactor;
@@ -124,11 +124,11 @@ namespace Jitter.LinearMath
 
         public static JQuaternion CreateFromMatrix(JMatrix matrix)
         {
-            CreateFromMatrix(ref matrix, out var result);
+            CreateFromMatrix(matrix, out var result);
             return result;
         }
 
-        public static void CreateFromMatrix(ref JMatrix matrix, out JQuaternion result)
+        public static void CreateFromMatrix(in JMatrix matrix, out JQuaternion result)
         {
             float num8 = matrix.M11 + matrix.M22 + matrix.M33;
             if (num8 > 0f)
@@ -171,19 +171,19 @@ namespace Jitter.LinearMath
 
         public static JQuaternion operator *(JQuaternion value1, JQuaternion value2)
         {
-            Multiply(ref value1, ref value2, out var result);
+            Multiply(value1, value2, out var result);
             return result;
         }
 
         public static JQuaternion operator +(JQuaternion value1, JQuaternion value2)
         {
-            Add(ref value1, ref value2, out var result);
+            Add(value1, value2, out var result);
             return result;
         }
 
         public static JQuaternion operator -(JQuaternion value1, JQuaternion value2)
         {
-            Subtract(ref value1, ref value2, out var result);
+            Subtract(value1, value2, out var result);
             return result;
         }
     }

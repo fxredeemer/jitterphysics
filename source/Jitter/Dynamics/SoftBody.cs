@@ -493,7 +493,7 @@ namespace Jitter.Dynamics
             for (int i = 0; i < points.Count; i++)
             {
                 queryList.Clear();
-                dynamicTree.Query(queryList, ref points[i].boundingBox);
+                dynamicTree.Query(queryList, points[i].boundingBox);
 
                 for (int e = 0; e < queryList.Count; e++)
                 {
@@ -509,10 +509,10 @@ namespace Jitter.Dynamics
                             points[i].position,
                             JVector.InternalZero,
                             out var point,
-                            out var normal, 
+                            out var normal,
                             out float penetration))
                         {
-                            int nearest = CollisionSystem.FindNearestTrianglePoint(this, queryList[e], ref point);
+                            int nearest = CollisionSystem.FindNearestTrianglePoint(this, queryList[e], point);
 
                             collision(points[i], points[nearest], point, point, normal, penetration);
                         }

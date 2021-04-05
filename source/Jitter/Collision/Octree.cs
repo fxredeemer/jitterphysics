@@ -96,13 +96,13 @@ namespace Jitter.Collision
                 int nodeIndex = 0;
                 var box = rootNodeBox;
 
-                while (box.Contains( triBoxes[triNum]) == JBBox.ContainmentType.Contains)
+                while (box.Contains(triBoxes[triNum]) == JBBox.ContainmentType.Contains)
                 {
                     int childCon = -1;
                     for (int i = 0; i < 8; ++i)
                     {
-                        CreateAABox(ref box, (EChild)i, out children[i]);
-                        if (children[i].Contains( triBoxes[triNum]) == JBBox.ContainmentType.Contains)
+                        CreateAABox(box, (EChild)i, out children[i]);
+                        if (children[i].Contains(triBoxes[triNum]) == JBBox.ContainmentType.Contains)
                         {
                             childCon = i;
                             break;
@@ -171,7 +171,10 @@ namespace Jitter.Collision
             BuildOctree();
         }
 
-        private static void CreateAABox(ref JBBox aabb, EChild child, out JBBox result)
+        private static void CreateAABox(
+            in JBBox aabb,
+            EChild child,
+            out JBBox result)
         {
             var dims = JVector.Subtract(aabb.Max, aabb.Min);
             dims = JVector.Multiply(dims, 0.5f);
@@ -211,7 +214,7 @@ namespace Jitter.Collision
 
             var min = new JVector(
                 offset.X * dims.X,
-                offset.Y * dims.Y, 
+                offset.Y * dims.Y,
                 offset.Z * dims.Z);
 
             min = JVector.Add(min, aabb.Min);
@@ -227,7 +230,7 @@ namespace Jitter.Collision
             result = new JBBox(min, max);
         }
 
-        private void GatherTriangles(int nodeIndex, ref List<int> tris)
+        private void GatherTriangles(int nodeIndex, List<int> tris)
         {
             tris.AddRange(nodes[nodeIndex].triIndices);
 
@@ -235,11 +238,11 @@ namespace Jitter.Collision
             for (int i = 0; i < numChildren; ++i)
             {
                 int childNodeIndex = nodes[nodeIndex].nodeIndices[i];
-                GatherTriangles(childNodeIndex, ref tris);
+                GatherTriangles(childNodeIndex, tris);
             }
         }
 
-        public int GetTrianglesIntersectingtAABox(List<int> triangles, ref JBBox testBox)
+        public int GetTrianglesIntersectingtAABox(List<int> triangles, in JBBox testBox)
         {
             if (nodes.Length == 0)
             {
