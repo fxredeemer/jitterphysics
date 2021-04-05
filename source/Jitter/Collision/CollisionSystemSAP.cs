@@ -263,13 +263,13 @@ namespace Jitter.Collision
                         {
                             terrainShape.CollisionNormal(out tempNormal);
                             JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
-                            tempNormal.Negate();
+                            tempNormal = JVector.Negate(tempNormal);
                         }
                         else if (useTriangleMeshNormal && ms is TriangleMeshShape triangleMeshShape)
                         {
                             triangleMeshShape.CollisionNormal(out tempNormal);
                             JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
-                            tempNormal.Negate();
+                            tempNormal = JVector.Negate(tempNormal);
                         }
 
                         normal = tempNormal;

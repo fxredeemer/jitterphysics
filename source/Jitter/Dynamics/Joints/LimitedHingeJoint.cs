@@ -24,7 +24,7 @@ namespace Jitter.Dynamics.Joints
             worldPointConstraint[0] = new PointOnPoint(body1, body2, pos1);
             worldPointConstraint[1] = new PointOnPoint(body1, body2, pos2);
 
-            hingeAxis.Normalize();
+            hingeAxis = JVector.Normalize(hingeAxis);
 
             var perpDir = JVector.Up;
 
@@ -35,7 +35,7 @@ namespace Jitter.Dynamics.Joints
 
             var sideAxis = JVector.Cross(hingeAxis, perpDir);
             perpDir = JVector.Cross(sideAxis, hingeAxis);
-            perpDir.Normalize();
+            perpDir = JVector.Normalize(perpDir);
 
             float len = 10.0f * 3;
 

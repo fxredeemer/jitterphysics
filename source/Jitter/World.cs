@@ -688,8 +688,8 @@ namespace Jitter
                     }
                 }
 
-                body.force.MakeZero();
-                body.torque.MakeZero();
+                body.force = new JVector();
+                body.torque = new JVector();
             }
         }
 

@@ -43,12 +43,12 @@ namespace Jitter.Dynamics.Constraints
             JVector.Subtract(ref p2, ref p1, out var dp);
 
             var l = JVector.Transform(lineNormal, body1.orientation);
-            l.Normalize();
+            l = JVector.Normalize(l);
 
             var t = (p1 - p2) % l;
             if (t.LengthSquared() != 0.0f)
             {
-                t.Normalize();
+                t = JVector.Normalize(t);
             }
 
             t %= l;

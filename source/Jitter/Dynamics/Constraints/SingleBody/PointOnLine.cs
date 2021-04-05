@@ -22,12 +22,20 @@ namespace Jitter.Dynamics.Constraints.SingleBody
             anchor = body.position + JVector.Transform(localAnchor, body.orientation);
 
             lineNormal = lineDirection;
-            lineNormal.Normalize();
+            lineNormal = JVector.Normalize(lineNormal);
         }
 
         public JVector Anchor { get => anchor; set => anchor = value; }
 
-        public JVector Axis { get => lineNormal; set { lineNormal = value; lineNormal.Normalize(); } }
+        public JVector Axis
+        {
+            get => lineNormal;
+            set
+            {
+                lineNormal = value;
+                lineNormal = JVector.Normalize(lineNormal);
+            }
+        }
 
         public float Softness { get; set; }
 
@@ -52,7 +60,7 @@ namespace Jitter.Dynamics.Constraints.SingleBody
             var t = (p1 - anchor) % l;
             if (t.LengthSquared() != 0.0f)
             {
-                t.Normalize();
+                t = JVector.Normalize(t);
             }
 
             t = t % l;

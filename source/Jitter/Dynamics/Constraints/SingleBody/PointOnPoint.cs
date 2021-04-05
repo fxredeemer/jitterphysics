@@ -40,7 +40,7 @@ namespace Jitter.Dynamics.Constraints.SingleBody
             var n = anchor - p1;
             if (n.LengthSquared() != 0.0f)
             {
-                n.Normalize();
+                n = JVector.Normalize(n);
             }
 
             jacobian[0] = -1.0f * n;

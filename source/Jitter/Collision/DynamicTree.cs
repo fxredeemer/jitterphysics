@@ -9,7 +9,6 @@ namespace Jitter.Collision
     {
         internal const int NullNode = -1;
         private int freeList;
-        private int insertionCount;
         private int nodeCapacity;
         private int nodeCount;
         private const float SettingsAABBMultiplier = 2.0f;
@@ -88,29 +87,47 @@ namespace Jitter.Collision
 
             if (d.X < 0.0f)
             {
-                b.Min.X += d.X;
+                b.Min = new JVector(
+                    b.Min.X + d.X,
+                    b.Min.Y,
+                    b.Min.Z);
             }
             else
             {
-                b.Max.X += d.X;
+                b.Max = new JVector(
+                    b.Max.X + d.X,
+                    b.Max.Y,
+                    b.Max.Z);
             }
 
             if (d.Y < 0.0f)
             {
-                b.Min.Y += d.Y;
+                b.Min = new JVector(
+                    b.Min.X,
+                    b.Min.Y + d.Y,
+                    b.Min.Z);
             }
             else
             {
-                b.Max.Y += d.Y;
+                b.Max = new JVector(
+                    b.Max.X,
+                    b.Max.Y + d.Y,
+                    b.Max.Z);
             }
 
             if (d.Z < 0.0f)
             {
-                b.Min.Z += d.Z;
+                b.Min = new JVector(
+                    b.Min.X,
+                    b.Min.Y,
+                    b.Min.Z + d.Z);
             }
             else
             {
-                b.Max.Z += d.Z;
+                b.Max = new JVector(
+                    b.Max.X,
+                    b.Max.Y,
+                    b.Max.Z + d.Z);
             }
 
             Nodes[proxyId].AABB = b;
@@ -313,8 +330,6 @@ namespace Jitter.Collision
 
         private void InsertLeaf(int leaf)
         {
-            ++insertionCount;
-
             if (Root == NullNode)
             {
                 Root = leaf;

@@ -21,9 +21,10 @@ namespace Jitter.Collision
             ref JVector direction,
             out JVector result)
         {
-            result.X = (direction.X * orientation.M11) + (direction.Y * orientation.M12) + (direction.Z * orientation.M13);
-            result.Y = (direction.X * orientation.M21) + (direction.Y * orientation.M22) + (direction.Z * orientation.M23);
-            result.Z = (direction.X * orientation.M31) + (direction.Y * orientation.M32) + (direction.Z * orientation.M33);
+            result = new JVector(
+                (direction.X * orientation.M11) + (direction.Y * orientation.M12) + (direction.Z * orientation.M13),
+                (direction.X * orientation.M21) + (direction.Y * orientation.M22) + (direction.Z * orientation.M23),
+                (direction.X * orientation.M31) + (direction.Y * orientation.M32) + (direction.Z * orientation.M33));
 
             support.SupportMapping(ref result, out result);
 
@@ -31,9 +32,10 @@ namespace Jitter.Collision
             float y = (result.X * orientation.M12) + (result.Y * orientation.M22) + (result.Z * orientation.M32);
             float z = (result.X * orientation.M13) + (result.Y * orientation.M23) + (result.Z * orientation.M33);
 
-            result.X = position.X + x;
-            result.Y = position.Y + y;
-            result.Z = position.Z + z;
+            result = new JVector(
+                position.X + x,
+                position.Y + y,
+                position.Z + z);
         }
 
         public static bool Detect(
@@ -50,7 +52,7 @@ namespace Jitter.Collision
             JVector temp1;
             JVector mn;
 
-            point = normal = JVector.Zero;
+            point = JVector.Zero;
             penetration = 0.0f;
 
             support1.SupportCenter(out var v01);
@@ -86,7 +88,7 @@ namespace Jitter.Collision
             {
                 JVector.Subtract(ref v1, ref v0, out normal);
 
-                normal.Normalize();
+                normal = JVector.Normalize(normal);
 
                 point = v11;
                 JVector.Add(ref point, ref v12, out point);
@@ -182,7 +184,7 @@ namespace Jitter.Collision
                         return true;
                     }
 
-                    normal.Normalize();
+                    normal = JVector.Normalize(normal);
 
                     float d = JVector.Dot(ref normal, ref v1);
 

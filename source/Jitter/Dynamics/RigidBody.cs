@@ -397,29 +397,47 @@ namespace Jitter.Dynamics
 
             if (sweptDirection.X < 0.0f)
             {
-                boundingBox.Min.X += sweptDirection.X;
+                boundingBox.Min = new JVector(
+                    boundingBox.Min.X + sweptDirection.X,
+                    boundingBox.Min.Y,
+                    boundingBox.Min.Z);
             }
             else
             {
-                boundingBox.Max.X += sweptDirection.X;
+                boundingBox.Max = new JVector(
+                    boundingBox.Max.X + sweptDirection.X,
+                    boundingBox.Max.Y,
+                    boundingBox.Max.Z);
             }
 
             if (sweptDirection.Y < 0.0f)
             {
-                boundingBox.Min.Y += sweptDirection.Y;
+                boundingBox.Min = new JVector(
+                    boundingBox.Min.X,
+                    boundingBox.Min.Y + sweptDirection.Y,
+                    boundingBox.Min.Z);
             }
             else
             {
-                boundingBox.Max.Y += sweptDirection.Y;
+                boundingBox.Max = new JVector(
+                    boundingBox.Max.X,
+                    boundingBox.Max.Y + sweptDirection.Y,
+                    boundingBox.Max.Z);
             }
 
             if (sweptDirection.Z < 0.0f)
             {
-                boundingBox.Min.Z += sweptDirection.Z;
+                boundingBox.Min = new JVector(
+                    boundingBox.Min.X,
+                    boundingBox.Min.Y,
+                    boundingBox.Min.Z + sweptDirection.Z);
             }
             else
             {
-                boundingBox.Max.Z += sweptDirection.Z;
+                boundingBox.Max = new JVector(
+                    boundingBox.Max.X,
+                    boundingBox.Max.Y,
+                    boundingBox.Max.Z + sweptDirection.Z);
             }
         }
 
@@ -434,7 +452,7 @@ namespace Jitter.Dynamics
                 JVector.Add(ref boundingBox.Min, ref position, out boundingBox.Min);
                 JVector.Add(ref boundingBox.Max, ref position, out boundingBox.Max);
 
-                angularVelocity.MakeZero();
+                angularVelocity = new JVector();
             }
             else
             {
