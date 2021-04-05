@@ -10,9 +10,10 @@ namespace Jitter.Collision
 
         private static void SupportMapTransformed(ISupportMappable support, ref JMatrix orientation, ref JVector position, ref JVector direction, out JVector result)
         {
-            result.X = (direction.X * orientation.M11) + (direction.Y * orientation.M12) + (direction.Z * orientation.M13);
-            result.Y = (direction.X * orientation.M21) + (direction.Y * orientation.M22) + (direction.Z * orientation.M23);
-            result.Z = (direction.X * orientation.M31) + (direction.Y * orientation.M32) + (direction.Z * orientation.M33);
+            result = new JVector(
+                (direction.X * orientation.M11) + (direction.Y * orientation.M12) + (direction.Z * orientation.M13),
+                (direction.X * orientation.M21) + (direction.Y * orientation.M22) + (direction.Z * orientation.M23),
+                (direction.X * orientation.M31) + (direction.Y * orientation.M32) + (direction.Z * orientation.M33));
 
             support.SupportMapping(ref result, out result);
 
@@ -20,9 +21,10 @@ namespace Jitter.Collision
             float y = (result.X * orientation.M12) + (result.Y * orientation.M22) + (result.Z * orientation.M32);
             float z = (result.X * orientation.M13) + (result.Y * orientation.M23) + (result.Z * orientation.M33);
 
-            result.X = position.X + x;
-            result.Y = position.Y + y;
-            result.Z = position.Z + z;
+            result = new JVector(
+                position.X + x,
+                position.Y + y,
+                position.Z + z);
         }
 
         public static bool Pointcast(ISupportMappable support, ref JMatrix orientation, ref JVector position, ref JVector point)
@@ -99,17 +101,12 @@ namespace Jitter.Collision
             simplexSolver.Reset();
 
             var r = position1 - position2;
-            JVector w, v;
-
-            JVector rn, vn;
-
-            rn = JVector.Negate(r);
+            var rn = JVector.Negate(r);
 
             SupportMapTransformed(support1, ref orientation1, ref position1, ref rn, out var supVertexA);
-
             SupportMapTransformed(support2, ref orientation2, ref position2, ref r, out var supVertexB);
 
-            v = supVertexA - supVertexB;
+            var v = supVertexA - supVertexB;
 
             normal = JVector.Zero;
 
@@ -120,10 +117,10 @@ namespace Jitter.Collision
 
             while ((distSq > epsilon) && (maxIter-- != 0))
             {
-                vn = JVector.Negate(v);
+                var vn = JVector.Negate(v);
                 SupportMapTransformed(support1, ref orientation1, ref position1, ref vn, out supVertexA);
                 SupportMapTransformed(support2, ref orientation2, ref position2, ref v, out supVertexB);
-                w = supVertexA - supVertexB;
+                var w = supVertexA - supVertexB;
 
                 if (!simplexSolver.InSimplex(w))
                 {
@@ -145,7 +142,7 @@ namespace Jitter.Collision
 
             if (normal.LengthSquared() > JMath.Epsilon * JMath.Epsilon)
             {
-                normal.Normalize();
+                normal = JVector.Normalize(normal);
             }
 
             simplexSolverPool.GiveBack(simplexSolver);
@@ -228,7 +225,7 @@ namespace Jitter.Collision
 
             if (normal.LengthSquared() > JMath.Epsilon * JMath.Epsilon)
             {
-                normal.Normalize();
+                normal = JVector.Normalize(normal);
             }
 
             simplexSolverPool.GiveBack(simplexSolver);
@@ -547,7 +544,8 @@ namespace Jitter.Collision
                                 else
                                 {
                                     _cachedValidClosest = true;
-                                    _cachedV.X = _cachedV.Y = _cachedV.Z = 0f;
+                                    _cachedV = new JVector();
+
                                 }
                                 break;
                             }
@@ -564,7 +562,11 @@ namespace Jitter.Collision
                 return _cachedValidClosest;
             }
 
-            public bool ClosestPtPointTriangle(JVector p, JVector a, JVector b, JVector c,
+            public bool ClosestPtPointTriangle(
+                JVector p,
+                JVector a, 
+                JVector b, 
+                JVector c,
                 ref SubSimplexClosestResult result)
             {
                 result.UsedVertices.Reset();
