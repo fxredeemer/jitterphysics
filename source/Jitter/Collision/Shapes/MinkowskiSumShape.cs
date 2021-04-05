@@ -63,17 +63,17 @@ namespace Jitter.Collision.Shapes
             mass = CalculateMassInertia(this, out shifted, out inertia);
         }
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
             var temp2 = JVector.Zero;
 
             for (int i = 0; i < shapes.Count; i++)
             {
-                shapes[i].SupportMapping(ref direction, out var temp1);
-                JVector.Add(ref temp1, ref temp2, out temp2);
+                shapes[i].SupportMapping(in direction, out var temp1);
+                JVector.Add( temp1,  temp2, out temp2);
             }
 
-            JVector.Subtract(ref temp2, ref shifted, out result);
+            JVector.Subtract(temp2, shifted, out result);
         }
     }
 }

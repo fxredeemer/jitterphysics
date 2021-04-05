@@ -5,7 +5,8 @@ namespace Jitter.Collision.Shapes
 {
     public class CapsuleShape : Shape
     {
-        private float length, radius;
+        private float length;
+        private float radius;
 
         public float Length
         {
@@ -41,32 +42,36 @@ namespace Jitter.Collision.Shapes
 
             mass = massCylinder + massSphere;
 
-            inertia.M11 = (1.0f / 4.0f * massCylinder * radius * radius) + (1.0f / 12.0f * massCylinder * length * length) + (2.0f / 5.0f * massSphere * radius * radius) + (1.0f / 4.0f * length * length * massSphere);
-            inertia.M22 = (1.0f / 2.0f * massCylinder * radius * radius) + (2.0f / 5.0f * massSphere * radius * radius);
-            inertia.M33 = (1.0f / 4.0f * massCylinder * radius * radius) + (1.0f / 12.0f * massCylinder * length * length) + (2.0f / 5.0f * massSphere * radius * radius) + (1.0f / 4.0f * length * length * massSphere);
+            inertia = JMatrix.FromDiagonal(
+                m11: (1.0f / 4.0f * massCylinder * radius * radius) + (1.0f / 12.0f * massCylinder * length * length) + (2.0f / 5.0f * massSphere * radius * radius) + (1.0f / 4.0f * length * length * massSphere),
+                m22: (1.0f / 2.0f * massCylinder * radius * radius) + (2.0f / 5.0f * massSphere * radius * radius),
+                m33: (1.0f / 4.0f * massCylinder * radius * radius) + (1.0f / 12.0f * massCylinder * length * length) + (2.0f / 5.0f * massSphere * radius * radius) + (1.0f / 4.0f * length * length * massSphere));
         }
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
             float r = JMath.Sqrt((direction.X * direction.X) + (direction.Z * direction.Z));
 
             if (Math.Abs(direction.Y) > 0.0f)
             {
-                JVector.Normalize(ref direction, out var dir);
-                JVector.Multiply(ref dir, radius, out result);
-                result.Y += Math.Sign(direction.Y) * 0.5f * length;
+                JVector.Normalize(in direction, out var dir);
+                JVector.Multiply(in dir, radius, out result);
+
+                result = new JVector(
+                    result.X,
+                    result.Y + Math.Sign(direction.Y) * 0.5f * length,
+                    result.Z);
             }
             else if (r > 0.0f)
             {
-                result.X = direction.X / r * radius;
-                result.Y = 0.0f;
-                result.Z = direction.Z / r * radius;
+                result = new JVector(
+                    direction.X / r * radius,
+                    0.0f,
+                    direction.Z / r * radius);
             }
             else
             {
-                result.X = 0.0f;
-                result.Y = 0.0f;
-                result.Z = 0.0f;
+                result = new JVector();
             }
         }
     }

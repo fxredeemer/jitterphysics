@@ -21,32 +21,29 @@ namespace Jitter.Collision.Shapes
             UpdateShape();
         }
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
             result = direction;
-            result.Normalize();
+            result = JVector.Normalize(result);
 
-            JVector.Multiply(ref result, radius, out result);
+            JVector.Multiply(result, radius, out result);
         }
 
-        public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public override void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
-            box.Min.X = -radius;
-            box.Min.Y = -radius;
-            box.Min.Z = -radius;
-            box.Max.X = radius;
-            box.Max.Y = radius;
-            box.Max.Z = radius;
+            box = new JBBox(
+                new JVector(-radius, -radius, -radius),
+                new JVector(radius, radius, radius));
         }
 
         public override void CalculateMassInertia()
         {
             mass = 4.0f / 3.0f * JMath.Pi * radius * radius * radius;
 
-            inertia = JMatrix.Identity;
-            inertia.M11 = 0.4f * mass * radius * radius;
-            inertia.M22 = 0.4f * mass * radius * radius;
-            inertia.M33 = 0.4f * mass * radius * radius;
+            inertia = JMatrix.FromDiagonal(
+                m11: 0.4f * mass * radius * radius,
+                m22: 0.4f * mass * radius * radius,
+                m33: 0.4f * mass * radius * radius);
         }
     }
 }

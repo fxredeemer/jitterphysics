@@ -24,6 +24,8 @@ namespace Jitter.Collision.Shapes
             heightsLength1 = heights.GetLength(1);
 
             boundings = JBBox.SmallBox;
+            float minY = 0.0f;
+            float maxY = 0.0f;
 
             for (int i = 0; i < heightsLength0; i++)
             {
@@ -31,20 +33,24 @@ namespace Jitter.Collision.Shapes
                 {
                     if (heights[i, e] > boundings.Max.Y)
                     {
-                        boundings.Max.Y = heights[i, e];
+                        maxY = heights[i, e];
                     }
                     else if (heights[i, e] < boundings.Min.Y)
                     {
-                        boundings.Min.Y = heights[i, e];
+                        minY = heights[i, e];
                     }
                 }
             }
 
-            boundings.Min.X = 0.0f;
-            boundings.Min.Z = 0.0f;
+            float minX = 0.0f;
+            float minZ = 0.0f;
 
-            boundings.Max.X = checked(heightsLength0 * scaleX);
-            boundings.Max.Z = checked(heightsLength1 * scaleZ);
+            float maxX = checked(heightsLength0 * scaleX);
+            float maxZ = checked(heightsLength1 * scaleZ);
+
+            boundings = new JBBox(
+                new JVector(minX, minY, minZ),
+                new JVector(maxX, maxY, maxZ));
 
             this.heights = heights;
             this.scaleX = scaleX;
@@ -88,26 +94,26 @@ namespace Jitter.Collision.Shapes
 
             if (leftTriangle)
             {
-                points[0].Set((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
-                points[1].Set((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
-                points[2].Set((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
+                points[0] = new JVector((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
+                points[1] = new JVector((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
+                points[2] = new JVector((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
             }
             else
             {
-                points[0].Set((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
-                points[1].Set((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
-                points[2].Set((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
+                points[0] = new JVector((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
+                points[1] = new JVector((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
+                points[2] = new JVector((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
             }
 
             var sum = points[0];
-            JVector.Add(ref sum, ref points[1], out sum);
-            JVector.Add(ref sum, ref points[2], out sum);
-            JVector.Multiply(ref sum, 1.0f / 3.0f, out sum);
+            JVector.Add(sum, points[1], out sum);
+            JVector.Add(sum, points[2], out sum);
+            JVector.Multiply(sum, 1.0f / 3.0f, out sum);
             geomCen = sum;
 
-            JVector.Subtract(ref points[1], ref points[0], out sum);
-            JVector.Subtract(ref points[2], ref points[0], out normal);
-            JVector.Cross(ref sum, ref normal, out normal);
+            JVector.Subtract(points[1], points[0], out sum);
+            JVector.Subtract(points[2], points[0], out normal);
+            JVector.Cross(sum, normal, out normal);
         }
 
         public void CollisionNormal(out JVector normal)
@@ -115,7 +121,7 @@ namespace Jitter.Collision.Shapes
             normal = this.normal;
         }
 
-        public override int Prepare(ref JBBox box)
+        public override int Prepare(in JBBox box)
         {
             if (box.Min.X < boundings.Min.X)
             {
@@ -169,21 +175,18 @@ namespace Jitter.Collision.Shapes
             Mass = 1.0f;
         }
 
-        public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public override void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
             box = boundings;
 
-            box.Min.X -= SphericalExpansion;
-            box.Min.Y -= SphericalExpansion;
-            box.Min.Z -= SphericalExpansion;
-            box.Max.X += SphericalExpansion;
-            box.Max.Y += SphericalExpansion;
-            box.Max.Z += SphericalExpansion;
+            box = new JBBox(
+                new JVector(box.Min.X - SphericalExpansion, box.Min.Y - SphericalExpansion, box.Min.Z - SphericalExpansion),
+                new JVector(box.Max.X + SphericalExpansion, box.Max.Y + SphericalExpansion, box.Max.Z + SphericalExpansion));
 
-            box.Transform(ref orientation);
+            box = box.Transform(orientation);
         }
 
-        public override void MakeHull(ref List<JVector> triangleList, int generationThreshold)
+        public override void MakeHull(List<JVector> triangleList, int generationThreshold)
         {
             for (int index = 0; index < (heightsLength0 - 1) * (heightsLength1 - 1); index++)
             {
@@ -200,39 +203,39 @@ namespace Jitter.Collision.Shapes
             }
         }
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
-            JVector.Normalize(ref direction, out var expandVector);
-            JVector.Multiply(ref expandVector, SphericalExpansion, out expandVector);
+            JVector.Normalize(direction, out var expandVector);
+            JVector.Multiply(expandVector, SphericalExpansion, out expandVector);
 
             int minIndex = 0;
-            float min = JVector.Dot(ref points[0], ref direction);
-            float dot = JVector.Dot(ref points[1], ref direction);
+            float min = JVector.Dot(points[0], direction);
+            float dot = JVector.Dot(points[1], direction);
             if (dot > min)
             {
                 min = dot;
                 minIndex = 1;
             }
-            dot = JVector.Dot(ref points[2], ref direction);
+            dot = JVector.Dot(points[2], direction);
             if (dot > min)
             {
                 minIndex = 2;
             }
 
-            JVector.Add(ref points[minIndex], ref expandVector, out result);
+            JVector.Add(points[minIndex], expandVector, out result);
         }
 
-        public override int Prepare(ref JVector rayOrigin, ref JVector rayDelta)
+        public override int Prepare(in JVector rayOrigin, in JVector rayDelta)
         {
             var box = JBBox.SmallBox;
 
-            JVector.Normalize(ref rayDelta, out var rayEnd);
+            JVector.Normalize(rayDelta, out var rayEnd);
             rayEnd = rayOrigin + rayDelta + (rayEnd * SphericalExpansion);
 
-            box.AddPoint(ref rayOrigin);
-            box.AddPoint(ref rayEnd);
+            box = box.AddPoint(rayOrigin);
+            box = box.AddPoint(rayEnd);
 
-            return Prepare(ref box);
+            return Prepare(box);
         }
     }
 }

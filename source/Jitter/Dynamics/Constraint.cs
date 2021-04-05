@@ -23,7 +23,6 @@ namespace Jitter.Dynamics.Constraints
             instance = Interlocked.Increment(ref instanceCount);
 
             body1?.Update();
-
             body2?.Update();
         }
 

@@ -9,7 +9,6 @@ namespace Jitter.Collision
     {
         internal const int NullNode = -1;
         private int freeList;
-        private int insertionCount;
         private int nodeCapacity;
         private int nodeCount;
         private const float SettingsAABBMultiplier = 2.0f;
@@ -40,15 +39,18 @@ namespace Jitter.Collision
 
         private readonly Random rnd = new Random();
 
-        public int AddProxy(ref JBBox aabb, T userData)
+        public int AddProxy(in JBBox aabb, T userData)
         {
             int proxyId = AllocateNode();
 
             Nodes[proxyId].MinorRandomExtension = (float)rnd.NextDouble() * settingsRndExtension;
 
             var r = new JVector(Nodes[proxyId].MinorRandomExtension);
-            Nodes[proxyId].AABB.Min = aabb.Min - r;
-            Nodes[proxyId].AABB.Max = aabb.Max + r;
+
+            Nodes[proxyId].AABB = new JBBox(
+                aabb.Min - r,
+                aabb.Max + r);
+
             Nodes[proxyId].UserData = userData;
             Nodes[proxyId].LeafCount = 1;
 
@@ -66,13 +68,13 @@ namespace Jitter.Collision
             FreeNode(proxyId);
         }
 
-        public bool MoveProxy(int proxyId, ref JBBox aabb, JVector displacement)
+        public bool MoveProxy(int proxyId, in JBBox aabb, JVector displacement)
         {
             Debug.Assert(0 <= proxyId && proxyId < nodeCapacity);
 
             Debug.Assert(Nodes[proxyId].IsLeaf());
 
-            if (Nodes[proxyId].AABB.Contains(ref aabb) != JBBox.ContainmentType.Disjoint)
+            if (Nodes[proxyId].AABB.Contains(aabb) != JBBox.ContainmentType.Disjoint)
             {
                 return false;
             }
@@ -81,39 +83,50 @@ namespace Jitter.Collision
 
             var b = aabb;
             var r = new JVector(Nodes[proxyId].MinorRandomExtension);
-            b.Min -= r;
-            b.Max += r;
+            
+            b = new JBBox(
+                b.Min - r,
+                b.Max + r);
 
             var d = SettingsAABBMultiplier * displacement;
 
+            float deltaMinX = 0.0f;
+            float deltaMaxX = 0.0f;
+            float deltaMinY = 0.0f;
+            float deltaMaxY = 0.0f;
+            float deltaMinZ = 0.0f;
+            float deltaMaxZ = 0.0f;
+
             if (d.X < 0.0f)
             {
-                b.Min.X += d.X;
+                deltaMinX = d.X;
             }
             else
             {
-                b.Max.X += d.X;
+                deltaMaxX = d.X;
             }
 
             if (d.Y < 0.0f)
             {
-                b.Min.Y += d.Y;
+                deltaMinY = d.Y;
             }
             else
             {
-                b.Max.Y += d.Y;
+                deltaMaxY = d.Y;
             }
 
             if (d.Z < 0.0f)
             {
-                b.Min.Z += d.Z;
+                deltaMinZ = d.Z;
             }
             else
             {
-                b.Max.Z += d.Z;
+                deltaMaxZ = d.Z;
             }
 
-            Nodes[proxyId].AABB = b;
+            Nodes[proxyId].AABB = new JBBox(
+                new JVector(b.Min.X + deltaMinX, b.Min.Y + deltaMinY, b.Min.Z + deltaMinZ),
+                new JVector(b.Max.X + deltaMaxX, b.Max.Y + deltaMaxY, b.Max.Z + deltaMaxZ));
 
             InsertLeaf(proxyId);
             return true;
@@ -147,7 +160,7 @@ namespace Jitter.Collision
                 int nodeId = stack.Pop();
                 var node = Nodes[nodeId];
 
-                if (node.AABB.RayIntersect(ref origin, ref direction))
+                if (node.AABB.RayIntersect(origin, direction))
                 {
                     if (node.IsLeaf())
                     {
@@ -155,12 +168,12 @@ namespace Jitter.Collision
                     }
                     else
                     {
-                        if (Nodes[node.Child1].AABB.RayIntersect(ref origin, ref direction))
+                        if (Nodes[node.Child1].AABB.RayIntersect(origin, direction))
                         {
                             stack.Push(node.Child1);
                         }
 
-                        if (Nodes[node.Child2].AABB.RayIntersect(ref origin, ref direction))
+                        if (Nodes[node.Child2].AABB.RayIntersect(origin, direction))
                         {
                             stack.Push(node.Child2);
                         }
@@ -194,7 +207,7 @@ namespace Jitter.Collision
                     continue;
                 }
 
-                if (tree.Nodes[nodeId2].AABB.Contains(ref Nodes[nodeId1].AABB) != JBBox.ContainmentType.Disjoint)
+                if (tree.Nodes[nodeId2].AABB.Contains(Nodes[nodeId1].AABB) != JBBox.ContainmentType.Disjoint)
                 {
                     if (Nodes[nodeId1].IsLeaf() && tree.Nodes[nodeId2].IsLeaf())
                     {
@@ -240,7 +253,7 @@ namespace Jitter.Collision
 
         private readonly ResourcePool<Stack<int>> stackPool = new ResourcePool<Stack<int>>();
 
-        public void Query(List<int> my, ref JBBox aabb)
+        public void Query(List<int> my, in JBBox aabb)
         {
             var stack = stackPool.GetNew();
 
@@ -256,7 +269,7 @@ namespace Jitter.Collision
 
                 var node = Nodes[nodeId];
 
-                if (aabb.Contains(ref node.AABB) != JBBox.ContainmentType.Disjoint)
+                if (aabb.Contains(node.AABB) != JBBox.ContainmentType.Disjoint)
                 {
                     if (node.IsLeaf())
                     {
@@ -313,8 +326,6 @@ namespace Jitter.Collision
 
         private void InsertLeaf(int leaf)
         {
-            ++insertionCount;
-
             if (Root == NullNode)
             {
                 Root = leaf;
@@ -329,13 +340,13 @@ namespace Jitter.Collision
                 int child1 = Nodes[sibling].Child1;
                 int child2 = Nodes[sibling].Child2;
 
-                JBBox.CreateMerged(ref Nodes[sibling].AABB, ref leafAABB, out Nodes[sibling].AABB);
+                JBBox.CreateMerged(Nodes[sibling].AABB, leafAABB, out Nodes[sibling].AABB);
 
                 Nodes[sibling].LeafCount++;
 
                 float siblingArea = Nodes[sibling].AABB.Perimeter;
                 var parentAABB = new JBBox();
-                JBBox.CreateMerged(ref Nodes[sibling].AABB, ref leafAABB, out Nodes[sibling].AABB);
+                JBBox.CreateMerged(Nodes[sibling].AABB, leafAABB, out Nodes[sibling].AABB);
 
                 float parentArea = parentAABB.Perimeter;
                 float cost1 = 2.0f * parentArea;
@@ -345,12 +356,12 @@ namespace Jitter.Collision
                 float cost2;
                 if (Nodes[child1].IsLeaf())
                 {
-                    JBBox.CreateMerged(ref leafAABB, ref Nodes[child1].AABB, out var aabb);
+                    JBBox.CreateMerged(leafAABB, Nodes[child1].AABB, out var aabb);
                     cost2 = aabb.Perimeter + inheritanceCost;
                 }
                 else
                 {
-                    JBBox.CreateMerged(ref leafAABB, ref Nodes[child1].AABB, out var aabb);
+                    JBBox.CreateMerged(leafAABB, Nodes[child1].AABB, out var aabb);
 
                     float oldArea = Nodes[child1].AABB.Perimeter;
                     float newArea = aabb.Perimeter;
@@ -360,12 +371,12 @@ namespace Jitter.Collision
                 float cost3;
                 if (Nodes[child2].IsLeaf())
                 {
-                    JBBox.CreateMerged(ref leafAABB, ref Nodes[child2].AABB, out var aabb);
+                    JBBox.CreateMerged(leafAABB, Nodes[child2].AABB, out var aabb);
                     cost3 = aabb.Perimeter + inheritanceCost;
                 }
                 else
                 {
-                    JBBox.CreateMerged(ref leafAABB, ref Nodes[child2].AABB, out var aabb);
+                    JBBox.CreateMerged(leafAABB, Nodes[child2].AABB, out var aabb);
                     float oldArea = Nodes[child2].AABB.Perimeter;
                     float newArea = aabb.Perimeter;
                     cost3 = newArea - oldArea + inheritanceCost;
@@ -376,7 +387,7 @@ namespace Jitter.Collision
                     break;
                 }
 
-                JBBox.CreateMerged(ref leafAABB, ref Nodes[sibling].AABB, out Nodes[sibling].AABB);
+                JBBox.CreateMerged(leafAABB, Nodes[sibling].AABB, out Nodes[sibling].AABB);
 
                 if (cost2 < cost3)
                 {
@@ -392,7 +403,7 @@ namespace Jitter.Collision
             int newParent = AllocateNode();
             Nodes[newParent].ParentOrNext = oldParent;
             Nodes[newParent].UserData = default;
-            JBBox.CreateMerged(ref leafAABB, ref Nodes[sibling].AABB, out Nodes[newParent].AABB);
+            JBBox.CreateMerged(leafAABB, Nodes[sibling].AABB, out Nodes[newParent].AABB);
             Nodes[newParent].LeafCount = Nodes[sibling].LeafCount + 1;
 
             if (oldParent != NullNode)
@@ -457,8 +468,7 @@ namespace Jitter.Collision
                 parent = grandParent;
                 while (parent != NullNode)
                 {
-                    JBBox.CreateMerged(ref Nodes[Nodes[parent].Child1].AABB,
-                        ref Nodes[Nodes[parent].Child2].AABB, out Nodes[parent].AABB);
+                    JBBox.CreateMerged(Nodes[Nodes[parent].Child1].AABB, Nodes[Nodes[parent].Child2].AABB, out Nodes[parent].AABB);
 
                     Debug.Assert(Nodes[parent].LeafCount > 0);
                     Nodes[parent].LeafCount--;

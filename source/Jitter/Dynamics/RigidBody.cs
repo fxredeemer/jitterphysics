@@ -148,10 +148,10 @@ namespace Jitter.Dynamics
         private int CalculateHash(int a)
         {
             a = a ^ 61 ^ (a >> 16);
-            a = a + (a << 3);
-            a = a ^ (a >> 4);
-            a = a * 0x27d4eb2d;
-            a = a ^ (a >> 15);
+            a += a << 3;
+            a ^= a >> 4;
+            a *= 0x27d4eb2d;
+            a ^= a >> 15;
             return a;
         }
 
@@ -169,8 +169,8 @@ namespace Jitter.Dynamics
                 else if (isActive && !value)
                 {
                     inactiveTime = float.PositiveInfinity;
-                    angularVelocity.MakeZero();
-                    linearVelocity.MakeZero();
+                    angularVelocity = JVector.Zero;
+                    linearVelocity = JVector.Zero;
                 }
 
                 isActive = value;
@@ -184,8 +184,8 @@ namespace Jitter.Dynamics
                 throw new InvalidOperationException("Can't apply an impulse to a static body.");
             }
 
-            JVector.Multiply(ref impulse, inverseMass, out var temp);
-            JVector.Add(ref linearVelocity, ref temp, out linearVelocity);
+            JVector.Multiply(impulse, inverseMass, out var temp);
+            JVector.Add(linearVelocity, temp, out linearVelocity);
         }
 
         public void ApplyImpulse(JVector impulse, JVector relativePosition)
@@ -195,25 +195,24 @@ namespace Jitter.Dynamics
                 throw new InvalidOperationException("Can't apply an impulse to a static body.");
             }
 
-            JVector.Multiply(ref impulse, inverseMass, out var temp);
-            JVector.Add(ref linearVelocity, ref temp, out linearVelocity);
-
-            JVector.Cross(ref relativePosition, ref impulse, out temp);
-            JVector.Transform(ref temp, ref invInertiaWorld, out temp);
-            JVector.Add(ref angularVelocity, ref temp, out angularVelocity);
+            JVector.Multiply(impulse, inverseMass, out var temp);
+            JVector.Add(linearVelocity, temp, out linearVelocity);
+            JVector.Cross(relativePosition, impulse, out temp);
+            JVector.Transform(temp, invInertiaWorld, out temp);
+            JVector.Add(angularVelocity, temp, out angularVelocity);
         }
 
         public void AddForce(JVector force)
         {
-            JVector.Add(ref force, ref this.force, out this.force);
+            JVector.Add(force, this.force, out this.force);
         }
 
         public void AddForce(JVector force, JVector pos)
         {
-            JVector.Add(ref this.force, ref force, out this.force);
-            JVector.Subtract(ref pos, ref position, out pos);
-            JVector.Cross(ref pos, ref force, out pos);
-            JVector.Add(ref pos, ref torque, out torque);
+            JVector.Add(this.force, force, out this.force);
+            JVector.Subtract(pos, position, out pos);
+            JVector.Cross(pos, force, out pos);
+            JVector.Add(pos, torque, out torque);
         }
 
         public JVector Torque => torque;
@@ -222,7 +221,7 @@ namespace Jitter.Dynamics
 
         public void AddTorque(JVector torque)
         {
-            JVector.Add(ref torque, ref this.torque, out this.torque);
+            JVector.Add(torque, this.torque, out this.torque);
         }
 
         protected bool useShapeMassProperties = true;
@@ -230,7 +229,7 @@ namespace Jitter.Dynamics
         public void SetMassProperties()
         {
             inertia = Shape.inertia;
-            JMatrix.Inverse(ref inertia, out invInertia);
+            JMatrix.Inverse(inertia, out invInertia);
             inverseMass = 1.0f / Shape.mass;
             useShapeMassProperties = true;
         }
@@ -242,7 +241,7 @@ namespace Jitter.Dynamics
                 if (!isParticle)
                 {
                     invInertia = inertia;
-                    JMatrix.Inverse(ref inertia, out this.inertia);
+                    JMatrix.Inverse(inertia, out this.inertia);
                 }
                 inverseMass = mass;
             }
@@ -251,7 +250,7 @@ namespace Jitter.Dynamics
                 if (!isParticle)
                 {
                     this.inertia = inertia;
-                    JMatrix.Inverse(ref inertia, out invInertia);
+                    JMatrix.Inverse(inertia, out invInertia);
                 }
                 inverseMass = 1.0f / mass;
             }
@@ -358,8 +357,8 @@ namespace Jitter.Dynamics
                         island.islandManager.MakeBodyStatic(this);
                     }
 
-                    angularVelocity.MakeZero();
-                    linearVelocity.MakeZero();
+                    angularVelocity = JVector.Zero;
+                    linearVelocity = JVector.Zero;
                 }
                 isStatic = value;
             }
@@ -381,8 +380,8 @@ namespace Jitter.Dynamics
 
                 if (!isParticle)
                 {
-                    JMatrix.Multiply(ref Shape.inertia, value / Shape.mass, out inertia);
-                    JMatrix.Inverse(ref inertia, out invInertia);
+                    JMatrix.Multiply(Shape.inertia, value / Shape.mass, out inertia);
+                    JMatrix.Inverse(inertia, out invInertia);
                 }
 
                 inverseMass = 1.0f / value;
@@ -395,32 +394,43 @@ namespace Jitter.Dynamics
         {
             sweptDirection = linearVelocity * timestep;
 
+            float deltaMinX = 0.0f;
+            float deltaMaxX = 0.0f;
+            float deltaMinY = 0.0f;
+            float deltaMaxY = 0.0f;
+            float deltaMinZ = 0.0f;
+            float deltaMaxZ = 0.0f;
+
             if (sweptDirection.X < 0.0f)
             {
-                boundingBox.Min.X += sweptDirection.X;
+                deltaMinX = sweptDirection.X;
             }
             else
             {
-                boundingBox.Max.X += sweptDirection.X;
+                deltaMaxX = sweptDirection.X;
             }
 
             if (sweptDirection.Y < 0.0f)
             {
-                boundingBox.Min.Y += sweptDirection.Y;
+                deltaMinY = sweptDirection.Y;
             }
             else
             {
-                boundingBox.Max.Y += sweptDirection.Y;
+                deltaMaxY = sweptDirection.Y;
             }
 
             if (sweptDirection.Z < 0.0f)
             {
-                boundingBox.Min.Z += sweptDirection.Z;
+                deltaMinZ = sweptDirection.Z;
             }
             else
             {
-                boundingBox.Max.Z += sweptDirection.Z;
+                deltaMaxZ = sweptDirection.Z;
             }
+
+            boundingBox = new JBBox(
+                new JVector(boundingBox.Min.X + deltaMinX, boundingBox.Min.Y + deltaMinY, boundingBox.Min.Z + deltaMinZ),
+                new JVector(boundingBox.Max.X + deltaMaxX, boundingBox.Max.Y + deltaMaxY, boundingBox.Max.Z + deltaMaxZ));
         }
 
         public virtual void Update()
@@ -431,22 +441,26 @@ namespace Jitter.Dynamics
                 invInertia = invInertiaWorld = JMatrix.Zero;
                 invOrientation = orientation = JMatrix.Identity;
                 boundingBox = shape.boundingBox;
-                JVector.Add(ref boundingBox.Min, ref position, out boundingBox.Min);
-                JVector.Add(ref boundingBox.Max, ref position, out boundingBox.Max);
 
-                angularVelocity.MakeZero();
+                boundingBox = new JBBox(
+                    JVector.Add(boundingBox.Min, position),
+                    JVector.Add(boundingBox.Max, position));
+
+                angularVelocity = new JVector();
             }
             else
             {
-                JMatrix.Transpose(ref orientation, out invOrientation);
-                Shape.GetBoundingBox(ref orientation, out boundingBox);
-                JVector.Add(ref boundingBox.Min, ref position, out boundingBox.Min);
-                JVector.Add(ref boundingBox.Max, ref position, out boundingBox.Max);
+                JMatrix.Transpose(orientation, out invOrientation);
+                Shape.GetBoundingBox( orientation, out boundingBox);
+                
+                boundingBox = new JBBox(
+                    JVector.Add(boundingBox.Min, position),
+                    JVector.Add(boundingBox.Max, position));
 
                 if (!isStatic)
                 {
-                    JMatrix.Multiply(ref invOrientation, ref invInertia, out invInertiaWorld);
-                    JMatrix.Multiply(ref invInertiaWorld, ref orientation, out invInertiaWorld);
+                    JMatrix.Multiply(invOrientation, invInertia, out invInertiaWorld);
+                    JMatrix.Multiply(invInertiaWorld, orientation, out invInertiaWorld);
                 }
             }
         }
@@ -503,7 +517,7 @@ namespace Jitter.Dynamics
 
             if (enableDebugDraw)
             {
-                shape.MakeHull(ref hullPoints, 3);
+                shape.MakeHull(hullPoints, 3);
             }
         }
 
@@ -517,14 +531,14 @@ namespace Jitter.Dynamics
                 pos2 = hullPoints[i + 1];
                 pos3 = hullPoints[i + 2];
 
-                JVector.Transform(ref pos1, ref orientation, out pos1);
-                JVector.Add(ref pos1, ref position, out pos1);
+                JVector.Transform(pos1, orientation, out pos1);
+                JVector.Add(pos1, position, out pos1);
 
-                JVector.Transform(ref pos2, ref orientation, out pos2);
-                JVector.Add(ref pos2, ref position, out pos2);
+                JVector.Transform(pos2, orientation, out pos2);
+                JVector.Add(pos2, position, out pos2);
 
-                JVector.Transform(ref pos3, ref orientation, out pos3);
-                JVector.Add(ref pos3, ref position, out pos3);
+                JVector.Transform(pos3, orientation, out pos3);
+                JVector.Add(pos3, position, out pos3);
 
                 drawer.DrawTriangle(pos1, pos2, pos3);
             }

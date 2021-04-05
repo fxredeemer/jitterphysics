@@ -31,16 +31,16 @@ namespace Jitter.Dynamics.Constraints.SingleBody
 
         public override void PrepareForIteration(float timestep)
         {
-            JVector.Transform(ref localAnchor1, ref body1.orientation, out r1);
-            JVector.Add(ref body1.position, ref r1, out var p1);
+            JVector.Transform(localAnchor1,  body1.orientation, out r1);
+            JVector.Add( body1.position,  r1, out var p1);
+            JVector.Subtract(p1, anchor, out var dp);
 
-            JVector.Subtract(ref p1, ref anchor, out var dp);
             float deltaLength = dp.Length();
 
             var n = anchor - p1;
             if (n.LengthSquared() != 0.0f)
             {
-                n.Normalize();
+                n = JVector.Normalize(n);
             }
 
             jacobian[0] = -1.0f * n;

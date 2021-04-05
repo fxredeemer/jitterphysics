@@ -27,30 +27,25 @@ namespace Jitter.Collision.Shapes
             return clone;
         }
 
-        public override int Prepare(ref JBBox box)
+        public override int Prepare(in JBBox box)
         {
             potentialTriangles.Clear();
 
-            var exp = box;
+            var exp = new JBBox(
+                new JVector(box.Min.X - SphericalExpansion, box.Min.Y - SphericalExpansion, box.Min.Z - SphericalExpansion),
+                new JVector(box.Max.X + SphericalExpansion, box.Max.Y + SphericalExpansion, box.Max.Z + SphericalExpansion));
 
-            exp.Min.X -= SphericalExpansion;
-            exp.Min.Y -= SphericalExpansion;
-            exp.Min.Z -= SphericalExpansion;
-            exp.Max.X += SphericalExpansion;
-            exp.Max.Y += SphericalExpansion;
-            exp.Max.Z += SphericalExpansion;
-
-            octree.GetTrianglesIntersectingtAABox(potentialTriangles, ref exp);
+            octree.GetTrianglesIntersectingtAABox(potentialTriangles, exp);
 
             return potentialTriangles.Count;
         }
 
-        public override void MakeHull(ref List<JVector> triangleList, int generationThreshold)
+        public override void MakeHull(List<JVector> triangleList, int generationThreshold)
         {
             var large = JBBox.LargeBox;
 
             var indices = new List<int>();
-            octree.GetTrianglesIntersectingtAABox(indices, ref large);
+            octree.GetTrianglesIntersectingtAABox(indices, large);
 
             for (int i = 0; i < indices.Count; i++)
             {
@@ -60,11 +55,11 @@ namespace Jitter.Collision.Shapes
             }
         }
 
-        public override int Prepare(ref JVector rayOrigin, ref JVector rayDelta)
+        public override int Prepare(in JVector rayOrigin, in JVector rayDelta)
         {
             potentialTriangles.Clear();
 
-            JVector.Normalize(ref rayDelta, out var expDelta);
+            JVector.Normalize(rayDelta, out var expDelta);
             expDelta = rayDelta + (expDelta * SphericalExpansion);
 
             octree.GetTrianglesIntersectingRay(potentialTriangles, rayOrigin, expDelta);
@@ -74,20 +69,20 @@ namespace Jitter.Collision.Shapes
 
         private readonly JVector[] vecs = new JVector[3];
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
-            JVector.Normalize(ref direction, out var exp);
+            JVector.Normalize(direction, out var exp);
             exp *= SphericalExpansion;
 
-            float min = JVector.Dot(ref vecs[0], ref direction);
+            float min = JVector.Dot(vecs[0], direction);
             int minIndex = 0;
-            float dot = JVector.Dot(ref vecs[1], ref direction);
+            float dot = JVector.Dot(vecs[1], direction);
             if (dot > min)
             {
                 min = dot;
                 minIndex = 1;
             }
-            dot = JVector.Dot(ref vecs[2], ref direction);
+            dot = JVector.Dot(vecs[2], direction);
             if (dot > min)
             {
                 minIndex = 2;
@@ -96,18 +91,15 @@ namespace Jitter.Collision.Shapes
             result = vecs[minIndex] + exp;
         }
 
-        public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public override void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
             box = octree.rootNodeBox;
 
-            box.Min.X -= SphericalExpansion;
-            box.Min.Y -= SphericalExpansion;
-            box.Min.Z -= SphericalExpansion;
-            box.Max.X += SphericalExpansion;
-            box.Max.Y += SphericalExpansion;
-            box.Max.Z += SphericalExpansion;
+            box = new JBBox(
+                new JVector(box.Min.X - SphericalExpansion, box.Min.Y - SphericalExpansion, box.Min.Z - SphericalExpansion),
+                new JVector(box.Max.X + SphericalExpansion, box.Max.Y + SphericalExpansion, box.Max.Z + SphericalExpansion));
 
-            box.Transform(ref orientation);
+            box = box.Transform(orientation);
         }
 
         public bool FlipNormals { get; set; }
@@ -119,19 +111,19 @@ namespace Jitter.Collision.Shapes
             vecs[2] = octree.GetVertex(octree.tris[potentialTriangles[index]].I2);
 
             var sum = vecs[0];
-            JVector.Add(ref sum, ref vecs[1], out sum);
-            JVector.Add(ref sum, ref vecs[2], out sum);
-            JVector.Multiply(ref sum, 1.0f / 3.0f, out sum);
+            JVector.Add(sum, vecs[1], out sum);
+            JVector.Add(sum, vecs[2], out sum);
+            JVector.Multiply(sum, 1.0f / 3.0f, out sum);
 
             geomCen = sum;
 
-            JVector.Subtract(ref vecs[1], ref vecs[0], out sum);
-            JVector.Subtract(ref vecs[2], ref vecs[0], out normal);
-            JVector.Cross(ref sum, ref normal, out normal);
+            JVector.Subtract(vecs[1], vecs[0], out sum);
+            JVector.Subtract(vecs[2], vecs[0], out normal);
+            JVector.Cross(sum, normal, out normal);
 
             if (FlipNormals)
             {
-                normal.Negate();
+                normal = JVector.Negate(normal);
             }
         }
 

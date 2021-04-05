@@ -8,9 +8,9 @@ namespace Jitter.Collision.Shapes
     {
         public abstract void SetCurrentShape(int index);
 
-        public abstract int Prepare(ref JBBox box);
+        public abstract int Prepare(in JBBox box);
 
-        public abstract int Prepare(ref JVector rayOrigin, ref JVector rayDelta);
+        public abstract int Prepare(in JVector rayOrigin, in JVector rayDelta);
 
         protected abstract Multishape CreateWorkingClone();
 
@@ -58,22 +58,22 @@ namespace Jitter.Collision.Shapes
             lock (workingCloneStack) { workingCloneStack.Push(this); }
         }
 
-        public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public override void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
             var helpBox = JBBox.LargeBox;
-            int length = Prepare(ref helpBox);
+            int length = Prepare(helpBox);
 
             box = JBBox.SmallBox;
 
             for (int i = 0; i < length; i++)
             {
                 SetCurrentShape(i);
-                base.GetBoundingBox(ref orientation, out helpBox);
-                JBBox.CreateMerged(ref box, ref helpBox, out box);
+                base.GetBoundingBox(orientation, out helpBox);
+                JBBox.CreateMerged(box, helpBox, out box);
             }
         }
 
-        public override void MakeHull(ref List<JVector> triangleList, int generationThreshold)
+        public override void MakeHull(List<JVector> triangleList, int generationThreshold)
         {
         }
 
@@ -83,13 +83,14 @@ namespace Jitter.Collision.Shapes
 
             inertia = JMatrix.Identity;
 
-            JVector.Subtract(ref boundingBox.Max, ref boundingBox.Min, out var size);
+            JVector.Subtract(boundingBox.Max, boundingBox.Min, out var size);
 
             mass = size.X * size.Y * size.Z;
 
-            inertia.M11 = 1.0f / 12.0f * mass * ((size.Y * size.Y) + (size.Z * size.Z));
-            inertia.M22 = 1.0f / 12.0f * mass * ((size.X * size.X) + (size.Z * size.Z));
-            inertia.M33 = 1.0f / 12.0f * mass * ((size.X * size.X) + (size.Y * size.Y));
+            inertia = JMatrix.FromDiagonal(
+                m11: 1.0f / 12.0f * mass * ((size.Y * size.Y) + (size.Z * size.Z)),
+                m22: 1.0f / 12.0f * mass * ((size.X * size.X) + (size.Z * size.Z)),
+                m33: 1.0f / 12.0f * mass * ((size.X * size.X) + (size.Y * size.Y)));
         }
     }
 }
