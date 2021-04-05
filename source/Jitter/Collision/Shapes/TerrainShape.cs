@@ -24,6 +24,8 @@ namespace Jitter.Collision.Shapes
             heightsLength1 = heights.GetLength(1);
 
             boundings = JBBox.SmallBox;
+            float minY = 0.0f;
+            float maxY = 0.0f; 
 
             for (int i = 0; i < heightsLength0; i++)
             {
@@ -31,20 +33,24 @@ namespace Jitter.Collision.Shapes
                 {
                     if (heights[i, e] > boundings.Max.Y)
                     {
-                        boundings.Max.Y = heights[i, e];
+                        maxY = heights[i, e];
                     }
                     else if (heights[i, e] < boundings.Min.Y)
                     {
-                        boundings.Min.Y = heights[i, e];
+                        minY = heights[i, e];
                     }
                 }
             }
 
-            boundings.Min.X = 0.0f;
-            boundings.Min.Z = 0.0f;
+            float minX = 0.0f;
+            float minZ = 0.0f;
 
-            boundings.Max.X = checked(heightsLength0 * scaleX);
-            boundings.Max.Z = checked(heightsLength1 * scaleZ);
+            float maxX = checked(heightsLength0 * scaleX);
+            float maxZ = checked(heightsLength1 * scaleZ);
+
+            boundings = new JBBox(
+                new JVector(minX, minY, minZ),
+                new JVector(maxX, maxY, maxZ));
 
             this.heights = heights;
             this.scaleX = scaleX;
@@ -88,15 +94,15 @@ namespace Jitter.Collision.Shapes
 
             if (leftTriangle)
             {
-                points[0].Set((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
-                points[1].Set((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
-                points[2].Set((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
+                points[0] = new JVector((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
+                points[1] = new JVector((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
+                points[2] = new JVector((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
             }
             else
             {
-                points[0].Set((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
-                points[1].Set((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
-                points[2].Set((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
+                points[0] = new JVector((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
+                points[1] = new JVector((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
+                points[2] = new JVector((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
             }
 
             var sum = points[0];
@@ -173,12 +179,9 @@ namespace Jitter.Collision.Shapes
         {
             box = boundings;
 
-            box.Min.X -= SphericalExpansion;
-            box.Min.Y -= SphericalExpansion;
-            box.Min.Z -= SphericalExpansion;
-            box.Max.X += SphericalExpansion;
-            box.Max.Y += SphericalExpansion;
-            box.Max.Z += SphericalExpansion;
+            box = new JBBox(
+                new JVector(box.Min.X - SphericalExpansion, box.Min.Y - SphericalExpansion, box.Min.Z - SphericalExpansion),
+                new JVector(box.Max.X + SphericalExpansion, box.Max.Y + SphericalExpansion, box.Max.Z + SphericalExpansion));
 
             box.Transform(ref orientation);
         }

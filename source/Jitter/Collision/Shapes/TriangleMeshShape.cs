@@ -33,12 +33,9 @@ namespace Jitter.Collision.Shapes
 
             var exp = box;
 
-            exp.Min.X -= SphericalExpansion;
-            exp.Min.Y -= SphericalExpansion;
-            exp.Min.Z -= SphericalExpansion;
-            exp.Max.X += SphericalExpansion;
-            exp.Max.Y += SphericalExpansion;
-            exp.Max.Z += SphericalExpansion;
+            box = new JBBox(
+                new JVector(exp.Min.X - SphericalExpansion, exp.Min.Y - SphericalExpansion, exp.Min.Z - SphericalExpansion),
+                new JVector(exp.Max.X + SphericalExpansion, exp.Max.Y + SphericalExpansion, exp.Max.Z + SphericalExpansion));
 
             octree.GetTrianglesIntersectingtAABox(potentialTriangles, ref exp);
 
@@ -100,12 +97,9 @@ namespace Jitter.Collision.Shapes
         {
             box = octree.rootNodeBox;
 
-            box.Min.X -= SphericalExpansion;
-            box.Min.Y -= SphericalExpansion;
-            box.Min.Z -= SphericalExpansion;
-            box.Max.X += SphericalExpansion;
-            box.Max.Y += SphericalExpansion;
-            box.Max.Z += SphericalExpansion;
+            box = new JBBox(
+                new JVector(box.Min.X - SphericalExpansion, box.Min.Y - SphericalExpansion, box.Min.Z - SphericalExpansion),
+                new JVector(box.Max.X + SphericalExpansion, box.Max.Y + SphericalExpansion, box.Max.Z + SphericalExpansion));
 
             box.Transform(ref orientation);
         }
@@ -131,7 +125,7 @@ namespace Jitter.Collision.Shapes
 
             if (FlipNormals)
             {
-                normal.Negate();
+                normal = JVector.Negate(normal);
             }
         }
 

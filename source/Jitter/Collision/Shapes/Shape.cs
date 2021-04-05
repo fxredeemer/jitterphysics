@@ -150,31 +150,33 @@ namespace Jitter.Collision.Shapes
 
         public virtual void GetBoundingBox(ref JMatrix orientation, out JBBox box)
         {
-            var vec = JVector.Zero;
-
-            vec.Set(orientation.M11, orientation.M21, orientation.M31);
+            var vec = new JVector(orientation.M11, orientation.M21, orientation.M31);
             SupportMapping(ref vec, out vec);
-            box.Max.X = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
+            float maxX = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
 
-            vec.Set(orientation.M12, orientation.M22, orientation.M32);
+            vec = new JVector(orientation.M12, orientation.M22, orientation.M32);
             SupportMapping(ref vec, out vec);
-            box.Max.Y = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
+            float maxY = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
 
-            vec.Set(orientation.M13, orientation.M23, orientation.M33);
+            vec = new JVector(orientation.M13, orientation.M23, orientation.M33);
             SupportMapping(ref vec, out vec);
-            box.Max.Z = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
+            float maxZ = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
 
-            vec.Set(-orientation.M11, -orientation.M21, -orientation.M31);
+            vec = new JVector(-orientation.M11, -orientation.M21, -orientation.M31);
             SupportMapping(ref vec, out vec);
-            box.Min.X = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
+            float minX = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
 
-            vec.Set(-orientation.M12, -orientation.M22, -orientation.M32);
+            vec = new JVector(-orientation.M12, -orientation.M22, -orientation.M32);
             SupportMapping(ref vec, out vec);
-            box.Min.Y = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
+            float minY = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
 
-            vec.Set(-orientation.M13, -orientation.M23, -orientation.M33);
+            vec = new JVector(-orientation.M13, -orientation.M23, -orientation.M33);
             SupportMapping(ref vec, out vec);
-            box.Min.Z = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
+            float minZ = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
+
+            box = new JBBox(
+                new JVector(minX, minY, minZ),
+                new JVector(maxX, maxY, maxZ));
         }
 
         public virtual void UpdateShape()
