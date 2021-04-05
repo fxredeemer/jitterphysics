@@ -189,7 +189,7 @@ namespace Jitter.Collision.Shapes
 
         public virtual void UpdateShape()
         {
-            GetBoundingBox(JMatrix.InternalIdentity, out boundingBox);
+            GetBoundingBox(JMatrix.Identity, out boundingBox);
 
             CalculateMassInertia();
             RaiseShapeUpdated();

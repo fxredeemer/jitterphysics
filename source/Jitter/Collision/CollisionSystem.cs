@@ -110,10 +110,10 @@ namespace Jitter.Collision
                 bool result = XenoCollide.Detect(
                     myTriangle,
                     otherTriangle,
-                    JMatrix.InternalIdentity,
-                    JMatrix.InternalIdentity,
-                    JVector.InternalZero,
-                    JVector.InternalZero,
+                    JMatrix.Identity,
+                    JMatrix.Identity,
+                    JVector.Zero,
+                    JVector.Zero,
                     out var point,
                     out var normal,
                     out float penetration);
@@ -375,7 +375,10 @@ namespace Jitter.Collision
                         result = XenoCollide.Detect(
                             ms,
                             t,
-                            rigidBody.orientation, JMatrix.InternalIdentity, rigidBody.position, JVector.InternalZero,
+                            rigidBody.orientation, 
+                            JMatrix.Identity, 
+                            rigidBody.position,
+                            JVector.Zero,
                             out var point,
                             out var normal,
                             out float penetration);
@@ -410,7 +413,10 @@ namespace Jitter.Collision
                     bool result = XenoCollide.Detect(
                         rigidBody.Shape,
                         t,
-                        rigidBody.orientation, JMatrix.InternalIdentity, rigidBody.position, JVector.InternalZero,
+                        rigidBody.orientation,
+                        JMatrix.Identity, 
+                        rigidBody.position, 
+                        JVector.Zero,
                         out var point,
                         out var normal,
                         out float penetration);

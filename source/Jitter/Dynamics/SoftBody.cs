@@ -505,9 +505,9 @@ namespace Jitter.Dynamics
                             points[i].Shape,
                             t,
                             points[i].orientation,
-                            JMatrix.InternalIdentity,
+                            JMatrix.Identity,
                             points[i].position,
-                            JVector.InternalZero,
+                            JVector.Zero,
                             out var point,
                             out var normal,
                             out float penetration))

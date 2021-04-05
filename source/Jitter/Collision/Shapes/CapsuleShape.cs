@@ -42,9 +42,10 @@ namespace Jitter.Collision.Shapes
 
             mass = massCylinder + massSphere;
 
-            inertia.M11 = (1.0f / 4.0f * massCylinder * radius * radius) + (1.0f / 12.0f * massCylinder * length * length) + (2.0f / 5.0f * massSphere * radius * radius) + (1.0f / 4.0f * length * length * massSphere);
-            inertia.M22 = (1.0f / 2.0f * massCylinder * radius * radius) + (2.0f / 5.0f * massSphere * radius * radius);
-            inertia.M33 = (1.0f / 4.0f * massCylinder * radius * radius) + (1.0f / 12.0f * massCylinder * length * length) + (2.0f / 5.0f * massSphere * radius * radius) + (1.0f / 4.0f * length * length * massSphere);
+            inertia = JMatrix.FromDiagonal(
+                m11: (1.0f / 4.0f * massCylinder * radius * radius) + (1.0f / 12.0f * massCylinder * length * length) + (2.0f / 5.0f * massSphere * radius * radius) + (1.0f / 4.0f * length * length * massSphere),
+                m22: (1.0f / 2.0f * massCylinder * radius * radius) + (2.0f / 5.0f * massSphere * radius * radius),
+                m33: (1.0f / 4.0f * massCylinder * radius * radius) + (1.0f / 12.0f * massCylinder * length * length) + (2.0f / 5.0f * massSphere * radius * radius) + (1.0f / 4.0f * length * length * massSphere));
         }
 
         public override void SupportMapping(in JVector direction, out JVector result)

@@ -449,7 +449,7 @@ namespace Jitter.Dynamics
 
             if (num != 0.0f)
             {
-                num = (float)Math.Sqrt(num);
+                num = JMath.Sqrt(num);
 
                 tangent = new JVector(
                     tangent.X / num,

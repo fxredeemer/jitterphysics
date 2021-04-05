@@ -5,14 +5,22 @@ namespace Jitter.LinearMath
     public sealed class JMath
     {
         public const float Pi = 3.1415926535f;
-
         public const float PiOver2 = 1.570796326794f;
-
         public const float Epsilon = 1.192092896e-012f;
 
         public static float Sqrt(float number)
         {
             return (float)Math.Sqrt(number);
+        }
+
+        public static float Cos(float number)
+        {
+            return (float)Math.Cos(number);
+        }
+
+        public static float Sin(float number)
+        {
+            return (float)Math.Sin(number);
         }
 
         public static float Max(float val1, float val2)
@@ -46,15 +54,16 @@ namespace Jitter.LinearMath
 
         public static void Absolute(in JMatrix matrix, out JMatrix result)
         {
-            result.M11 = Math.Abs(matrix.M11);
-            result.M12 = Math.Abs(matrix.M12);
-            result.M13 = Math.Abs(matrix.M13);
-            result.M21 = Math.Abs(matrix.M21);
-            result.M22 = Math.Abs(matrix.M22);
-            result.M23 = Math.Abs(matrix.M23);
-            result.M31 = Math.Abs(matrix.M31);
-            result.M32 = Math.Abs(matrix.M32);
-            result.M33 = Math.Abs(matrix.M33);
+            result = new JMatrix(
+                m11: Math.Abs(matrix.M11),
+                m12: Math.Abs(matrix.M12),
+                m13: Math.Abs(matrix.M13),
+                m21: Math.Abs(matrix.M21),
+                m22: Math.Abs(matrix.M22),
+                m23: Math.Abs(matrix.M23),
+                m31: Math.Abs(matrix.M31),
+                m32: Math.Abs(matrix.M32),
+                m33: Math.Abs(matrix.M33));
         }
     }
 }

@@ -13,9 +13,6 @@
         public static readonly JVector MinValue = new JVector(float.MinValue);
         public static readonly JVector MaxValue = new JVector(float.MaxValue);
 
-        internal static JVector InternalZero = new JVector(0, 0, 0);
-        internal static JVector Arbitrary = new JVector(1, 1, 1);
-
         private const float ZeroEpsilonSq = JMath.Epsilon * JMath.Epsilon;
 
         public float X { get; }

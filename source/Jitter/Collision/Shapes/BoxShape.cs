@@ -53,10 +53,10 @@ namespace Jitter.Collision.Shapes
         {
             mass = size.X * size.Y * size.Z;
 
-            inertia = JMatrix.Identity;
-            inertia.M11 = 1.0f / 12.0f * mass * ((size.Y * size.Y) + (size.Z * size.Z));
-            inertia.M22 = 1.0f / 12.0f * mass * ((size.X * size.X) + (size.Z * size.Z));
-            inertia.M33 = 1.0f / 12.0f * mass * ((size.X * size.X) + (size.Y * size.Y));
+            inertia = JMatrix.FromDiagonal(
+                m11: 1.0f / 12.0f * mass * ((size.Y * size.Y) + (size.Z * size.Z)),
+                m22: 1.0f / 12.0f * mass * ((size.X * size.X) + (size.Z * size.Z)),
+                m33: 1.0f / 12.0f * mass * ((size.X * size.X) + (size.Y * size.Y)));
 
             geomCen = JVector.Zero;
         }

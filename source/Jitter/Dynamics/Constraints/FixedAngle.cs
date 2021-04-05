@@ -44,9 +44,10 @@ namespace Jitter.Dynamics.Constraints
 
             softnessOverDt = Softness / timestep;
 
-            effectiveMass.M11 += softnessOverDt;
-            effectiveMass.M22 += softnessOverDt;
-            effectiveMass.M33 += softnessOverDt;
+            effectiveMass = JMatrix.FromDiagonal(
+                m11: effectiveMass.M11 + softnessOverDt,
+                m22: effectiveMass.M22 + softnessOverDt,
+                m33: effectiveMass.M33 + softnessOverDt);
 
             JMatrix.Inverse(effectiveMass, out effectiveMass);
 

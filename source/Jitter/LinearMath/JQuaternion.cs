@@ -17,7 +17,7 @@ namespace Jitter.LinearMath
             W = w;
         }
 
-        public static JQuaternion Add(JQuaternion quaternion1, JQuaternion quaternion2)
+        public static JQuaternion Add(in JQuaternion quaternion1, JQuaternion quaternion2)
         {
             Add(quaternion1, quaternion2, out var result);
             return result;
@@ -52,7 +52,7 @@ namespace Jitter.LinearMath
                 quaternion1.W + quaternion2.W);
         }
 
-        public static JQuaternion Conjugate(JQuaternion value)
+        public static JQuaternion Conjugate(in JQuaternion value)
         {
             return new JQuaternion(
                 -value.X,
@@ -61,7 +61,7 @@ namespace Jitter.LinearMath
                  value.W);
         }
 
-        public static JQuaternion Subtract(JQuaternion quaternion1, JQuaternion quaternion2)
+        public static JQuaternion Subtract(in JQuaternion quaternion1, JQuaternion quaternion2)
         {
             Subtract(quaternion1, quaternion2, out var result);
             return result;
@@ -76,7 +76,7 @@ namespace Jitter.LinearMath
                 quaternion1.W - quaternion2.W);
         }
 
-        public static JQuaternion Multiply(JQuaternion quaternion1, JQuaternion quaternion2)
+        public static JQuaternion Multiply(in JQuaternion quaternion1, JQuaternion quaternion2)
         {
             Multiply(quaternion1, quaternion2, out var result);
             return result;
@@ -104,7 +104,7 @@ namespace Jitter.LinearMath
                 (w * num) - num9);
         }
 
-        public static JQuaternion Multiply(JQuaternion quaternion1, float scaleFactor)
+        public static JQuaternion Multiply(in JQuaternion quaternion1, float scaleFactor)
         {
             Multiply(quaternion1, scaleFactor, out var result);
             return result;
@@ -131,7 +131,7 @@ namespace Jitter.LinearMath
                 W * num);
         }
 
-        public static JQuaternion CreateFromMatrix(JMatrix matrix)
+        public static JQuaternion CreateFromMatrix(in JMatrix matrix)
         {
             CreateFromMatrix(matrix, out var result);
             return result;
@@ -184,19 +184,19 @@ namespace Jitter.LinearMath
             }
         }
 
-        public static JQuaternion operator *(JQuaternion value1, JQuaternion value2)
+        public static JQuaternion operator *(in JQuaternion value1, JQuaternion value2)
         {
             Multiply(value1, value2, out var result);
             return result;
         }
 
-        public static JQuaternion operator +(JQuaternion value1, JQuaternion value2)
+        public static JQuaternion operator +(in JQuaternion value1, JQuaternion value2)
         {
             Add(value1, value2, out var result);
             return result;
         }
 
-        public static JQuaternion operator -(JQuaternion value1, JQuaternion value2)
+        public static JQuaternion operator -(in JQuaternion value1, JQuaternion value2)
         {
             Subtract(value1, value2, out var result);
             return result;

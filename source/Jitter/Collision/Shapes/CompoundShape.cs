@@ -150,18 +150,17 @@ namespace Jitter.Collision.Shapes
                 var p = Shapes[i].Position * -1.0f;
                 float m = Shapes[i].Shape.Mass;
 
-                currentInertia.M11 += m * ((p.Y * p.Y) + (p.Z * p.Z));
-                currentInertia.M22 += m * ((p.X * p.X) + (p.Z * p.Z));
-                currentInertia.M33 += m * ((p.X * p.X) + (p.Y * p.Y));
 
-                currentInertia.M12 += -p.X * p.Y * m;
-                currentInertia.M21 += -p.X * p.Y * m;
-
-                currentInertia.M31 += -p.X * p.Z * m;
-                currentInertia.M13 += -p.X * p.Z * m;
-
-                currentInertia.M32 += -p.Y * p.Z * m;
-                currentInertia.M23 += -p.Y * p.Z * m;
+                currentInertia = new JMatrix(
+                    m11: currentInertia.M11 + m * ((p.Y * p.Y) + (p.Z * p.Z)),
+                    m12: currentInertia.M12 + -p.X * p.Y * m,
+                    m13: currentInertia.M13 + -p.X * p.Z * m,
+                    m21: currentInertia.M21 + -p.X * p.Y * m,
+                    m22: currentInertia.M22 + m * ((p.X * p.X) + (p.Z * p.Z)),
+                    m23: currentInertia.M23 + -p.Y * p.Z * m,
+                    m31: currentInertia.M31 + -p.X * p.Z * m,
+                    m32: currentInertia.M32 + -p.Y * p.Z * m,
+                    m33: currentInertia.M33 + m * ((p.X * p.X) + (p.Y * p.Y)));
 
                 inertia += currentInertia;
                 mass += m;
@@ -223,7 +222,7 @@ namespace Jitter.Collision.Shapes
 
             for (int i = 0; i < Shapes.Length; i++)
             {
-                if (Shapes[i].boundingBox.Contains( box) != JBBox.ContainmentType.Disjoint)
+                if (Shapes[i].boundingBox.Contains(box) != JBBox.ContainmentType.Disjoint)
                 {
                     currentSubShapes.Add(i);
                 }
