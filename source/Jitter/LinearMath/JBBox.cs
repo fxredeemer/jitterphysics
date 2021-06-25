@@ -1,6 +1,6 @@
 ﻿namespace Jitter.LinearMath
 {
-    public struct JBBox
+    public readonly struct JBBox
     {
         public enum ContainmentType
         {
@@ -9,21 +9,16 @@
             Intersects
         }
 
-        public JVector Min;
+        public readonly JVector Min;
+        public readonly JVector Max;
 
-        public JVector Max;
+        public static readonly JBBox LargeBox = new JBBox(
+            new JVector(float.MinValue),
+            new JVector(float.MaxValue));
 
-        public static readonly JBBox LargeBox;
-
-        public static readonly JBBox SmallBox;
-
-        static JBBox()
-        {
-            LargeBox.Min = new JVector(float.MinValue);
-            LargeBox.Max = new JVector(float.MaxValue);
-            SmallBox.Min = new JVector(float.MaxValue);
-            SmallBox.Max = new JVector(float.MinValue);
-        }
+        public static readonly JBBox SmallBox = new JBBox(
+            new JVector(float.MaxValue),
+            new JVector(float.MinValue));
 
         public JBBox(JVector min, JVector max)
         {
