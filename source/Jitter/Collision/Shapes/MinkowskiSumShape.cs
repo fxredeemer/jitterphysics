@@ -48,7 +48,7 @@ namespace Jitter.Collision.Shapes
                 throw new Exception("There must be at least one shape.");
             }
 
-            bool result = shapes.Remove(shape);
+            var result = shapes.Remove(shape);
             UpdateShape();
             return result;
         }
@@ -67,7 +67,7 @@ namespace Jitter.Collision.Shapes
         {
             var temp2 = JVector.Zero;
 
-            for (int i = 0; i < shapes.Count; i++)
+            for (var i = 0; i < shapes.Count; i++)
             {
                 shapes[i].SupportMapping(ref direction, out var temp1);
                 JVector.Add(ref temp1, ref temp2, out temp2);

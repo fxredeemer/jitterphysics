@@ -107,8 +107,8 @@ namespace Jitter.Collision
 
         private int QuickSort(SweepPoint sweepPoint1, SweepPoint sweepPoint2)
         {
-            float val1 = sweepPoint1.Value;
-            float val2 = sweepPoint2.Value;
+            var val1 = sweepPoint1.Value;
+            var val2 = sweepPoint2.Value;
 
             if (val1 > val2)
             {
@@ -131,7 +131,7 @@ namespace Jitter.Collision
             axis.Sort(QuickSort);
             activeList.Clear();
 
-            for (int i = 0; i < axis.Count; i++)
+            for (var i = 0; i < axis.Count; i++)
             {
                 var keyelement = axis[i];
 
@@ -156,12 +156,12 @@ namespace Jitter.Collision
 
         private void SortAxis(List<SweepPoint> axis)
         {
-            for (int j = 1; j < axis.Count; j++)
+            for (var j = 1; j < axis.Count; j++)
             {
                 var keyelement = axis[j];
-                float key = keyelement.Value;
+                var key = keyelement.Value;
 
-                int i = j - 1;
+                var i = j - 1;
 
                 while (i >= 0 && axis[i].Value > key)
                 {
@@ -212,8 +212,8 @@ namespace Jitter.Collision
         private readonly Stack<OverlapPair> depricated = new Stack<OverlapPair>();
         public override bool RemoveEntity(IBroadphaseEntity body)
         {
-            int count = 0;
-            for (int i = 0; i < axis1.Count; i++)
+            var count = 0;
+            for (var i = 0; i < axis1.Count; i++)
             {
                 if (axis1[i].Body == body)
                 {
@@ -226,7 +226,7 @@ namespace Jitter.Collision
             }
 
             count = 0;
-            for (int i = 0; i < axis2.Count; i++)
+            for (var i = 0; i < axis2.Count; i++)
             {
                 if (axis2[i].Body == body)
                 {
@@ -241,7 +241,7 @@ namespace Jitter.Collision
             }
 
             count = 0;
-            for (int i = 0; i < axis3.Count; i++)
+            for (var i = 0; i < axis3.Count; i++)
             {
                 if (axis3[i].Body == body)
                 {
@@ -371,7 +371,7 @@ namespace Jitter.Collision
             body = null; normal = JVector.Zero; fraction = float.MaxValue;
 
             JVector tempNormal; float tempFraction;
-            bool result = false;
+            var result = false;
 
             foreach (var e in bodyList)
             {
@@ -429,39 +429,39 @@ namespace Jitter.Collision
             {
                 multishape = multishape.RequestWorkingClone();
 
-                bool multiShapeCollides = false;
+                var multiShapeCollides = false;
 
                 JVector.Subtract(ref rayOrigin, ref body.position, out var transformedOrigin);
                 JVector.Transform(ref transformedOrigin, ref body.invOrientation, out transformedOrigin);
                 JVector.Transform(ref rayDirection, ref body.invOrientation, out var transformedDirection);
 
-                int msLength = multishape.Prepare(ref transformedOrigin, ref transformedDirection);
+                var msLength = multishape.Prepare(ref transformedOrigin, ref transformedDirection);
 
-                for (int i = 0; i < msLength; i++)
+                for (var i = 0; i < msLength; i++)
                 {
                     multishape.SetCurrentShape(i);
 
                     if (GJKCollide.Raycast(
-                        (ISupportMappable)multishape,
+                        multishape,
                         ref body.orientation,
                         ref body.invOrientation,
                         ref body.position,
                         ref rayOrigin,
                         ref rayDirection,
-                        out float tempFraction,
+                        out var tempFraction,
                         out var tempNormal) && tempFraction < fraction)
                     {
                         if (useTerrainNormal && multishape is TerrainShape terrainShape)
                         {
                             terrainShape.CollisionNormal(out tempNormal);
                             JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
-                            tempNormal.Negate();
+                            tempNormal = JVector.Negate(tempNormal);
                         }
                         else if (useTriangleMeshNormal && multishape is TriangleMeshShape triangleMeshShape)
                         {
                             triangleMeshShape.CollisionNormal(out tempNormal);
                             JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
-                            tempNormal.Negate();
+                            tempNormal = JVector.Negate(tempNormal);
                         }
 
                         normal = tempNormal;

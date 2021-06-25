@@ -15,7 +15,7 @@ namespace Jitter.Collision
         {
             public int Compare(IBroadphaseEntity body1, IBroadphaseEntity body2)
             {
-                float f = body1.BoundingBox.Min.X - body2.BoundingBox.Min.X;
+                var f = body1.BoundingBox.Min.X - body2.BoundingBox.Min.X;
                 return (f < 0) ? -1 : (f > 0) ? 1 : 0;
             }
         }
@@ -55,7 +55,7 @@ namespace Jitter.Collision
 
             if (multiThreaded)
             {
-                for (int i = 0; i < bodyList.Count; i++)
+                for (var i = 0; i < bodyList.Count; i++)
                 {
                     AddToActiveMultithreaded(bodyList[i]);
                 }
@@ -64,7 +64,7 @@ namespace Jitter.Collision
             }
             else
             {
-                for (int i = 0; i < bodyList.Count; i++)
+                for (var i = 0; i < bodyList.Count; i++)
                 {
                     AddToActive(bodyList[i]);
                 }
@@ -73,14 +73,14 @@ namespace Jitter.Collision
 
         private void AddToActive(IBroadphaseEntity body)
         {
-            float xmin = body.BoundingBox.Min.X;
-            int n = active.Count;
+            var xmin = body.BoundingBox.Min.X;
+            var n = active.Count;
 
-            bool thisInactive = body.IsStaticOrInactive;
+            var thisInactive = body.IsStaticOrInactive;
 
             JBBox acBox, bodyBox;
 
-            for (int i = 0; i != n;)
+            for (var i = 0; i != n;)
             {
                 var ac = active[i];
                 acBox = ac.BoundingBox;
@@ -122,14 +122,14 @@ namespace Jitter.Collision
 
         private void AddToActiveMultithreaded(IBroadphaseEntity body)
         {
-            float xmin = body.BoundingBox.Min.X;
-            int n = active.Count;
+            var xmin = body.BoundingBox.Min.X;
+            var n = active.Count;
 
-            bool thisInactive = body.IsStaticOrInactive;
+            var thisInactive = body.IsStaticOrInactive;
 
             JBBox acBox, bodyBox;
 
-            for (int i = 0; i != n;)
+            for (var i = 0; i != n;)
             {
                 var ac = active[i];
                 acBox = ac.BoundingBox;
@@ -186,7 +186,7 @@ namespace Jitter.Collision
             body = null; normal = JVector.Zero; fraction = float.MaxValue;
 
             JVector tempNormal; float tempFraction;
-            bool result = false;
+            var result = false;
 
             foreach (var e in bodyList)
             {
@@ -237,15 +237,15 @@ namespace Jitter.Collision
             {
                 var ms = (body.Shape as Multishape).RequestWorkingClone();
 
-                bool multiShapeCollides = false;
+                var multiShapeCollides = false;
 
                 JVector.Subtract(ref rayOrigin, ref body.position, out var transformedOrigin);
                 JVector.Transform(ref transformedOrigin, ref body.invOrientation, out transformedOrigin);
                 JVector.Transform(ref rayDirection, ref body.invOrientation, out var transformedDirection);
 
-                int msLength = ms.Prepare(ref transformedOrigin, ref transformedDirection);
+                var msLength = ms.Prepare(ref transformedOrigin, ref transformedDirection);
 
-                for (int i = 0; i < msLength; i++)
+                for (var i = 0; i < msLength; i++)
                 {
                     ms.SetCurrentShape(i);
 
@@ -256,20 +256,20 @@ namespace Jitter.Collision
                         ref body.position,
                         ref rayOrigin,
                         ref rayDirection,
-                        out float tempFraction,
+                        out var tempFraction,
                         out var tempNormal) && tempFraction < fraction)
                     {
                         if (useTerrainNormal && ms is TerrainShape terrainShape)
                         {
                             terrainShape.CollisionNormal(out tempNormal);
                             JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
-                            tempNormal.Negate();
+                            tempNormal = JVector.Negate(tempNormal);
                         }
                         else if (useTriangleMeshNormal && ms is TriangleMeshShape triangleMeshShape)
                         {
                             triangleMeshShape.CollisionNormal(out tempNormal);
                             JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
-                            tempNormal.Negate();
+                            tempNormal = JVector.Negate(tempNormal);
                         }
 
                         normal = tempNormal;

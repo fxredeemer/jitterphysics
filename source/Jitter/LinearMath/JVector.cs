@@ -115,18 +115,18 @@
 
         public static void Transform(ref JVector position, ref JMatrix matrix, out JVector result)
         {
-            float x = (position.X * matrix.M11) + (position.Y * matrix.M21) + (position.Z * matrix.M31);
-            float y = (position.X * matrix.M12) + (position.Y * matrix.M22) + (position.Z * matrix.M32);
-            float z = (position.X * matrix.M13) + (position.Y * matrix.M23) + (position.Z * matrix.M33);
+            var x = (position.X * matrix.M11) + (position.Y * matrix.M21) + (position.Z * matrix.M31);
+            var y = (position.X * matrix.M12) + (position.Y * matrix.M22) + (position.Z * matrix.M32);
+            var z = (position.X * matrix.M13) + (position.Y * matrix.M23) + (position.Z * matrix.M33);
 
             result = new JVector(x, y, z);
         }
 
         public static void TransposedTransform(ref JVector position, ref JMatrix matrix, out JVector result)
         {
-            float num0 = (position.X * matrix.M11) + (position.Y * matrix.M12) + (position.Z * matrix.M13);
-            float num1 = (position.X * matrix.M21) + (position.Y * matrix.M22) + (position.Z * matrix.M23);
-            float num2 = (position.X * matrix.M31) + (position.Y * matrix.M32) + (position.Z * matrix.M33);
+            var num0 = (position.X * matrix.M11) + (position.Y * matrix.M12) + (position.Z * matrix.M13);
+            var num1 = (position.X * matrix.M21) + (position.Y * matrix.M22) + (position.Z * matrix.M23);
+            var num2 = (position.X * matrix.M31) + (position.Y * matrix.M32) + (position.Z * matrix.M33);
 
             result = new JVector(num0, num1, num2);
         }
@@ -149,9 +149,9 @@
 
         public static void Add(ref JVector value1, ref JVector value2, out JVector result)
         {
-            float num0 = value1.X + value2.X;
-            float num1 = value1.Y + value2.Y;
-            float num2 = value1.Z + value2.Z;
+            var num0 = value1.X + value2.X;
+            var num1 = value1.Y + value2.Y;
+            var num2 = value1.Z + value2.Z;
 
             result = new JVector(num0, num1, num2);
         }
@@ -164,9 +164,9 @@
 
         public static void Subtract(ref JVector value1, ref JVector value2, out JVector result)
         {
-            float num0 = value1.X - value2.X;
-            float num1 = value1.Y - value2.Y;
-            float num2 = value1.Z - value2.Z;
+            var num0 = value1.X - value2.X;
+            var num1 = value1.Y - value2.Y;
+            var num2 = value1.Z - value2.Z;
 
             result = new JVector(num0, num1, num2);
         }
@@ -179,9 +179,9 @@
 
         public static void Cross(ref JVector vector1, ref JVector vector2, out JVector result)
         {
-            float num3 = (vector1.Y * vector2.Z) - (vector1.Z * vector2.Y);
-            float num2 = (vector1.Z * vector2.X) - (vector1.X * vector2.Z);
-            float num = (vector1.X * vector2.Y) - (vector1.Y * vector2.X);
+            var num3 = (vector1.Y * vector2.Z) - (vector1.Z * vector2.Y);
+            var num2 = (vector1.Z * vector2.X) - (vector1.X * vector2.Z);
+            var num = (vector1.X * vector2.Y) - (vector1.Y * vector2.X);
 
             result = new JVector(num3, num2, num);
         }
@@ -199,9 +199,9 @@
 
         public static void Negate(ref JVector value, out JVector result)
         {
-            float num0 = -value.X;
-            float num1 = -value.Y;
-            float num2 = -value.Z;
+            var num0 = -value.X;
+            var num1 = -value.Y;
+            var num2 = -value.Z;
 
             result = new JVector(num0, num1, num2);
         }
@@ -214,8 +214,8 @@
 
         public static void Normalize(ref JVector value, out JVector result)
         {
-            float num2 = (value.X * value.X) + (value.Y * value.Y) + (value.Z * value.Z);
-            float num = 1f / (JMath.Sqrt(num2));
+            var num2 = (value.X * value.X) + (value.Y * value.Y) + (value.Z * value.Z);
+            var num = 1f / (JMath.Sqrt(num2));
 
             result = new JVector(
                 value.X * num,
@@ -230,7 +230,7 @@
 
         public float Length()
         {
-            float num = (X * X) + (Y * Y) + (Z * Z);
+            var num = (X * X) + (Y * Y) + (Z * Z);
             return JMath.Sqrt(num);
         }
 

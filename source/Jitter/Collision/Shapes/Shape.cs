@@ -58,7 +58,7 @@ namespace Jitter.Collision.Shapes
                 new JVector(  0,  0,  1 ),
             };
 
-            int[,] kTriangleVerts = new int[8, 3]
+            var kTriangleVerts = new int[8, 3]
             {
                 { 5, 1, 3 },
                 { 4, 3, 1 },
@@ -70,7 +70,7 @@ namespace Jitter.Collision.Shapes
                 { 0, 2, 5 }
             };
 
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
             {
                 var tri = new ClipTriangle
                 {
@@ -90,9 +90,9 @@ namespace Jitter.Collision.Shapes
                 SupportMapping(ref tri.n2, out var p2);
                 SupportMapping(ref tri.n3, out var p3);
 
-                float d1 = (p2 - p1).LengthSquared();
-                float d2 = (p3 - p2).LengthSquared();
-                float d3 = (p1 - p3).LengthSquared();
+                var d1 = (p2 - p1).LengthSquared();
+                var d2 = (p3 - p2).LengthSquared();
+                var d3 = (p1 - p3).LengthSquared();
 
                 if (Math.Max(Math.Max(d1, d2), d3) > distanceThreshold && tri.generation < generationThreshold)
                 {
@@ -111,21 +111,21 @@ namespace Jitter.Collision.Shapes
                     tri3.n3 = tri.n3;
 
                     var n = 0.5f * (tri.n1 + tri.n2);
-                    n.Normalize();
+                    n = JVector.Normalize(n);
 
                     tri1.n2 = n;
                     tri2.n1 = n;
                     tri4.n3 = n;
 
                     n = 0.5f * (tri.n2 + tri.n3);
-                    n.Normalize();
+                    n = JVector.Normalize(n);
 
                     tri2.n3 = n;
                     tri3.n2 = n;
                     tri4.n1 = n;
 
                     n = 0.5f * (tri.n3 + tri.n1);
-                    n.Normalize();
+                    n = JVector.Normalize(n);
 
                     tri1.n3 = n;
                     tri3.n1 = n;
@@ -150,31 +150,33 @@ namespace Jitter.Collision.Shapes
 
         public virtual void GetBoundingBox(ref JMatrix orientation, out JBBox box)
         {
-            var vec = JVector.Zero;
-
-            vec.Set(orientation.M11, orientation.M21, orientation.M31);
+            var vec = new JVector(orientation.M11, orientation.M21, orientation.M31);
             SupportMapping(ref vec, out vec);
-            box.Max.X = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
+            var maxX = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
 
-            vec.Set(orientation.M12, orientation.M22, orientation.M32);
+            vec = new JVector(orientation.M12, orientation.M22, orientation.M32);
             SupportMapping(ref vec, out vec);
-            box.Max.Y = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
+            var maxY = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
 
-            vec.Set(orientation.M13, orientation.M23, orientation.M33);
+            vec = new JVector(orientation.M13, orientation.M23, orientation.M33);
             SupportMapping(ref vec, out vec);
-            box.Max.Z = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
+            var maxZ = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
 
-            vec.Set(-orientation.M11, -orientation.M21, -orientation.M31);
+            vec = new JVector(-orientation.M11, -orientation.M21, -orientation.M31);
             SupportMapping(ref vec, out vec);
-            box.Min.X = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
+            var minX = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
 
-            vec.Set(-orientation.M12, -orientation.M22, -orientation.M32);
+            vec = new JVector(-orientation.M12, -orientation.M22, -orientation.M32);
             SupportMapping(ref vec, out vec);
-            box.Min.Y = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
+            var minY = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
 
-            vec.Set(-orientation.M13, -orientation.M23, -orientation.M33);
+            vec = new JVector(-orientation.M13, -orientation.M23, -orientation.M33);
             SupportMapping(ref vec, out vec);
-            box.Min.Z = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
+            var minZ = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
+
+            box = new JBBox(
+                new JVector(minX, minY, minZ),
+                new JVector(maxX, maxY, maxZ));
         }
 
         public virtual void UpdateShape()
@@ -188,7 +190,7 @@ namespace Jitter.Collision.Shapes
         public static float CalculateMassInertia(Shape shape, out JVector centerOfMass,
             out JMatrix inertia)
         {
-            float mass = 0.0f;
+            var mass = 0.0f;
             centerOfMass = JVector.Zero; inertia = JMatrix.Zero;
 
             if (shape is Multishape)
@@ -202,7 +204,7 @@ namespace Jitter.Collision.Shapes
             const float a = 1.0f / 60.0f, b = 1.0f / 120.0f;
             var C = new JMatrix(a, b, b, b, a, b, b, b, a);
 
-            for (int i = 0; i < hullTriangles.Count; i += 3)
+            for (var i = 0; i < hullTriangles.Count; i += 3)
             {
                 var column0 = hullTriangles[i + 0];
                 var column1 = hullTriangles[i + 1];
@@ -212,12 +214,12 @@ namespace Jitter.Collision.Shapes
                     column0.Y, column1.Y, column2.Y,
                     column0.Z, column1.Z, column2.Z);
 
-                float detA = A.Determinant();
+                var detA = A.Determinant();
 
                 var tetrahedronInertia = JMatrix.Multiply(A * C * JMatrix.Transpose(A), detA);
 
                 var tetrahedronCOM = 1.0f / 4.0f * (hullTriangles[i + 0] + hullTriangles[i + 1] + hullTriangles[i + 2]);
-                float tetrahedronMass = 1.0f / 6.0f * detA;
+                var tetrahedronMass = 1.0f / 6.0f * detA;
 
                 inertia += tetrahedronInertia;
                 centerOfMass += tetrahedronMass * tetrahedronCOM;
@@ -227,9 +229,9 @@ namespace Jitter.Collision.Shapes
             inertia = JMatrix.Multiply(JMatrix.Identity, inertia.Trace()) - inertia;
             centerOfMass *= (1.0f / mass);
 
-            float x = centerOfMass.X;
-            float y = centerOfMass.Y;
-            float z = centerOfMass.Z;
+            var x = centerOfMass.X;
+            var y = centerOfMass.Y;
+            var z = centerOfMass.Z;
 
             var t = new JMatrix(
                 -mass * ((y * y) + (z * z)), mass * x * y, mass * x * z,

@@ -89,7 +89,7 @@ namespace Jitter.Collision.Shapes
 
         private bool TestValidity()
         {
-            for (int i = 0; i < Shapes.Length; i++)
+            for (var i = 0; i < Shapes.Length; i++)
             {
                 if (Shapes[i].Shape is Multishape)
                 {
@@ -104,10 +104,10 @@ namespace Jitter.Collision.Shapes
         {
             var triangles = new List<JVector>();
 
-            for (int i = 0; i < Shapes.Length; i++)
+            for (var i = 0; i < Shapes.Length; i++)
             {
                 Shapes[i].Shape.MakeHull(ref triangles, 4);
-                for (int e = 0; e < triangles.Count; e++)
+                for (var e = 0; e < triangles.Count; e++)
                 {
                     var pos = triangles[e];
                     JVector.Transform(ref pos, ref Shapes[i].orientation, out pos);
@@ -120,14 +120,14 @@ namespace Jitter.Collision.Shapes
 
         private void DoShifting()
         {
-            for (int i = 0; i < Shapes.Length; i++)
+            for (var i = 0; i < Shapes.Length; i++)
             {
                 shifted += Shapes[i].position;
             }
 
             shifted *= 1.0f / Shapes.Length;
 
-            for (int i = 0; i < Shapes.Length; i++)
+            for (var i = 0; i < Shapes.Length; i++)
             {
                 Shapes[i].position -= shifted;
             }
@@ -138,11 +138,11 @@ namespace Jitter.Collision.Shapes
             inertia = JMatrix.Zero;
             mass = 0.0f;
 
-            for (int i = 0; i < Shapes.Length; i++)
+            for (var i = 0; i < Shapes.Length; i++)
             {
                 var currentInertia = Shapes[i].InverseOrientation * Shapes[i].Shape.Inertia * Shapes[i].Orientation;
                 var p = Shapes[i].Position * -1.0f;
-                float m = Shapes[i].Shape.Mass;
+                var m = Shapes[i].Shape.Mass;
 
                 currentInertia.M11 += m * ((p.Y * p.Y) + (p.Z * p.Z));
                 currentInertia.M22 += m * ((p.X * p.X) + (p.Z * p.Z));
@@ -213,7 +213,7 @@ namespace Jitter.Collision.Shapes
         {
             currentSubShapes.Clear();
 
-            for (int i = 0; i < Shapes.Length; i++)
+            for (var i = 0; i < Shapes.Length; i++)
             {
                 if (Shapes[i].boundingBox.Contains(ref box) != JBBox.ContainmentType.Disjoint)
                 {
@@ -246,7 +246,7 @@ namespace Jitter.Collision.Shapes
             mInternalBBox.Min = new JVector(float.MaxValue);
             mInternalBBox.Max = new JVector(float.MinValue);
 
-            for (int i = 0; i < Shapes.Length; i++)
+            for (var i = 0; i < Shapes.Length; i++)
             {
                 Shapes[i].UpdateBoundingBox();
 

@@ -24,7 +24,7 @@ namespace Jitter.Dynamics.Joints
             worldPointConstraint[0] = new PointOnPoint(body1, body2, pos1);
             worldPointConstraint[1] = new PointOnPoint(body1, body2, pos2);
 
-            hingeAxis.Normalize();
+            hingeAxis = JVector.Normalize(hingeAxis);
 
             var perpDir = JVector.Up;
 
@@ -35,17 +35,18 @@ namespace Jitter.Dynamics.Joints
 
             var sideAxis = JVector.Cross(hingeAxis, perpDir);
             perpDir = JVector.Cross(sideAxis, hingeAxis);
-            perpDir.Normalize();
 
-            float len = 10.0f * 3;
+            perpDir = JVector.Normalize(perpDir);
+
+            const float len = 10.0f * 3;
 
             var hingeRelAnchorPos0 = perpDir * len;
 
-            float angleToMiddle = 0.5f * (hingeFwdAngle - hingeBckAngle);
+            var angleToMiddle = 0.5f * (hingeFwdAngle - hingeBckAngle);
             var hingeRelAnchorPos1 = JVector.Transform(hingeRelAnchorPos0, JMatrix.CreateFromAxisAngle(hingeAxis, -angleToMiddle / 360.0f * 2.0f * JMath.Pi));
 
-            float hingeHalfAngle = 0.5f * (hingeFwdAngle + hingeBckAngle);
-            float allowedDistance = len * 2.0f * (float)System.Math.Sin(hingeHalfAngle * 0.5f / 360.0f * 2.0f * JMath.Pi);
+            var hingeHalfAngle = 0.5f * (hingeFwdAngle + hingeBckAngle);
+            var allowedDistance = len * 2.0f * (float)System.Math.Sin(hingeHalfAngle * 0.5f / 360.0f * 2.0f * JMath.Pi);
 
             var hingePos = body1.Position;
             var relPos0c = hingePos + hingeRelAnchorPos0;

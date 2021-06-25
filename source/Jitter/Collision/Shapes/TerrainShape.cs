@@ -25,26 +25,32 @@ namespace Jitter.Collision.Shapes
 
             boundings = JBBox.SmallBox;
 
-            for (int i = 0; i < heightsLength0; i++)
+            const float minX = 0f;
+            const float minZ = 0f;
+            var maxX = checked(heightsLength0 * scaleX);
+            var maxZ = checked(heightsLength1 * scaleZ);
+
+            var minY = boundings.Min.Y;
+            var maxY = boundings.Max.Y;
+
+            for (var i = 0; i < heightsLength0; i++)
             {
-                for (int e = 0; e < heightsLength1; e++)
+                for (var e = 0; e < heightsLength1; e++)
                 {
                     if (heights[i, e] > boundings.Max.Y)
                     {
-                        boundings.Max.Y = heights[i, e];
+                        maxY = heights[i, e];
                     }
                     else if (heights[i, e] < boundings.Min.Y)
                     {
-                        boundings.Min.Y = heights[i, e];
+                        minY = heights[i, e];
                     }
                 }
             }
 
-            boundings.Min.X = 0.0f;
-            boundings.Min.Z = 0.0f;
-
-            boundings.Max.X = checked(heightsLength0 * scaleX);
-            boundings.Max.Z = checked(heightsLength1 * scaleZ);
+            boundings = new JBBox(
+                new JVector(minX, minY, minZ),
+                new JVector(maxX, maxY, maxZ));
 
             this.heights = heights;
             this.scaleX = scaleX;
@@ -75,7 +81,7 @@ namespace Jitter.Collision.Shapes
 
         public override void SetCurrentShape(int index)
         {
-            bool leftTriangle = false;
+            var leftTriangle = false;
 
             if (index >= numX * numZ)
             {
@@ -83,20 +89,20 @@ namespace Jitter.Collision.Shapes
                 index -= numX * numZ;
             }
 
-            int quadIndexX = index % numX;
-            int quadIndexZ = index / numX;
+            var quadIndexX = index % numX;
+            var quadIndexZ = index / numX;
 
             if (leftTriangle)
             {
-                points[0].Set((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
-                points[1].Set((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
-                points[2].Set((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
+                points[0] = new JVector((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
+                points[1] = new JVector((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
+                points[2] = new JVector((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
             }
             else
             {
-                points[0].Set((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
-                points[1].Set((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
-                points[2].Set((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
+                points[0] = new JVector((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 0], (minZ + quadIndexZ + 0) * scaleZ);
+                points[1] = new JVector((minX + quadIndexX + 1) * scaleX, heights[minX + quadIndexX + 1, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
+                points[2] = new JVector((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
             }
 
             var sum = points[0];
@@ -171,24 +177,25 @@ namespace Jitter.Collision.Shapes
 
         public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
         {
-            box = boundings;
-
-            box.Min.X -= SphericalExpansion;
-            box.Min.Y -= SphericalExpansion;
-            box.Min.Z -= SphericalExpansion;
-            box.Max.X += SphericalExpansion;
-            box.Max.Y += SphericalExpansion;
-            box.Max.Z += SphericalExpansion;
+            box = new JBBox(
+                new JVector(
+                    boundings.Min.X - SphericalExpansion,
+                    boundings.Min.Y - SphericalExpansion,
+                    boundings.Min.Z - SphericalExpansion),
+                new JVector(
+                    boundings.Max.X + SphericalExpansion,
+                    boundings.Max.Y + SphericalExpansion,
+                    boundings.Max.Z + SphericalExpansion));
 
             box.Transform(ref orientation);
         }
 
         public override void MakeHull(ref List<JVector> triangleList, int generationThreshold)
         {
-            for (int index = 0; index < (heightsLength0 - 1) * (heightsLength1 - 1); index++)
+            for (var index = 0; index < (heightsLength0 - 1) * (heightsLength1 - 1); index++)
             {
-                int quadIndexX = index % (heightsLength0 - 1);
-                int quadIndexZ = index / (heightsLength0 - 1);
+                var quadIndexX = index % (heightsLength0 - 1);
+                var quadIndexZ = index / (heightsLength0 - 1);
 
                 triangleList.Add(new JVector((0 + quadIndexX + 0) * scaleX, heights[0 + quadIndexX + 0, 0 + quadIndexZ + 0], (0 + quadIndexZ + 0) * scaleZ));
                 triangleList.Add(new JVector((0 + quadIndexX + 1) * scaleX, heights[0 + quadIndexX + 1, 0 + quadIndexZ + 0], (0 + quadIndexZ + 0) * scaleZ));
@@ -205,9 +212,9 @@ namespace Jitter.Collision.Shapes
             JVector.Normalize(ref direction, out var expandVector);
             JVector.Multiply(ref expandVector, SphericalExpansion, out expandVector);
 
-            int minIndex = 0;
-            float min = JVector.Dot(ref points[0], ref direction);
-            float dot = JVector.Dot(ref points[1], ref direction);
+            var minIndex = 0;
+            var min = JVector.Dot(ref points[0], ref direction);
+            var dot = JVector.Dot(ref points[1], ref direction);
             if (dot > min)
             {
                 min = dot;

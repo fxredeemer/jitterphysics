@@ -25,30 +25,30 @@ namespace Jitter.LinearMath
         {
             var allIndices = new List<int>();
 
-            int steps = (int)factor;
+            var steps = (int)factor;
 
-            for (int thetaIndex = 0; thetaIndex < steps; thetaIndex++)
+            for (var thetaIndex = 0; thetaIndex < steps; thetaIndex++)
             {
-                float theta = JMath.Pi / (steps - 1) * thetaIndex;
-                float sinTheta = (float)Math.Sin(theta);
-                float cosTheta = (float)Math.Cos(theta);
+                var theta = JMath.Pi / (steps - 1) * thetaIndex;
+                var sinTheta = (float)Math.Sin(theta);
+                var cosTheta = (float)Math.Cos(theta);
 
-                for (int phiIndex = 0; phiIndex < steps; phiIndex++)
+                for (var phiIndex = 0; phiIndex < steps; phiIndex++)
                 {
-                    float phi = (2.0f * JMath.Pi / (steps - 0) * phiIndex) - JMath.Pi;
-                    float sinPhi = (float)Math.Sin(phi);
-                    float cosPhi = (float)Math.Cos(phi);
+                    var phi = (2.0f * JMath.Pi / (steps - 0) * phiIndex) - JMath.Pi;
+                    var sinPhi = (float)Math.Sin(phi);
+                    var cosPhi = (float)Math.Cos(phi);
 
                     var dir = new JVector(sinTheta * cosPhi, cosTheta, sinTheta * sinPhi);
 
-                    int index = FindExtremePoint(pointCloud, ref dir);
+                    var index = FindExtremePoint(pointCloud, ref dir);
                     allIndices.Add(index);
                 }
             }
 
             allIndices.Sort();
 
-            for (int i = 1; i < allIndices.Count; i++)
+            for (var i = 1; i < allIndices.Count; i++)
             {
                 if (allIndices[i - 1] == allIndices[i])
                 {
@@ -61,12 +61,12 @@ namespace Jitter.LinearMath
 
         private static int FindExtremePoint(List<JVector> points, ref JVector dir)
         {
-            int index = 0;
-            float current = float.MinValue;
+            var index = 0;
+            var current = float.MinValue;
 
             JVector point; float value;
 
-            for (int i = 1; i < points.Count; i++)
+            for (var i = 1; i < points.Count; i++)
             {
                 point = points[i];
 

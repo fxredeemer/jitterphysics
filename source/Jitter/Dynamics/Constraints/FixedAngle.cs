@@ -56,14 +56,14 @@ namespace Jitter.Dynamics.Constraints
             var q = orientationDifference * body2.invOrientation * body1.orientation;
             JVector axis;
 
-            float x = q.M32 - q.M23;
-            float y = q.M13 - q.M31;
-            float z = q.M21 - q.M12;
+            var x = q.M32 - q.M23;
+            var y = q.M13 - q.M31;
+            var z = q.M21 - q.M12;
 
-            float r = JMath.Sqrt((x * x) + (y * y) + (z * z));
-            float t = q.M11 + q.M22 + q.M33;
+            var r = JMath.Sqrt((x * x) + (y * y) + (z * z));
+            var t = q.M11 + q.M22 + q.M33;
 
-            float angle = (float)Math.Atan2(r, t - 1);
+            var angle = (float)Math.Atan2(r, t - 1);
             axis = new JVector(x, y, z) * angle;
 
             if (r != 0.0f)

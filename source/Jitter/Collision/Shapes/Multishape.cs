@@ -61,11 +61,11 @@ namespace Jitter.Collision.Shapes
         public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
         {
             var helpBox = JBBox.LargeBox;
-            int length = Prepare(ref helpBox);
+            var length = Prepare(ref helpBox);
 
             box = JBBox.SmallBox;
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 SetCurrentShape(i);
                 base.GetBoundingBox(ref orientation, out helpBox);

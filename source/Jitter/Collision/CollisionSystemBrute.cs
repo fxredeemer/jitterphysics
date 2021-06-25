@@ -33,13 +33,13 @@ namespace Jitter.Collision
 
         public override void Detect(bool multiThreaded)
         {
-            int count = bodyList.Count;
+            var count = bodyList.Count;
 
             if (multiThreaded)
             {
-                for (int i = 0; i < count; i++)
+                for (var i = 0; i < count; i++)
                 {
-                    for (int e = i + 1; e < count; e++)
+                    for (var e = i + 1; e < count; e++)
                     {
                         if (!CheckBothStaticOrInactive(bodyList[i], bodyList[e])
                             && CheckBoundingBoxes(bodyList[i], bodyList[e])
@@ -68,9 +68,9 @@ namespace Jitter.Collision
             }
             else
             {
-                for (int i = 0; i < count; i++)
+                for (var i = 0; i < count; i++)
                 {
-                    for (int e = i + 1; e < count; e++)
+                    for (var e = i + 1; e < count; e++)
                     {
                         if (!CheckBothStaticOrInactive(bodyList[i], bodyList[e])
                             && CheckBoundingBoxes(bodyList[i], bodyList[e])
@@ -109,7 +109,7 @@ namespace Jitter.Collision
 
             JVector tempNormal;
             float tempFraction;
-            bool result = false;
+            var result = false;
 
             foreach (var e in bodyList)
             {
@@ -160,15 +160,15 @@ namespace Jitter.Collision
             {
                 multishape = multishape.RequestWorkingClone();
 
-                bool multiShapeCollides = false;
+                var multiShapeCollides = false;
 
                 JVector.Subtract(ref rayOrigin, ref body.position, out var transformedOrigin);
                 JVector.Transform(ref transformedOrigin, ref body.invOrientation, out transformedOrigin);
                 JVector.Transform(ref rayDirection, ref body.invOrientation, out var transformedDirection);
 
-                int msLength = multishape.Prepare(ref transformedOrigin, ref transformedDirection);
+                var msLength = multishape.Prepare(ref transformedOrigin, ref transformedDirection);
 
-                for (int i = 0; i < msLength; i++)
+                for (var i = 0; i < msLength; i++)
                 {
                     multishape.SetCurrentShape(i);
 
@@ -179,7 +179,7 @@ namespace Jitter.Collision
                             ref body.position,
                             ref rayOrigin,
                             ref rayDirection,
-                            out float tempFraction,
+                            out var tempFraction,
                             out var tempNormal)
                         && tempFraction < fraction)
                     {

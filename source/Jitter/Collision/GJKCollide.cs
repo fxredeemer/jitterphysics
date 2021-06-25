@@ -10,19 +10,21 @@ namespace Jitter.Collision
 
         private static void SupportMapTransformed(ISupportMappable support, ref JMatrix orientation, ref JVector position, ref JVector direction, out JVector result)
         {
-            result.X = (direction.X * orientation.M11) + (direction.Y * orientation.M12) + (direction.Z * orientation.M13);
-            result.Y = (direction.X * orientation.M21) + (direction.Y * orientation.M22) + (direction.Z * orientation.M23);
-            result.Z = (direction.X * orientation.M31) + (direction.Y * orientation.M32) + (direction.Z * orientation.M33);
+            result = new JVector(
+                (direction.X * orientation.M11) + (direction.Y * orientation.M12) + (direction.Z * orientation.M13),
+                (direction.X * orientation.M21) + (direction.Y * orientation.M22) + (direction.Z * orientation.M23),
+                (direction.X * orientation.M31) + (direction.Y * orientation.M32) + (direction.Z * orientation.M33));
 
             support.SupportMapping(ref result, out result);
 
-            float x = (result.X * orientation.M11) + (result.Y * orientation.M21) + (result.Z * orientation.M31);
-            float y = (result.X * orientation.M12) + (result.Y * orientation.M22) + (result.Z * orientation.M32);
-            float z = (result.X * orientation.M13) + (result.Y * orientation.M23) + (result.Z * orientation.M33);
+            var x = (result.X * orientation.M11) + (result.Y * orientation.M21) + (result.Z * orientation.M31);
+            var y = (result.X * orientation.M12) + (result.Y * orientation.M22) + (result.Z * orientation.M32);
+            var z = (result.X * orientation.M13) + (result.Y * orientation.M23) + (result.Z * orientation.M33);
 
-            result.X = position.X + x;
-            result.Y = position.Y + y;
-            result.Z = position.Z + z;
+            result = new JVector(
+                position.X + x,
+                position.Y + y,
+                position.Z + z);
         }
 
         public static bool Pointcast(ISupportMappable support, ref JMatrix orientation, ref JVector position, ref JVector point)
@@ -39,10 +41,10 @@ namespace Jitter.Collision
             float VdotR;
 
             JVector.Subtract(ref x, ref arbitraryPoint, out var v);
-            float dist = v.LengthSquared();
+            var dist = v.LengthSquared();
             const float epsilon = 0.0001f;
 
-            int maxIter = MaxIterations;
+            var maxIter = MaxIterations;
 
             var simplexSolver = simplexSolverPool.GetNew();
 
@@ -53,7 +55,7 @@ namespace Jitter.Collision
                 SupportMapTransformed(support, ref orientation, ref position, ref v, out var p);
                 JVector.Subtract(ref x, ref p, out var w);
 
-                float VdotW = JVector.Dot(ref v, ref w);
+                var VdotW = JVector.Dot(ref v, ref w);
 
                 if (VdotW > 0.0f)
                 {
@@ -113,9 +115,9 @@ namespace Jitter.Collision
 
             normal = JVector.Zero;
 
-            int maxIter = 15;
+            var maxIter = 15;
 
-            float distSq = v.LengthSquared();
+            var distSq = v.LengthSquared();
             const float epsilon = 0.00001f;
 
             while ((distSq > epsilon) && (maxIter-- != 0))
@@ -145,7 +147,7 @@ namespace Jitter.Collision
 
             if (normal.LengthSquared() > JMath.Epsilon * JMath.Epsilon)
             {
-                normal.Normalize();
+                normal = JVector.Normalize(normal);
             }
 
             simplexSolverPool.GiveBack(simplexSolver);
@@ -169,7 +171,7 @@ namespace Jitter.Collision
             normal = JVector.Zero;
             fraction = float.MaxValue;
 
-            float lambda = 0.0f;
+            var lambda = 0.0f;
 
             var r = direction;
             var x = origin;
@@ -177,9 +179,9 @@ namespace Jitter.Collision
             SupportMapTransformed(support, ref orientation, ref position, ref r, out var arbitraryPoint);
             JVector.Subtract(ref x, ref arbitraryPoint, out var v);
 
-            int maxIter = MaxIterations;
+            var maxIter = MaxIterations;
 
-            float distSq = v.LengthSquared();
+            var distSq = v.LengthSquared();
             const float epsilon = 0.000001f;
 
             float VdotR;
@@ -189,7 +191,7 @@ namespace Jitter.Collision
                 SupportMapTransformed(support, ref orientation, ref position, ref v, out var p);
                 JVector.Subtract(ref x, ref p, out var w);
 
-                float VdotW = JVector.Dot(ref v, ref w);
+                var VdotW = JVector.Dot(ref v, ref w);
 
                 if (VdotW > 0.0f)
                 {
@@ -228,7 +230,7 @@ namespace Jitter.Collision
 
             if (normal.LengthSquared() > JMath.Epsilon * JMath.Epsilon)
             {
-                normal.Normalize();
+                normal = JVector.Normalize(normal);
             }
 
             simplexSolverPool.GiveBack(simplexSolver);
@@ -330,7 +332,7 @@ namespace Jitter.Collision
 
             public bool Closest(out JVector v)
             {
-                bool succes = UpdateClosestVectorAndPoints();
+                var succes = UpdateClosestVectorAndPoints();
                 v = _cachedV;
                 return succes;
             }
@@ -339,9 +341,9 @@ namespace Jitter.Collision
             {
                 get
                 {
-                    int numverts = NumVertices;
+                    var numverts = NumVertices;
                     float maxV = 0f, curLen2;
-                    for (int i = 0; i < numverts; i++)
+                    for (var i = 0; i < numverts; i++)
                     {
                         curLen2 = _simplexVectorW[i].LengthSquared();
                         if (maxV < curLen2)
@@ -355,11 +357,11 @@ namespace Jitter.Collision
 
             public int GetSimplex(out JVector[] pBuf, out JVector[] qBuf, out JVector[] yBuf)
             {
-                int numverts = NumVertices;
+                var numverts = NumVertices;
                 pBuf = new JVector[numverts];
                 qBuf = new JVector[numverts];
                 yBuf = new JVector[numverts];
-                for (int i = 0; i < numverts; i++)
+                for (var i = 0; i < numverts; i++)
                 {
                     yBuf[i] = _simplexVectorW[i];
                     pBuf[i] = _simplexPointsP[i];
@@ -375,8 +377,8 @@ namespace Jitter.Collision
                     return true;
                 }
 
-                int numverts = NumVertices;
-                for (int i = 0; i < numverts; i++)
+                var numverts = NumVertices;
+                for (var i = 0; i < numverts; i++)
                 {
                     if (_simplexVectorW[i] == w)
                     {
@@ -458,11 +460,11 @@ namespace Jitter.Collision
                             var to = _simplexVectorW[1];
                             var diff = from * (-1);
                             var v = to - from;
-                            float t = JVector.Dot(v, diff);
+                            var t = JVector.Dot(v, diff);
 
                             if (t > 0)
                             {
-                                float dotVV = v.LengthSquared();
+                                var dotVV = v.LengthSquared();
                                 if (t < dotVV)
                                 {
                                     t /= dotVV;
@@ -521,7 +523,7 @@ namespace Jitter.Collision
                             c = _simplexVectorW[2];
                             d = _simplexVectorW[3];
 
-                            bool hasSeperation = ClosestPtPointTetrahedron(p, a, b, c, d, ref _cachedBC);
+                            var hasSeperation = ClosestPtPointTetrahedron(p, a, b, c, d, ref _cachedBC);
 
                             if (hasSeperation)
                             {
@@ -547,7 +549,7 @@ namespace Jitter.Collision
                                 else
                                 {
                                     _cachedValidClosest = true;
-                                    _cachedV.X = _cachedV.Y = _cachedV.Z = 0f;
+                                    _cachedV = new JVector();
                                 }
                                 break;
                             }
@@ -574,8 +576,8 @@ namespace Jitter.Collision
                 var ab = b - a;
                 var ac = c - a;
                 var ap = p - a;
-                float d1 = JVector.Dot(ab, ap);
-                float d2 = JVector.Dot(ac, ap);
+                var d1 = JVector.Dot(ab, ap);
+                var d2 = JVector.Dot(ac, ap);
                 if (d1 <= 0f && d2 <= 0f)
                 {
                     result.ClosestPointOnSimplex = a;
@@ -585,8 +587,8 @@ namespace Jitter.Collision
                 }
 
                 var bp = p - b;
-                float d3 = JVector.Dot(ab, bp);
-                float d4 = JVector.Dot(ac, bp);
+                var d3 = JVector.Dot(ab, bp);
+                var d4 = JVector.Dot(ac, bp);
                 if (d3 >= 0f && d4 <= d3)
                 {
                     result.ClosestPointOnSimplex = b;
@@ -595,7 +597,7 @@ namespace Jitter.Collision
 
                     return true;
                 }
-                float vc = (d1 * d4) - (d3 * d2);
+                var vc = (d1 * d4) - (d3 * d2);
                 if (vc <= 0f && d1 >= 0f && d3 <= 0f)
                 {
                     v = d1 / (d1 - d3);
@@ -607,8 +609,8 @@ namespace Jitter.Collision
                 }
 
                 var cp = p - c;
-                float d5 = JVector.Dot(ab, cp);
-                float d6 = JVector.Dot(ac, cp);
+                var d5 = JVector.Dot(ab, cp);
+                var d6 = JVector.Dot(ac, cp);
                 if (d6 >= 0f && d5 <= d6)
                 {
                     result.ClosestPointOnSimplex = c;
@@ -617,7 +619,7 @@ namespace Jitter.Collision
                     return true;
                 }
 
-                float vb = (d5 * d2) - (d1 * d6);
+                var vb = (d5 * d2) - (d1 * d6);
                 if (vb <= 0f && d2 >= 0f && d6 <= 0f)
                 {
                     w = d2 / (d2 - d6);
@@ -628,7 +630,7 @@ namespace Jitter.Collision
                     return true;
                 }
 
-                float va = (d3 * d6) - (d5 * d4);
+                var va = (d3 * d6) - (d5 * d4);
                 if (va <= 0f && (d4 - d3) >= 0f && (d5 - d6) >= 0f)
                 {
                     w = (d4 - d3) / (d4 - d3 + (d5 - d6));
@@ -640,7 +642,7 @@ namespace Jitter.Collision
                     return true;
                 }
 
-                float denom = 1.0f / (va + vb + vc);
+                var denom = 1.0f / (va + vb + vc);
                 v = vb * denom;
                 w = vc * denom;
 
@@ -657,8 +659,8 @@ namespace Jitter.Collision
             {
                 var normal = JVector.Cross(b - a, c - a);
 
-                float signp = JVector.Dot(p - a, normal);
-                float signd = JVector.Dot(d - a, normal);
+                var signp = JVector.Dot(p - a, normal);
+                var signd = JVector.Dot(d - a, normal);
 
                 if (signd * signd < (1e-4f * 1e-4f))
                 {
@@ -680,10 +682,10 @@ namespace Jitter.Collision
                 finalResult.UsedVertices.UsedVertexC = true;
                 finalResult.UsedVertices.UsedVertexD = true;
 
-                int pointOutsideABC = PointOutsideOfPlane(p, a, b, c, d);
-                int pointOutsideACD = PointOutsideOfPlane(p, a, c, d, b);
-                int pointOutsideADB = PointOutsideOfPlane(p, a, d, b, c);
-                int pointOutsideBDC = PointOutsideOfPlane(p, b, d, c, a);
+                var pointOutsideABC = PointOutsideOfPlane(p, a, b, c, d);
+                var pointOutsideACD = PointOutsideOfPlane(p, a, c, d, b);
+                var pointOutsideADB = PointOutsideOfPlane(p, a, d, b, c);
+                var pointOutsideBDC = PointOutsideOfPlane(p, b, d, c, a);
 
                 if (pointOutsideABC < 0 || pointOutsideACD < 0 || pointOutsideADB < 0 || pointOutsideBDC < 0)
                 {
@@ -696,13 +698,13 @@ namespace Jitter.Collision
                     return false;
                 }
 
-                float bestSqDist = float.MaxValue;
+                var bestSqDist = float.MaxValue;
                 if (pointOutsideABC != 0)
                 {
                     ClosestPtPointTriangle(p, a, b, c, ref tempResult);
                     var q = tempResult.ClosestPointOnSimplex;
 
-                    float sqDist = (q - p).LengthSquared();
+                    var sqDist = (q - p).LengthSquared();
                     if (sqDist < bestSqDist)
                     {
                         bestSqDist = sqDist;
@@ -724,7 +726,7 @@ namespace Jitter.Collision
                     ClosestPtPointTriangle(p, a, c, d, ref tempResult);
                     var q = tempResult.ClosestPointOnSimplex;
 
-                    float sqDist = (q - p).LengthSquared();
+                    var sqDist = (q - p).LengthSquared();
                     if (sqDist < bestSqDist)
                     {
                         bestSqDist = sqDist;
@@ -746,7 +748,7 @@ namespace Jitter.Collision
                     ClosestPtPointTriangle(p, a, d, b, ref tempResult);
                     var q = tempResult.ClosestPointOnSimplex;
 
-                    float sqDist = (q - p).LengthSquared();
+                    var sqDist = (q - p).LengthSquared();
                     if (sqDist < bestSqDist)
                     {
                         bestSqDist = sqDist;
@@ -767,7 +769,7 @@ namespace Jitter.Collision
                 {
                     ClosestPtPointTriangle(p, b, d, c, ref tempResult);
                     var q = tempResult.ClosestPointOnSimplex;
-                    float sqDist = (q - p).LengthSquared();
+                    var sqDist = (q - p).LengthSquared();
                     if (sqDist < bestSqDist)
                     {
                         finalResult.ClosestPointOnSimplex = q;

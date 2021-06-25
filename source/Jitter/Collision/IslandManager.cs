@@ -270,7 +270,7 @@ namespace Jitter.Collision
                 var currentNode = leftSearchQueue.Dequeue();
                 if (!currentNode.isStatic)
                 {
-                    for (int i = 0; i < currentNode.connections.Count; i++)
+                    for (var i = 0; i < currentNode.connections.Count; i++)
                     {
                         var connectedNode = currentNode.connections[i];
 
@@ -292,7 +292,7 @@ namespace Jitter.Collision
                 currentNode = rightSearchQueue.Dequeue();
                 if (!currentNode.isStatic)
                 {
-                    for (int i = 0; i < currentNode.connections.Count; i++)
+                    for (var i = 0; i < currentNode.connections.Count; i++)
                     {
                         var connectedNode = currentNode.connections[i];
 
@@ -319,7 +319,7 @@ namespace Jitter.Collision
 
             if (leftSearchQueue.Count == 0)
             {
-                for (int i = 0; i < visitedBodiesLeft.Count; i++)
+                for (var i = 0; i < visitedBodiesLeft.Count; i++)
                 {
                     var body = visitedBodiesLeft[i];
                     body1.island.bodies.Remove(body);
@@ -343,7 +343,7 @@ namespace Jitter.Collision
             }
             else if (rightSearchQueue.Count == 0)
             {
-                for (int i = 0; i < visitedBodiesRight.Count; i++)
+                for (var i = 0; i < visitedBodiesRight.Count; i++)
                 {
                     var body = visitedBodiesRight[i];
                     body0.island.bodies.Remove(body);
@@ -368,12 +368,12 @@ namespace Jitter.Collision
 
         ResetSearchStates:
 
-            for (int i = 0; i < visitedBodiesLeft.Count; i++)
+            for (var i = 0; i < visitedBodiesLeft.Count; i++)
             {
                 visitedBodiesLeft[i].marker = 0;
             }
 
-            for (int i = 0; i < visitedBodiesRight.Count; i++)
+            for (var i = 0; i < visitedBodiesRight.Count; i++)
             {
                 visitedBodiesRight[i].marker = 0;
             }

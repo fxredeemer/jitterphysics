@@ -43,8 +43,8 @@ namespace Jitter.LinearMath
         public static JMatrix CreateRotationX(float radians)
         {
             JMatrix matrix;
-            float num2 = (float)Math.Cos(radians);
-            float num = (float)Math.Sin(radians);
+            var num2 = (float)Math.Cos(radians);
+            var num = (float)Math.Sin(radians);
             matrix.M11 = 1f;
             matrix.M12 = 0f;
             matrix.M13 = 0f;
@@ -59,8 +59,8 @@ namespace Jitter.LinearMath
 
         public static void CreateRotationX(float radians, out JMatrix result)
         {
-            float num2 = (float)Math.Cos(radians);
-            float num = (float)Math.Sin(radians);
+            var num2 = (float)Math.Cos(radians);
+            var num = (float)Math.Sin(radians);
             result.M11 = 1f;
             result.M12 = 0f;
             result.M13 = 0f;
@@ -75,8 +75,8 @@ namespace Jitter.LinearMath
         public static JMatrix CreateRotationY(float radians)
         {
             JMatrix matrix;
-            float num2 = (float)Math.Cos(radians);
-            float num = (float)Math.Sin(radians);
+            var num2 = (float)Math.Cos(radians);
+            var num = (float)Math.Sin(radians);
             matrix.M11 = num2;
             matrix.M12 = 0f;
             matrix.M13 = -num;
@@ -91,8 +91,8 @@ namespace Jitter.LinearMath
 
         public static void CreateRotationY(float radians, out JMatrix result)
         {
-            float num2 = (float)Math.Cos(radians);
-            float num = (float)Math.Sin(radians);
+            var num2 = (float)Math.Cos(radians);
+            var num = (float)Math.Sin(radians);
             result.M11 = num2;
             result.M12 = 0f;
             result.M13 = -num;
@@ -107,8 +107,8 @@ namespace Jitter.LinearMath
         public static JMatrix CreateRotationZ(float radians)
         {
             JMatrix matrix;
-            float num2 = (float)Math.Cos(radians);
-            float num = (float)Math.Sin(radians);
+            var num2 = (float)Math.Cos(radians);
+            var num = (float)Math.Sin(radians);
             matrix.M11 = num2;
             matrix.M12 = num;
             matrix.M13 = 0f;
@@ -123,8 +123,8 @@ namespace Jitter.LinearMath
 
         public static void CreateRotationZ(float radians, out JMatrix result)
         {
-            float num2 = (float)Math.Cos(radians);
-            float num = (float)Math.Sin(radians);
+            var num2 = (float)Math.Cos(radians);
+            var num = (float)Math.Sin(radians);
             result.M11 = num2;
             result.M12 = num;
             result.M13 = 0f;
@@ -157,15 +157,15 @@ namespace Jitter.LinearMath
 
         public static void Multiply(ref JMatrix matrix1, ref JMatrix matrix2, out JMatrix result)
         {
-            float num0 = (matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21) + (matrix1.M13 * matrix2.M31);
-            float num1 = (matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22) + (matrix1.M13 * matrix2.M32);
-            float num2 = (matrix1.M11 * matrix2.M13) + (matrix1.M12 * matrix2.M23) + (matrix1.M13 * matrix2.M33);
-            float num3 = (matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21) + (matrix1.M23 * matrix2.M31);
-            float num4 = (matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22) + (matrix1.M23 * matrix2.M32);
-            float num5 = (matrix1.M21 * matrix2.M13) + (matrix1.M22 * matrix2.M23) + (matrix1.M23 * matrix2.M33);
-            float num6 = (matrix1.M31 * matrix2.M11) + (matrix1.M32 * matrix2.M21) + (matrix1.M33 * matrix2.M31);
-            float num7 = (matrix1.M31 * matrix2.M12) + (matrix1.M32 * matrix2.M22) + (matrix1.M33 * matrix2.M32);
-            float num8 = (matrix1.M31 * matrix2.M13) + (matrix1.M32 * matrix2.M23) + (matrix1.M33 * matrix2.M33);
+            var num0 = (matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21) + (matrix1.M13 * matrix2.M31);
+            var num1 = (matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22) + (matrix1.M13 * matrix2.M32);
+            var num2 = (matrix1.M11 * matrix2.M13) + (matrix1.M12 * matrix2.M23) + (matrix1.M13 * matrix2.M33);
+            var num3 = (matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21) + (matrix1.M23 * matrix2.M31);
+            var num4 = (matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22) + (matrix1.M23 * matrix2.M32);
+            var num5 = (matrix1.M21 * matrix2.M13) + (matrix1.M22 * matrix2.M23) + (matrix1.M23 * matrix2.M33);
+            var num6 = (matrix1.M31 * matrix2.M11) + (matrix1.M32 * matrix2.M21) + (matrix1.M33 * matrix2.M31);
+            var num7 = (matrix1.M31 * matrix2.M12) + (matrix1.M32 * matrix2.M22) + (matrix1.M33 * matrix2.M32);
+            var num8 = (matrix1.M31 * matrix2.M13) + (matrix1.M32 * matrix2.M23) + (matrix1.M33 * matrix2.M33);
 
             result.M11 = num0;
             result.M12 = num1;
@@ -211,18 +211,18 @@ namespace Jitter.LinearMath
 
         public static void Invert(ref JMatrix matrix, out JMatrix result)
         {
-            float determinantInverse = 1 / matrix.Determinant();
-            float m11 = ((matrix.M22 * matrix.M33) - (matrix.M23 * matrix.M32)) * determinantInverse;
-            float m12 = ((matrix.M13 * matrix.M32) - (matrix.M33 * matrix.M12)) * determinantInverse;
-            float m13 = ((matrix.M12 * matrix.M23) - (matrix.M22 * matrix.M13)) * determinantInverse;
+            var determinantInverse = 1 / matrix.Determinant();
+            var m11 = ((matrix.M22 * matrix.M33) - (matrix.M23 * matrix.M32)) * determinantInverse;
+            var m12 = ((matrix.M13 * matrix.M32) - (matrix.M33 * matrix.M12)) * determinantInverse;
+            var m13 = ((matrix.M12 * matrix.M23) - (matrix.M22 * matrix.M13)) * determinantInverse;
 
-            float m21 = ((matrix.M23 * matrix.M31) - (matrix.M21 * matrix.M33)) * determinantInverse;
-            float m22 = ((matrix.M11 * matrix.M33) - (matrix.M13 * matrix.M31)) * determinantInverse;
-            float m23 = ((matrix.M13 * matrix.M21) - (matrix.M11 * matrix.M23)) * determinantInverse;
+            var m21 = ((matrix.M23 * matrix.M31) - (matrix.M21 * matrix.M33)) * determinantInverse;
+            var m22 = ((matrix.M11 * matrix.M33) - (matrix.M13 * matrix.M31)) * determinantInverse;
+            var m23 = ((matrix.M13 * matrix.M21) - (matrix.M11 * matrix.M23)) * determinantInverse;
 
-            float m31 = ((matrix.M21 * matrix.M32) - (matrix.M22 * matrix.M31)) * determinantInverse;
-            float m32 = ((matrix.M12 * matrix.M31) - (matrix.M11 * matrix.M32)) * determinantInverse;
-            float m33 = ((matrix.M11 * matrix.M22) - (matrix.M12 * matrix.M21)) * determinantInverse;
+            var m31 = ((matrix.M21 * matrix.M32) - (matrix.M22 * matrix.M31)) * determinantInverse;
+            var m32 = ((matrix.M12 * matrix.M31) - (matrix.M11 * matrix.M32)) * determinantInverse;
+            var m33 = ((matrix.M11 * matrix.M22) - (matrix.M12 * matrix.M21)) * determinantInverse;
 
             result.M11 = m11;
             result.M12 = m12;
@@ -239,24 +239,24 @@ namespace Jitter.LinearMath
 
         public static void Inverse(ref JMatrix matrix, out JMatrix result)
         {
-            float det = (matrix.M11 * matrix.M22 * matrix.M33)
+            var det = (matrix.M11 * matrix.M22 * matrix.M33)
                 - (matrix.M11 * matrix.M23 * matrix.M32)
                 - (matrix.M12 * matrix.M21 * matrix.M33)
                 + (matrix.M12 * matrix.M23 * matrix.M31)
                 + (matrix.M13 * matrix.M21 * matrix.M32)
                 - (matrix.M13 * matrix.M22 * matrix.M31);
 
-            float num11 = (matrix.M22 * matrix.M33) - (matrix.M23 * matrix.M32);
-            float num12 = (matrix.M13 * matrix.M32) - (matrix.M12 * matrix.M33);
-            float num13 = (matrix.M12 * matrix.M23) - (matrix.M22 * matrix.M13);
+            var num11 = (matrix.M22 * matrix.M33) - (matrix.M23 * matrix.M32);
+            var num12 = (matrix.M13 * matrix.M32) - (matrix.M12 * matrix.M33);
+            var num13 = (matrix.M12 * matrix.M23) - (matrix.M22 * matrix.M13);
 
-            float num21 = (matrix.M23 * matrix.M31) - (matrix.M33 * matrix.M21);
-            float num22 = (matrix.M11 * matrix.M33) - (matrix.M31 * matrix.M13);
-            float num23 = (matrix.M13 * matrix.M21) - (matrix.M23 * matrix.M11);
+            var num21 = (matrix.M23 * matrix.M31) - (matrix.M33 * matrix.M21);
+            var num22 = (matrix.M11 * matrix.M33) - (matrix.M31 * matrix.M13);
+            var num23 = (matrix.M13 * matrix.M21) - (matrix.M23 * matrix.M11);
 
-            float num31 = (matrix.M21 * matrix.M32) - (matrix.M31 * matrix.M22);
-            float num32 = (matrix.M12 * matrix.M31) - (matrix.M32 * matrix.M11);
-            float num33 = (matrix.M11 * matrix.M22) - (matrix.M21 * matrix.M12);
+            var num31 = (matrix.M21 * matrix.M32) - (matrix.M31 * matrix.M22);
+            var num32 = (matrix.M12 * matrix.M31) - (matrix.M32 * matrix.M11);
+            var num33 = (matrix.M11 * matrix.M22) - (matrix.M21 * matrix.M12);
 
             result.M11 = num11 / det;
             result.M12 = num12 / det;
@@ -277,7 +277,7 @@ namespace Jitter.LinearMath
 
         public static void Multiply(ref JMatrix matrix1, float scaleFactor, out JMatrix result)
         {
-            float num = scaleFactor;
+            var num = scaleFactor;
             result.M11 = matrix1.M11 * num;
             result.M12 = matrix1.M12 * num;
             result.M13 = matrix1.M13 * num;
@@ -297,15 +297,15 @@ namespace Jitter.LinearMath
 
         public static void CreateFromQuaternion(ref JQuaternion quaternion, out JMatrix result)
         {
-            float num9 = quaternion.X * quaternion.X;
-            float num8 = quaternion.Y * quaternion.Y;
-            float num7 = quaternion.Z * quaternion.Z;
-            float num6 = quaternion.X * quaternion.Y;
-            float num5 = quaternion.Z * quaternion.W;
-            float num4 = quaternion.Z * quaternion.X;
-            float num3 = quaternion.Y * quaternion.W;
-            float num2 = quaternion.Y * quaternion.Z;
-            float num = quaternion.X * quaternion.W;
+            var num9 = quaternion.X * quaternion.X;
+            var num8 = quaternion.Y * quaternion.Y;
+            var num7 = quaternion.Z * quaternion.Z;
+            var num6 = quaternion.X * quaternion.Y;
+            var num5 = quaternion.Z * quaternion.W;
+            var num4 = quaternion.Z * quaternion.X;
+            var num3 = quaternion.Y * quaternion.W;
+            var num2 = quaternion.Y * quaternion.Z;
+            var num = quaternion.X * quaternion.W;
             result.M11 = 1f - (2f * (num8 + num7));
             result.M12 = 2f * (num6 + num5);
             result.M13 = 2f * (num4 - num3);
@@ -362,17 +362,17 @@ namespace Jitter.LinearMath
 
         public static void CreateFromAxisAngle(ref JVector axis, float angle, out JMatrix result)
         {
-            float x = axis.X;
-            float y = axis.Y;
-            float z = axis.Z;
-            float num2 = (float)Math.Sin(angle);
-            float num = (float)Math.Cos(angle);
-            float num11 = x * x;
-            float num10 = y * y;
-            float num9 = z * z;
-            float num8 = x * y;
-            float num7 = x * z;
-            float num6 = y * z;
+            var x = axis.X;
+            var y = axis.Y;
+            var z = axis.Z;
+            var num2 = (float)Math.Sin(angle);
+            var num = (float)Math.Cos(angle);
+            var num11 = x * x;
+            var num10 = y * y;
+            var num9 = z * z;
+            var num8 = x * y;
+            var num7 = x * z;
+            var num6 = y * z;
             result.M11 = num11 + (num * (1f - num11));
             result.M12 = num8 - (num * num8) + (num2 * z);
             result.M13 = num7 - (num * num7) - (num2 * y);

@@ -25,15 +25,15 @@ namespace Jitter.LinearMath
 
         public static void CreateFromYawPitchRoll(float yaw, float pitch, float roll, out JQuaternion result)
         {
-            float num9 = roll * 0.5f;
-            float num6 = (float)Math.Sin(num9);
-            float num5 = (float)Math.Cos(num9);
-            float num8 = pitch * 0.5f;
-            float num4 = (float)Math.Sin(num8);
-            float num3 = (float)Math.Cos(num8);
-            float num7 = yaw * 0.5f;
-            float num2 = (float)Math.Sin(num7);
-            float num = (float)Math.Cos(num7);
+            var num9 = roll * 0.5f;
+            var num6 = (float)Math.Sin(num9);
+            var num5 = (float)Math.Cos(num9);
+            var num8 = pitch * 0.5f;
+            var num4 = (float)Math.Sin(num8);
+            var num3 = (float)Math.Cos(num8);
+            var num7 = yaw * 0.5f;
+            var num2 = (float)Math.Sin(num7);
+            var num = (float)Math.Cos(num7);
             result.X = (num * num4 * num5) + (num2 * num3 * num6);
             result.Y = (num2 * num3 * num5) - (num * num4 * num6);
             result.Z = (num * num3 * num6) - (num2 * num4 * num5);
@@ -80,18 +80,18 @@ namespace Jitter.LinearMath
 
         public static void Multiply(ref JQuaternion quaternion1, ref JQuaternion quaternion2, out JQuaternion result)
         {
-            float x = quaternion1.X;
-            float y = quaternion1.Y;
-            float z = quaternion1.Z;
-            float w = quaternion1.W;
-            float num4 = quaternion2.X;
-            float num3 = quaternion2.Y;
-            float num2 = quaternion2.Z;
-            float num = quaternion2.W;
-            float num12 = (y * num2) - (z * num3);
-            float num11 = (z * num4) - (x * num2);
-            float num10 = (x * num3) - (y * num4);
-            float num9 = (x * num4) + (y * num3) + (z * num2);
+            var x = quaternion1.X;
+            var y = quaternion1.Y;
+            var z = quaternion1.Z;
+            var w = quaternion1.W;
+            var num4 = quaternion2.X;
+            var num3 = quaternion2.Y;
+            var num2 = quaternion2.Z;
+            var num = quaternion2.W;
+            var num12 = (y * num2) - (z * num3);
+            var num11 = (z * num4) - (x * num2);
+            var num10 = (x * num3) - (y * num4);
+            var num9 = (x * num4) + (y * num3) + (z * num2);
             result.X = (x * num) + (num4 * w) + num12;
             result.Y = (y * num) + (num3 * w) + num11;
             result.Z = (z * num) + (num2 * w) + num10;
@@ -114,8 +114,8 @@ namespace Jitter.LinearMath
 
         public void Normalize()
         {
-            float num2 = (X * X) + (Y * Y) + (Z * Z) + (W * W);
-            float num = 1f / (JMath.Sqrt(num2));
+            var num2 = (X * X) + (Y * Y) + (Z * Z) + (W * W);
+            var num = 1f / (JMath.Sqrt(num2));
             X *= num;
             Y *= num;
             Z *= num;
@@ -130,10 +130,10 @@ namespace Jitter.LinearMath
 
         public static void CreateFromMatrix(ref JMatrix matrix, out JQuaternion result)
         {
-            float num8 = matrix.M11 + matrix.M22 + matrix.M33;
+            var num8 = matrix.M11 + matrix.M22 + matrix.M33;
             if (num8 > 0f)
             {
-                float num = JMath.Sqrt(num8 + 1f);
+                var num = JMath.Sqrt(num8 + 1f);
                 result.W = num * 0.5f;
                 num = 0.5f / num;
                 result.X = (matrix.M23 - matrix.M32) * num;
@@ -142,8 +142,8 @@ namespace Jitter.LinearMath
             }
             else if ((matrix.M11 >= matrix.M22) && (matrix.M11 >= matrix.M33))
             {
-                float num7 = JMath.Sqrt(1f + matrix.M11 - matrix.M22 - matrix.M33);
-                float num4 = 0.5f / num7;
+                var num7 = JMath.Sqrt(1f + matrix.M11 - matrix.M22 - matrix.M33);
+                var num4 = 0.5f / num7;
                 result.X = 0.5f * num7;
                 result.Y = (matrix.M12 + matrix.M21) * num4;
                 result.Z = (matrix.M13 + matrix.M31) * num4;
@@ -151,8 +151,8 @@ namespace Jitter.LinearMath
             }
             else if (matrix.M22 > matrix.M33)
             {
-                float num6 = JMath.Sqrt(1f + matrix.M22 - matrix.M11 - matrix.M33);
-                float num3 = 0.5f / num6;
+                var num6 = JMath.Sqrt(1f + matrix.M22 - matrix.M11 - matrix.M33);
+                var num3 = 0.5f / num6;
                 result.X = (matrix.M21 + matrix.M12) * num3;
                 result.Y = 0.5f * num6;
                 result.Z = (matrix.M32 + matrix.M23) * num3;
@@ -160,8 +160,8 @@ namespace Jitter.LinearMath
             }
             else
             {
-                float num5 = JMath.Sqrt(1f + matrix.M33 - matrix.M11 - matrix.M22);
-                float num2 = 0.5f / num5;
+                var num5 = JMath.Sqrt(1f + matrix.M33 - matrix.M11 - matrix.M22);
+                var num2 = 0.5f / num5;
                 result.X = (matrix.M31 + matrix.M13) * num2;
                 result.Y = (matrix.M32 + matrix.M23) * num2;
                 result.Z = 0.5f * num5;

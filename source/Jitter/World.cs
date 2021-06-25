@@ -35,7 +35,6 @@ namespace Jitter
 
             internal WorldEvents() { }
 
-
             internal void RaiseWorldPreStep(float timestep)
             {
                 PreStep?.Invoke(timestep);
@@ -100,7 +99,6 @@ namespace Jitter
             {
                 ContactCreated?.Invoke(contact);
             }
-
         }
 
         private float inactiveAngularThresholdSq = 0.1f;
@@ -454,13 +452,13 @@ namespace Jitter
             sw.Stop(); DebugTimes[(int)DebugType.UpdateContacts] = sw.Elapsed.TotalMilliseconds;
 
             sw.Restart();
-            double ms = 0;
             while (removedArbiterQueue.Count > 0)
             {
                 islands.ArbiterRemoved(removedArbiterQueue.Dequeue());
             }
 
-            sw.Stop(); ms = sw.Elapsed.TotalMilliseconds;
+            sw.Stop();
+            var ms = sw.Elapsed.TotalMilliseconds;
 
             sw.Restart();
             foreach (var body in softbodies)
@@ -492,7 +490,7 @@ namespace Jitter
             sw.Stop(); DebugTimes[(int)DebugType.IntegrateForces] = sw.Elapsed.TotalMilliseconds;
 
             sw.Restart();
-            HandleArbiter(contactIterations, multithread);
+            HandleArbiter(multithread);
             sw.Stop(); DebugTimes[(int)DebugType.HandleArbiter] = sw.Elapsed.TotalMilliseconds;
 
             sw.Restart();
@@ -513,7 +511,7 @@ namespace Jitter
 
         public void Step(float totalTime, bool multithread, float timestep, int maxSteps)
         {
-            int counter = 0;
+            var counter = 0;
             accumulatedTime += totalTime;
 
             while (accumulatedTime > timestep)
@@ -539,7 +537,7 @@ namespace Jitter
                 return;
             }
 
-            for (int i = arbiter.contactList.Count - 1; i >= 0; i--)
+            for (var i = arbiter.contactList.Count - 1; i >= 0; i--)
             {
                 var c = arbiter.contactList[i];
                 c.UpdatePosition();
@@ -553,9 +551,9 @@ namespace Jitter
                 else
                 {
                     JVector.Subtract(ref c.p1, ref c.p2, out var diff);
-                    float distance = JVector.Dot(ref diff, ref c.normal);
+                    var distance = JVector.Dot(ref diff, ref c.normal);
 
-                    diff = diff - (distance * c.normal);
+                    diff -= (distance * c.normal);
                     distance = diff.LengthSquared();
 
                     if (distance > ContactSettings.breakThreshold * ContactSettings.breakThreshold * 100)
@@ -602,12 +600,12 @@ namespace Jitter
                 thisIterations = smallIterations;
             }
 
-            for (int i = -1; i < thisIterations; i++)
+            for (var i = -1; i < thisIterations; i++)
             {
                 foreach (var arbiter in island.arbiter)
                 {
-                    int contactCount = arbiter.contactList.Count;
-                    for (int e = 0; e < contactCount; e++)
+                    var contactCount = arbiter.contactList.Count;
+                    for (var e = 0; e < contactCount; e++)
                     {
                         if (i == -1)
                         {
@@ -622,7 +620,7 @@ namespace Jitter
 
                 foreach (var c in island.constraints)
                 {
-                    if (c.body1 != null && !c.body1.IsActive && c.body2?.IsActive == false)
+                    if (c.body1?.IsActive == false && c.body2?.IsActive == false)
                     {
                         continue;
                     }
@@ -639,11 +637,11 @@ namespace Jitter
             }
         }
 
-        private void HandleArbiter(int iterations, bool multiThreaded)
+        private void HandleArbiter(bool multiThreaded)
         {
             if (multiThreaded)
             {
-                for (int i = 0; i < islands.Count; i++)
+                for (var i = 0; i < islands.Count; i++)
                 {
                     if (islands[i].IsActive())
                     {
@@ -655,7 +653,7 @@ namespace Jitter
             }
             else
             {
-                for (int i = 0; i < islands.Count; i++)
+                for (var i = 0; i < islands.Count; i++)
                 {
                     if (islands[i].IsActive())
                     {
@@ -688,8 +686,8 @@ namespace Jitter
                     }
                 }
 
-                body.force.MakeZero();
-                body.torque.MakeZero();
+                body.force = new JVector();
+                body.torque = new JVector();
             }
         }
 
@@ -703,7 +701,7 @@ namespace Jitter
             if (!body.isParticle)
             {
                 JVector axis;
-                float angle = body.angularVelocity.Length();
+                var angle = body.angularVelocity.Length();
 
                 if (angle < 0.001f)
                 {
@@ -733,7 +731,6 @@ namespace Jitter
             }
 
             body.Update();
-
 
             if (CollisionSystem.EnableSpeculativeContacts || body.EnableSpeculativeContacts)
             {
@@ -790,8 +787,7 @@ namespace Jitter
                 }
             }
 
-            Contact contact = null;
-
+            Contact contact;
             if (arbiter.body1 == body1)
             {
                 JVector.Negate(ref normal, out normal);
@@ -810,10 +806,9 @@ namespace Jitter
 
         private void CheckDeactivation()
         {
-
             foreach (var island in islands)
             {
-                bool deactivateIsland = true;
+                var deactivateIsland = true;
 
                 if (!AllowDeactivation)
                 {

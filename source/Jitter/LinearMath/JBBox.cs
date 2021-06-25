@@ -73,10 +73,10 @@
                 return start >= min && start <= max;
             }
 
-            float t0 = (min - start) / dir;
-            float t1 = (max - start) / dir;
+            var t0 = (min - start) / dir;
+            var t1 = (max - start) / dir;
 
-            if (t0 > t1) { float tmp = t0; t0 = t1; t1 = tmp; }
+            if (t0 > t1) { var tmp = t0; t0 = t1; t1 = tmp; }
 
             if (t0 > exit || t1 < enter)
             {
@@ -190,7 +190,7 @@
             var vector3 = new JVector(float.MaxValue);
             var vector2 = new JVector(float.MinValue);
 
-            for (int i = 0; i < points.Length; i++)
+            for (var i = 0; i < points.Length; i++)
             {
                 JVector.Min(ref vector3, ref points[i], out vector3);
                 JVector.Max(ref vector2, ref points[i], out vector2);

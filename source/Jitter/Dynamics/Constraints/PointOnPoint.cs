@@ -39,12 +39,12 @@ namespace Jitter.Dynamics.Constraints
 
             JVector.Subtract(ref p2, ref p1, out var dp);
 
-            float deltaLength = dp.Length();
+            var deltaLength = dp.Length();
 
             var n = p2 - p1;
             if (n.LengthSquared() != 0.0f)
             {
-                n.Normalize();
+                n = JVector.Normalize(n);
             }
 
             jacobian[0] = -1.0f * n;
@@ -78,15 +78,15 @@ namespace Jitter.Dynamics.Constraints
 
         public override void Iterate()
         {
-            float jv =
+            var jv =
                 (body1.linearVelocity * jacobian[0])
                 + (body1.angularVelocity * jacobian[1])
                 + (body2.linearVelocity * jacobian[2])
                 + (body2.angularVelocity * jacobian[3]);
 
-            float softnessScalar = AppliedImpulse * softnessOverDt;
+            var softnessScalar = AppliedImpulse * softnessOverDt;
 
-            float lambda = -effectiveMass * (jv + bias + softnessScalar);
+            var lambda = -effectiveMass * (jv + bias + softnessScalar);
 
             AppliedImpulse += lambda;
 

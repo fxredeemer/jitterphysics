@@ -31,14 +31,15 @@ namespace Jitter.Collision.Shapes
         {
             potentialTriangles.Clear();
 
-            var exp = box;
-
-            exp.Min.X -= SphericalExpansion;
-            exp.Min.Y -= SphericalExpansion;
-            exp.Min.Z -= SphericalExpansion;
-            exp.Max.X += SphericalExpansion;
-            exp.Max.Y += SphericalExpansion;
-            exp.Max.Z += SphericalExpansion;
+            var exp = new JBBox(
+                new JVector(
+                    box.Min.X - SphericalExpansion,
+                    box.Min.Y - SphericalExpansion,
+                    box.Min.Z - SphericalExpansion),
+                new JVector(
+                    box.Max.X + SphericalExpansion,
+                    box.Max.Y + SphericalExpansion,
+                    box.Max.Z + SphericalExpansion));
 
             octree.GetTrianglesIntersectingtAABox(potentialTriangles, ref exp);
 
@@ -52,7 +53,7 @@ namespace Jitter.Collision.Shapes
             var indices = new List<int>();
             octree.GetTrianglesIntersectingtAABox(indices, ref large);
 
-            for (int i = 0; i < indices.Count; i++)
+            for (var i = 0; i < indices.Count; i++)
             {
                 triangleList.Add(octree.GetVertex(octree.GetTriangleVertexIndex(i).I0));
                 triangleList.Add(octree.GetVertex(octree.GetTriangleVertexIndex(i).I1));
@@ -79,9 +80,9 @@ namespace Jitter.Collision.Shapes
             JVector.Normalize(ref direction, out var exp);
             exp *= SphericalExpansion;
 
-            float min = JVector.Dot(ref vecs[0], ref direction);
-            int minIndex = 0;
-            float dot = JVector.Dot(ref vecs[1], ref direction);
+            var min = JVector.Dot(ref vecs[0], ref direction);
+            var minIndex = 0;
+            var dot = JVector.Dot(ref vecs[1], ref direction);
             if (dot > min)
             {
                 min = dot;
@@ -100,12 +101,15 @@ namespace Jitter.Collision.Shapes
         {
             box = octree.rootNodeBox;
 
-            box.Min.X -= SphericalExpansion;
-            box.Min.Y -= SphericalExpansion;
-            box.Min.Z -= SphericalExpansion;
-            box.Max.X += SphericalExpansion;
-            box.Max.Y += SphericalExpansion;
-            box.Max.Z += SphericalExpansion;
+            box = new JBBox(
+                new JVector(
+                    box.Min.X - SphericalExpansion,
+                    box.Min.Y - SphericalExpansion,
+                    box.Min.Z - SphericalExpansion),
+                new JVector(
+                    box.Max.X + SphericalExpansion,
+                    box.Max.Y + SphericalExpansion,
+                    box.Max.Z + SphericalExpansion));
 
             box.Transform(ref orientation);
         }
@@ -131,7 +135,7 @@ namespace Jitter.Collision.Shapes
 
             if (FlipNormals)
             {
-                normal.Negate();
+                normal = JVector.Negate(normal);
             }
         }
 

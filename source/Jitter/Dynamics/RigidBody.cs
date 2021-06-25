@@ -395,32 +395,43 @@ namespace Jitter.Dynamics
         {
             sweptDirection = linearVelocity * timestep;
 
+            var minX = boundingBox.Min.X;
+            var minY = boundingBox.Min.Y;
+            var minZ = boundingBox.Min.Z;
+            var maxX = boundingBox.Max.X;
+            var maxY = boundingBox.Max.Y;
+            var maxZ = boundingBox.Max.Z;
+
             if (sweptDirection.X < 0.0f)
             {
-                boundingBox.Min.X += sweptDirection.X;
+                minX += sweptDirection.X;
             }
             else
             {
-                boundingBox.Max.X += sweptDirection.X;
+                maxX += sweptDirection.X;
             }
 
             if (sweptDirection.Y < 0.0f)
             {
-                boundingBox.Min.Y += sweptDirection.Y;
+                minY += sweptDirection.Y;
             }
             else
             {
-                boundingBox.Max.Y += sweptDirection.Y;
+                maxY += sweptDirection.Y;
             }
 
             if (sweptDirection.Z < 0.0f)
             {
-                boundingBox.Min.Z += sweptDirection.Z;
+                minZ += sweptDirection.Z;
             }
             else
             {
-                boundingBox.Max.Z += sweptDirection.Z;
+                maxZ += sweptDirection.Z;
             }
+
+            boundingBox = new JBBox(
+                new JVector(minX, minY, minZ),
+                new JVector(maxX, maxY, maxZ));
         }
 
         public virtual void Update()
@@ -434,7 +445,7 @@ namespace Jitter.Dynamics
                 JVector.Add(ref boundingBox.Min, ref position, out boundingBox.Min);
                 JVector.Add(ref boundingBox.Max, ref position, out boundingBox.Max);
 
-                angularVelocity.MakeZero();
+                angularVelocity = new JVector();
             }
             else
             {
@@ -511,7 +522,7 @@ namespace Jitter.Dynamics
         {
             JVector pos1, pos2, pos3;
 
-            for (int i = 0; i < hullPoints.Count; i += 3)
+            for (var i = 0; i < hullPoints.Count; i += 3)
             {
                 pos1 = hullPoints[i + 0];
                 pos2 = hullPoints[i + 1];

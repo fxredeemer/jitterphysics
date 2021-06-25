@@ -42,19 +42,21 @@ namespace Jitter.Collision.Shapes
 
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            float sigma = JMath.Sqrt((direction.X * direction.X) + (direction.Z * direction.Z));
+            var sigma = JMath.Sqrt((direction.X * direction.X) + (direction.Z * direction.Z));
 
             if (sigma > 0.0f)
             {
-                result.X = direction.X / sigma * radius;
-                result.Y = Math.Sign(direction.Y) * height * 0.5f;
-                result.Z = direction.Z / sigma * radius;
+                result = new JVector(
+                    direction.X / sigma * radius,
+                    Math.Sign(direction.Y) * height * 0.5f,
+                    direction.Z / sigma * radius);
             }
             else
             {
-                result.X = 0.0f;
-                result.Y = Math.Sign(direction.Y) * height * 0.5f;
-                result.Z = 0.0f;
+                result = new JVector(
+                    0.0f,
+                    Math.Sign(direction.Y) * height * 0.5f,
+                    0.0f);
             }
         }
     }

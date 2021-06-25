@@ -55,7 +55,7 @@ namespace Jitter
 
             var initWaitHandle = new AutoResetEvent(false);
 
-            for (int i = 1; i < threads.Length; i++)
+            for (var i = 1; i < threads.Length; i++)
             {
                 threads[i] = NewThread(() =>
                 {
@@ -110,11 +110,11 @@ namespace Jitter
 
         private void PumpTasks()
         {
-            int count = tasks.Count;
+            var count = tasks.Count;
 
             while (currentTaskIndex < count)
             {
-                int taskIndex = currentTaskIndex;
+                var taskIndex = currentTaskIndex;
 
                 if (taskIndex == Interlocked.CompareExchange(ref currentTaskIndex, taskIndex + 1, taskIndex)
                     && taskIndex < count)

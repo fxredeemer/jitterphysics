@@ -22,12 +22,19 @@ namespace Jitter.Dynamics.Constraints.SingleBody
             anchor = body.position + JVector.Transform(localAnchor, body.orientation);
 
             lineNormal = lineDirection;
-            lineNormal.Normalize();
+            lineNormal = JVector.Negate(lineNormal);
         }
 
         public JVector Anchor { get => anchor; set => anchor = value; }
 
-        public JVector Axis { get => lineNormal; set { lineNormal = value; lineNormal.Normalize(); } }
+        public JVector Axis
+        {
+            get => lineNormal; set
+            {
+                lineNormal = value;
+                lineNormal = JVector.Negate(lineNormal);
+            }
+        }
 
         public float Softness { get; set; }
 
@@ -44,18 +51,17 @@ namespace Jitter.Dynamics.Constraints.SingleBody
             JVector.Transform(ref localAnchor1, ref body1.orientation, out r1);
 
             JVector.Add(ref body1.position, ref r1, out var p1);
-
-            JVector.Subtract(ref p1, ref anchor, out var dp);
+            JVector.Subtract(ref p1, ref anchor, out _);
 
             var l = lineNormal;
 
             var t = (p1 - anchor) % l;
             if (t.LengthSquared() != 0.0f)
             {
-                t.Normalize();
+                t = JVector.Negate(t);
             }
 
-            t = t % l;
+            t %= l;
 
             jacobian[0] = t;
             jacobian[1] = r1 % t;
@@ -82,13 +88,13 @@ namespace Jitter.Dynamics.Constraints.SingleBody
 
         public override void Iterate()
         {
-            float jv =
+            var jv =
                 (body1.linearVelocity * jacobian[0])
                 + (body1.angularVelocity * jacobian[1]);
 
-            float softnessScalar = accumulatedImpulse * softnessOverDt;
+            var softnessScalar = accumulatedImpulse * softnessOverDt;
 
-            float lambda = -effectiveMass * (jv + bias + softnessScalar);
+            var lambda = -effectiveMass * (jv + bias + softnessScalar);
 
             accumulatedImpulse += lambda;
 

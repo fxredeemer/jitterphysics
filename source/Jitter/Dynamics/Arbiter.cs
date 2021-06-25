@@ -89,13 +89,13 @@ namespace Jitter.Dynamics
 
         private int GetCacheEntry(ref JVector realRelPos1, float contactBreakThreshold)
         {
-            float shortestDist = contactBreakThreshold * contactBreakThreshold;
-            int size = contactList.Count;
-            int nearestPoint = -1;
-            for (int i = 0; i < size; i++)
+            var shortestDist = contactBreakThreshold * contactBreakThreshold;
+            var size = contactList.Count;
+            var nearestPoint = -1;
+            for (var i = 0; i < size; i++)
             {
                 JVector.Subtract(ref contactList[i].relativePos1, ref realRelPos1, out var diffA);
-                float distToManiPoint = diffA.LengthSquared();
+                var distToManiPoint = diffA.LengthSquared();
                 if (distToManiPoint < shortestDist)
                 {
                     shortestDist = distToManiPoint;
@@ -107,9 +107,9 @@ namespace Jitter.Dynamics
 
         private int SortCachedPoints(ref JVector realRelPos1, float pen)
         {
-            int maxPenetrationIndex = -1;
-            float maxPenetration = pen;
-            for (int i = 0; i < 4; i++)
+            var maxPenetrationIndex = -1;
+            var maxPenetration = pen;
+            for (var i = 0; i < 4; i++)
             {
                 if (contactList[i].penetration > maxPenetration)
                 {
@@ -153,14 +153,14 @@ namespace Jitter.Dynamics
                 res3 = cross.LengthSquared();
             }
 
-            int biggestarea = MaxAxis(res0, res1, res2, res3);
+            var biggestarea = MaxAxis(res0, res1, res2, res3);
             return biggestarea;
         }
 
         internal static int MaxAxis(float x, float y, float z, float w)
         {
-            int maxIndex = -1;
-            float maxVal = float.MinValue;
+            var maxIndex = -1;
+            var maxVal = float.MinValue;
 
             if (x > maxVal)
             {
@@ -180,7 +180,6 @@ namespace Jitter.Dynamics
             if (w > maxVal)
             {
                 maxIndex = 3;
-                maxVal = w;
             }
 
             return maxIndex;

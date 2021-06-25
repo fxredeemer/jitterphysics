@@ -102,12 +102,12 @@ namespace Jitter.Collision
 
             body1.dynamicTree.Query(other, my, body2.dynamicTree);
 
-            for (int i = 0; i < other.Count; i++)
+            for (var i = 0; i < other.Count; i++)
             {
                 var myTriangle = body1.dynamicTree.GetUserData(my[i]);
                 var otherTriangle = body2.dynamicTree.GetUserData(other[i]);
 
-                bool result = XenoCollide.Detect(
+                var result = XenoCollide.Detect(
                     myTriangle,
                     otherTriangle,
                     ref JMatrix.InternalIdentity,
@@ -116,12 +116,12 @@ namespace Jitter.Collision
                     ref JVector.InternalZero,
                     out var point,
                     out var normal,
-                    out float penetration);
+                    out var penetration);
 
                 if (result)
                 {
-                    int minIndexMy = FindNearestTrianglePoint(body1, my[i], ref point);
-                    int minIndexOther = FindNearestTrianglePoint(body2, other[i], ref point);
+                    var minIndexMy = FindNearestTrianglePoint(body1, my[i], ref point);
+                    var minIndexOther = FindNearestTrianglePoint(body2, other[i], ref point);
 
                     RaiseCollisionDetected(body1.VertexBodies[minIndexMy],
                         body2.VertexBodies[minIndexOther], ref point, ref point, ref normal, penetration);
@@ -136,10 +136,10 @@ namespace Jitter.Collision
 
         private void DetectRigidRigid(RigidBody body1, RigidBody body2)
         {
-            bool b1IsMulti = body1.Shape is Multishape;
-            bool b2IsMulti = body2.Shape is Multishape;
+            var b1IsMulti = body1.Shape is Multishape;
+            var b2IsMulti = body2.Shape is Multishape;
 
-            bool speculative = EnableSpeculativeContacts || body1.EnableSpeculativeContacts || body2.EnableSpeculativeContacts;
+            var speculative = EnableSpeculativeContacts || body1.EnableSpeculativeContacts || body2.EnableSpeculativeContacts;
 
             JVector point, normal;
             float penetration;
@@ -198,12 +198,12 @@ namespace Jitter.Collision
                 var transformedBoundingBox = body2.boundingBox;
                 transformedBoundingBox.InverseTransform(ref body1.position, ref body1.orientation);
 
-                int ms1Length = ms1.Prepare(ref transformedBoundingBox);
+                var ms1Length = ms1.Prepare(ref transformedBoundingBox);
 
                 transformedBoundingBox = body1.boundingBox;
                 transformedBoundingBox.InverseTransform(ref body2.position, ref body2.orientation);
 
-                int ms2Length = ms2.Prepare(ref transformedBoundingBox);
+                var ms2Length = ms2.Prepare(ref transformedBoundingBox);
 
                 if (ms1Length == 0 || ms2Length == 0)
                 {
@@ -212,11 +212,11 @@ namespace Jitter.Collision
                     return;
                 }
 
-                for (int i = 0; i < ms1Length; i++)
+                for (var i = 0; i < ms1Length; i++)
                 {
                     ms1.SetCurrentShape(i);
 
-                    for (int e = 0; e < ms2Length; e++)
+                    for (var e = 0; e < ms2Length; e++)
                     {
                         ms2.SetCurrentShape(e);
 
@@ -265,7 +265,7 @@ namespace Jitter.Collision
                 var transformedBoundingBox = b2.boundingBox;
                 transformedBoundingBox.InverseTransform(ref b1.position, ref b1.orientation);
 
-                int msLength = multiShape.Prepare(ref transformedBoundingBox);
+                var msLength = multiShape.Prepare(ref transformedBoundingBox);
 
                 if (msLength == 0)
                 {
@@ -273,7 +273,7 @@ namespace Jitter.Collision
                     return;
                 }
 
-                for (int i = 0; i < msLength; i++)
+                for (var i = 0; i < msLength; i++)
                 {
                     multiShape.SetCurrentShape(i);
 
@@ -345,18 +345,18 @@ namespace Jitter.Collision
                 var transformedBoundingBox = softBody.BoundingBox;
                 transformedBoundingBox.InverseTransform(ref rigidBody.position, ref rigidBody.orientation);
 
-                int msLength = ms.Prepare(ref transformedBoundingBox);
+                var msLength = ms.Prepare(ref transformedBoundingBox);
 
                 var detected = potentialTriangleLists.GetNew();
                 softBody.dynamicTree.Query(detected, ref rigidBody.boundingBox);
 
-                foreach (int i in detected)
+                foreach (var i in detected)
                 {
                     var t = softBody.dynamicTree.GetUserData(i);
 
                     bool result;
 
-                    for (int e = 0; e < msLength; e++)
+                    for (var e = 0; e < msLength; e++)
                     {
                         ms.SetCurrentShape(e);
 
@@ -369,11 +369,11 @@ namespace Jitter.Collision
                             ref JVector.InternalZero,
                             out var point,
                             out var normal,
-                            out float penetration);
+                            out var penetration);
 
                         if (result)
                         {
-                            int minIndex = FindNearestTrianglePoint(softBody, i, ref point);
+                            var minIndex = FindNearestTrianglePoint(softBody, i, ref point);
 
                             RaiseCollisionDetected(
                                 rigidBody,
@@ -394,11 +394,11 @@ namespace Jitter.Collision
                 var detected = potentialTriangleLists.GetNew();
                 softBody.dynamicTree.Query(detected, ref rigidBody.boundingBox);
 
-                foreach (int i in detected)
+                foreach (var i in detected)
                 {
                     var t = softBody.dynamicTree.GetUserData(i);
 
-                    bool result = XenoCollide.Detect(
+                    var result = XenoCollide.Detect(
                         rigidBody.Shape,
                         t,
                         ref rigidBody.orientation,
@@ -407,11 +407,11 @@ namespace Jitter.Collision
                         ref JVector.InternalZero,
                         out var point,
                         out var normal,
-                        out float penetration);
+                        out var penetration);
 
                     if (result)
                     {
-                        int minIndex = FindNearestTrianglePoint(softBody, i, ref point);
+                        var minIndex = FindNearestTrianglePoint(softBody, i, ref point);
 
                         RaiseCollisionDetected(rigidBody,
                             softBody.VertexBodies[minIndex], ref point, ref point, ref normal, penetration);
@@ -426,20 +426,20 @@ namespace Jitter.Collision
         public static int FindNearestTrianglePoint(SoftBody softBody, int id, ref JVector point)
         {
             var triangle = softBody.dynamicTree.GetUserData(id);
-            JVector p = softBody.VertexBodies[triangle.indices.I0].position;
+            var p = softBody.VertexBodies[triangle.indices.I0].position;
             JVector.Subtract(ref p, ref point, out p);
 
-            float length0 = p.LengthSquared();
+            var length0 = p.LengthSquared();
 
             p = softBody.VertexBodies[triangle.indices.I1].position;
             JVector.Subtract(ref p, ref point, out p);
 
-            float length1 = p.LengthSquared();
+            var length1 = p.LengthSquared();
 
             p = softBody.VertexBodies[triangle.indices.I2].position;
             JVector.Subtract(ref p, ref point, out p);
 
-            float length2 = p.LengthSquared();
+            var length2 = p.LengthSquared();
 
             if (length0 < length1)
             {
@@ -483,8 +483,8 @@ namespace Jitter.Collision
             JVector.Subtract(ref sA, ref point, out sA);
             JVector.Subtract(ref sB, ref point, out sB);
 
-            float dot1 = JVector.Dot(ref sA, ref normal);
-            float dot2 = JVector.Dot(ref sB, ref normal);
+            var dot1 = JVector.Dot(ref sA, ref normal);
+            var dot2 = JVector.Dot(ref sB, ref normal);
 
             JVector.Multiply(ref normal, dot1, out sA);
             JVector.Multiply(ref normal, dot2, out sB);

@@ -27,7 +27,7 @@ namespace Jitter.LinearMath
 
         public static float Max(float val1, float val2, float val3)
         {
-            float max12 = (val1 > val2) ? val1 : val2;
+            var max12 = (val1 > val2) ? val1 : val2;
             return (max12 > val3) ? max12 : val3;
         }
 

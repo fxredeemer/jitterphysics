@@ -23,11 +23,11 @@ namespace Jitter.Collision.Shapes
 
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            float maxDotProduct = float.MinValue;
-            int maxIndex = 0;
+            var maxDotProduct = float.MinValue;
+            var maxIndex = 0;
             float dotProduct;
 
-            for (int i = 0; i < vertices.Count; i++)
+            for (var i = 0; i < vertices.Count; i++)
             {
                 dotProduct = JVector.Dot(vertices[i], direction);
                 if (dotProduct > maxDotProduct)

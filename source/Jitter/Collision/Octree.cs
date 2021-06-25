@@ -70,7 +70,7 @@ namespace Jitter.Collision
             rootNodeBox = new JBBox(new JVector(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity),
                                new JVector(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity));
 
-            for (int i = 0; i < tris.Length; i++)
+            for (var i = 0; i < tris.Length; i++)
             {
                 JVector.Min(ref positions[tris[i].I1], ref positions[tris[i].I2], out triBoxes[i].Min);
                 JVector.Min(ref positions[tris[i].I0], ref triBoxes[i].Min, out triBoxes[i].Min);
@@ -89,15 +89,15 @@ namespace Jitter.Collision
             buildNodes[0].box = rootNodeBox;
 
             var children = new JBBox[8];
-            for (int triNum = 0; triNum < tris.Length; triNum++)
+            for (var triNum = 0; triNum < tris.Length; triNum++)
             {
-                int nodeIndex = 0;
+                var nodeIndex = 0;
                 var box = rootNodeBox;
 
                 while (box.Contains(ref triBoxes[triNum]) == JBBox.ContainmentType.Contains)
                 {
-                    int childCon = -1;
-                    for (int i = 0; i < 8; ++i)
+                    var childCon = -1;
+                    for (var i = 0; i < 8; ++i)
                     {
                         CreateAABox(ref box, (EChild)i, out children[i]);
                         if (children[i].Contains(ref triBoxes[triNum]) == JBBox.ContainmentType.Contains)
@@ -114,8 +114,8 @@ namespace Jitter.Collision
                     }
                     else
                     {
-                        int childIndex = -1;
-                        for (int index = 0; index < buildNodes[nodeIndex].nodeIndices.Count; ++index)
+                        var childIndex = -1;
+                        for (var index = 0; index < buildNodes[nodeIndex].nodeIndices.Count; ++index)
                         {
                             if (buildNodes[buildNodes[nodeIndex].nodeIndices[index]].childType == childCon)
                             {
@@ -148,10 +148,10 @@ namespace Jitter.Collision
 
             nodes = new Node[buildNodes.Count];
             nodeStackPool = new ArrayResourcePool<ushort>(buildNodes.Count);
-            for (int i = 0; i < nodes.Length; i++)
+            for (var i = 0; i < nodes.Length; i++)
             {
                 nodes[i].nodeIndices = new ushort[buildNodes[i].nodeIndices.Count];
-                for (int index = 0; index < nodes[i].nodeIndices.Length; ++index)
+                for (var index = 0; index < nodes[i].nodeIndices.Length; ++index)
                 {
                     nodes[i].nodeIndices[index] = (ushort)buildNodes[i].nodeIndices[index];
                 }
@@ -160,7 +160,7 @@ namespace Jitter.Collision
                 buildNodes[i].triIndices.CopyTo(nodes[i].triIndices);
                 nodes[i].box = buildNodes[i].box;
             }
-            buildNodes.Clear(); buildNodes = null;
+            buildNodes.Clear();
         }
 
         public Octree(List<JVector> positions, List<TriangleVertexIndices> tris)
@@ -200,7 +200,7 @@ namespace Jitter.Collision
 
             JVector.Add(ref result.Min, ref dims, out result.Max);
 
-            float extra = 0.00001f;
+            const float extra = 0.00001f;
 
             JVector.Multiply(ref dims, extra, out var temp);
             JVector.Subtract(ref result.Min, ref temp, out result.Min);
@@ -211,8 +211,8 @@ namespace Jitter.Collision
         {
             tris.AddRange(nodes[nodeIndex].triIndices);
 
-            int numChildren = nodes[nodeIndex].nodeIndices.Length;
-            for (int i = 0; i < numChildren; ++i)
+            var numChildren = nodes[nodeIndex].nodeIndices.Length;
+            for (var i = 0; i < numChildren; ++i)
             {
                 int childNodeIndex = nodes[nodeIndex].nodeIndices[i];
                 GatherTriangles(childNodeIndex, ref tris);
@@ -226,22 +226,22 @@ namespace Jitter.Collision
                 return 0;
             }
 
-            int curStackIndex = 0;
-            int endStackIndex = 1;
+            var curStackIndex = 0;
+            var endStackIndex = 1;
 
-            ushort[] nodeStack = nodeStackPool.GetNew();
+            var nodeStack = nodeStackPool.GetNew();
 
             nodeStack[0] = 0;
 
-            int triCount = 0;
+            var triCount = 0;
 
             while (curStackIndex < endStackIndex)
             {
-                ushort nodeIndex = nodeStack[curStackIndex];
+                var nodeIndex = nodeStack[curStackIndex];
                 curStackIndex++;
                 if (nodes[nodeIndex].box.Contains(ref testBox) != JBBox.ContainmentType.Disjoint)
                 {
-                    for (int i = 0; i < nodes[nodeIndex].triIndices.Length; ++i)
+                    for (var i = 0; i < nodes[nodeIndex].triIndices.Length; ++i)
                     {
                         if (triBoxes[nodes[nodeIndex].triIndices[i]].Contains(ref testBox) != JBBox.ContainmentType.Disjoint)
                         {
@@ -250,8 +250,8 @@ namespace Jitter.Collision
                         }
                     }
 
-                    int numChildren = nodes[nodeIndex].nodeIndices.Length;
-                    for (int i = 0; i < numChildren; ++i)
+                    var numChildren = nodes[nodeIndex].nodeIndices.Length;
+                    for (var i = 0; i < numChildren; ++i)
                     {
                         nodeStack[endStackIndex++] = nodes[nodeIndex].nodeIndices[i];
                     }
@@ -272,21 +272,21 @@ namespace Jitter.Collision
                 return 0;
             }
 
-            int curStackIndex = 0;
-            int endStackIndex = 1;
+            var curStackIndex = 0;
+            var endStackIndex = 1;
 
-            ushort[] nodeStack = nodeStackPool.GetNew();
+            var nodeStack = nodeStackPool.GetNew();
             nodeStack[0] = 0;
 
-            int triCount = 0;
+            var triCount = 0;
 
             while (curStackIndex < endStackIndex)
             {
-                ushort nodeIndex = nodeStack[curStackIndex];
+                var nodeIndex = nodeStack[curStackIndex];
                 curStackIndex++;
                 if (nodes[nodeIndex].box.SegmentIntersect(ref rayOrigin, ref rayDelta))
                 {
-                    for (int i = 0; i < nodes[nodeIndex].triIndices.Length; ++i)
+                    for (var i = 0; i < nodes[nodeIndex].triIndices.Length; ++i)
                     {
                         if (triBoxes[nodes[nodeIndex].triIndices[i]].SegmentIntersect(ref rayOrigin, ref rayDelta))
                         {
@@ -295,8 +295,8 @@ namespace Jitter.Collision
                         }
                     }
 
-                    int numChildren = nodes[nodeIndex].nodeIndices.Length;
-                    for (int i = 0; i < numChildren; ++i)
+                    var numChildren = nodes[nodeIndex].nodeIndices.Length;
+                    for (var i = 0; i < numChildren; ++i)
                     {
                         nodeStack[endStackIndex++] = nodes[nodeIndex].nodeIndices[i];
                     }

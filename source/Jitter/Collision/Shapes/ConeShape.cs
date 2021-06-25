@@ -1,5 +1,4 @@
 ﻿using Jitter.LinearMath;
-using System;
 
 namespace Jitter.Collision.Shapes
 {
@@ -57,25 +56,28 @@ namespace Jitter.Collision.Shapes
 
         public override void SupportMapping(ref JVector direction, out JVector result)
         {
-            float sigma = JMath.Sqrt((direction.X * direction.X) + (direction.Z * direction.Z));
+            var sigma = JMath.Sqrt((direction.X * direction.X) + (direction.Z * direction.Z));
 
             if (direction.Y > direction.Length() * sina)
             {
-                result.X = 0.0f;
-                result.Y = 2.0f / 3.0f * height;
-                result.Z = 0.0f;
+                result = new JVector(
+                    0.0f,
+                    2.0f / 3.0f * height,
+                    0.0f);
             }
             else if (sigma > 0.0f)
             {
-                result.X = radius * direction.X / sigma;
-                result.Y = -(1.0f / 3.0f) * height;
-                result.Z = radius * direction.Z / sigma;
+                result = new JVector(
+                    radius * direction.X / sigma,
+                    -(1.0f / 3.0f) * height,
+                    radius * direction.Z / sigma);
             }
             else
             {
-                result.X = 0.0f;
-                result.Y = -(1.0f / 3.0f) * height;
-                result.Z = 0.0f;
+                result = new JVector(
+                    0.0f,
+                    -(1.0f / 3.0f) * height,
+                    0.0f);
             }
         }
     }
