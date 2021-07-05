@@ -20,48 +20,56 @@
             new JVector(float.MaxValue),
             new JVector(float.MinValue));
 
-        public JBBox(JVector min, JVector max)
+        public JBBox(in JVector min, in JVector max)
         {
             Min = min;
             Max = max;
         }
 
-        internal void InverseTransform(ref JVector position, ref JMatrix orientation)
+        internal JBBox InverseTransform(in JVector position, in JMatrix orientation)
         {
-            JVector.Subtract(Max, position, out Max);
-            JVector.Subtract(Min, position, out Min);
+            JVector.Subtract(Max, position, out var max);
+            JVector.Subtract(Min, position, out var min);
 
-            JVector.Add(Max, Min, out var center);
+            JVector.Add(max, min, out var center);
             center *= 0.5f;
 
-            JVector.Subtract(Max, Min, out var halfExtents);
+            JVector.Subtract(max, min, out var halfExtents);
             halfExtents *= 0.5f;
 
             JVector.TransposedTransform(center, orientation, out center);
 
-            JMath.Absolute(ref orientation, out var abs);
+            JMath.Absolute(orientation, out var abs);
             JVector.TransposedTransform(halfExtents, abs, out halfExtents);
 
-            JVector.Add(center, halfExtents, out Max);
-            JVector.Subtract(center, halfExtents, out Min);
+            JVector.Add(center, halfExtents, out max);
+            JVector.Subtract(center, halfExtents, out min);
+
+            return new JBBox(min, max);
         }
 
-        public void Transform(ref JMatrix orientation)
+        public JBBox Transform(in JMatrix orientation)
         {
             var halfExtents = 0.5f * (Max - Min);
             var center = 0.5f * (Max + Min);
 
             JVector.Transform(center, orientation, out center);
 
-            JMath.Absolute(ref orientation, out var abs);
+            JMath.Absolute(orientation, out var abs);
             JVector.Transform(halfExtents, abs, out halfExtents);
 
-            Max = center + halfExtents;
-            Min = center - halfExtents;
+            return new JBBox(
+                min: center - halfExtents,
+                max: center + halfExtents);
         }
 
-        private bool Intersect1D(float start, float dir, float min, float max,
-            ref float enter, ref float exit)
+        private bool Intersect1D(
+            float start,
+            float dir,
+            float min,
+            float max,
+            ref float enter,
+            ref float exit)
         {
             if (dir * dir < JMath.Epsilon * JMath.Epsilon)
             {
@@ -91,7 +99,7 @@
             return true;
         }
 
-        public bool SegmentIntersect(ref JVector origin, ref JVector direction)
+        public bool SegmentIntersect(in JVector origin, in JVector direction)
         {
             float enter = 0.0f, exit = 1.0f;
 
@@ -113,7 +121,7 @@
             return true;
         }
 
-        public bool RayIntersect(ref JVector origin, ref JVector direction)
+        public bool RayIntersect(in JVector origin, in JVector direction)
         {
             float enter = 0.0f, exit = float.MaxValue;
 
@@ -135,22 +143,7 @@
             return true;
         }
 
-        public bool SegmentIntersect(JVector origin, JVector direction)
-        {
-            return SegmentIntersect(ref origin, ref direction);
-        }
-
-        public bool RayIntersect(JVector origin, JVector direction)
-        {
-            return RayIntersect(ref origin, ref direction);
-        }
-
-        public ContainmentType Contains(JVector point)
-        {
-            return Contains(ref point);
-        }
-
-        public ContainmentType Contains(ref JVector point)
+        public ContainmentType Contains(in JVector point)
         {
             return ((Min.X <= point.X) && (point.X <= Max.X)
                 && (Min.Y <= point.Y) && (point.Y <= Max.Y)
@@ -171,13 +164,15 @@
 
         public void AddPoint(JVector point)
         {
-            AddPoint(ref point);
+            AddPoint(point);
         }
 
-        public void AddPoint(ref JVector point)
+        public JBBox AddPoint(in JVector point)
         {
-            JVector.Max(Max, point, out Max);
-            JVector.Min(Min, point, out Min);
+            JVector.Max(Max, point, out var max);
+            JVector.Min(Min, point, out var min);
+
+            return new JBBox(min, max);
         }
 
         public static JBBox CreateFromPoints(JVector[] points)
@@ -193,11 +188,6 @@
             return new JBBox(vector3, vector2);
         }
 
-        public ContainmentType Contains(JBBox box)
-        {
-            return Contains(ref box);
-        }
-
         public ContainmentType Contains(ref JBBox box)
         {
             var result = ContainmentType.Disjoint;
@@ -211,16 +201,18 @@
 
         public static JBBox CreateMerged(JBBox original, JBBox additional)
         {
-            CreateMerged(ref original, ref additional, out var result);
+            CreateMerged(original, additional, out var result);
             return result;
         }
 
-        public static void CreateMerged(ref JBBox original, ref JBBox additional, out JBBox result)
+        public static void CreateMerged(in JBBox original, in JBBox additional, out JBBox result)
         {
             JVector.Min(original.Min, additional.Min, out var vector2);
             JVector.Max(original.Max, additional.Max, out var vector);
-            result.Min = vector2;
-            result.Max = vector;
+
+            result = new JBBox(
+                min: vector2,
+                max: vector);
         }
 
         public JVector Center => (Min + Max) * (1.0f / 2.0f);

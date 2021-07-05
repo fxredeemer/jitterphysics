@@ -24,7 +24,6 @@ namespace Jitter.LinearMath
             Zero = new JMatrix();
 
             Identity = new JMatrix(
-
                 m11: 1.0f,
                 m12: 0f,
                 m13: 0f,
