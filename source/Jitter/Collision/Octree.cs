@@ -1,6 +1,7 @@
 ﻿using Jitter.LinearMath;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Jitter.Collision
 {
@@ -72,14 +73,22 @@ namespace Jitter.Collision
 
             for (var i = 0; i < tris.Length; i++)
             {
-                JVector.Min(ref positions[tris[i].I1], ref positions[tris[i].I2], out triBoxes[i].Min);
-                JVector.Min(ref positions[tris[i].I0], ref triBoxes[i].Min, out triBoxes[i].Min);
+                var i0 = positions[tris[i].I0];
+                var i1 = positions[tris[i].I1];
+                var i2 = positions[tris[i].I2];
 
-                JVector.Max(ref positions[tris[i].I1], ref positions[tris[i].I2], out triBoxes[i].Max);
-                JVector.Max(ref positions[tris[i].I0], ref triBoxes[i].Max, out triBoxes[i].Max);
+                JVector.Min(i1, i2, out var min);
+                JVector.Min(i0, min, out min);
 
-                JVector.Min(ref rootNodeBox.Min, ref triBoxes[i].Min, out rootNodeBox.Min);
-                JVector.Max(ref rootNodeBox.Max, ref triBoxes[i].Max, out rootNodeBox.Max);
+                JVector.Max(i1, i2, out var max);
+                JVector.Max(i0, max, out max);
+
+                triBoxes[i] = new JBBox(min, max);
+
+                JVector.Min(rootNodeBox.Min, min, out var rootNodeBoxMin);
+                JVector.Max(rootNodeBox.Max, max, out var rootNodeBoxMax);
+
+                rootNodeBox = new JBBox(rootNodeBoxMin, rootNodeBoxMax);
             }
 
             var buildNodes = new List<BuildNode>
@@ -94,13 +103,13 @@ namespace Jitter.Collision
                 var nodeIndex = 0;
                 var box = rootNodeBox;
 
-                while (box.Contains(ref triBoxes[triNum]) == JBBox.ContainmentType.Contains)
+                while (box.Contains(triBoxes[triNum]) == JBBox.ContainmentType.Contains)
                 {
                     var childCon = -1;
                     for (var i = 0; i < 8; ++i)
                     {
                         CreateAABox(ref box, (EChild)i, out children[i]);
-                        if (children[i].Contains(ref triBoxes[triNum]) == JBBox.ContainmentType.Contains)
+                        if (children[i].Contains(triBoxes[triNum]) == JBBox.ContainmentType.Contains)
                         {
                             childCon = i;
                             break;
@@ -171,8 +180,8 @@ namespace Jitter.Collision
 
         private void CreateAABox(ref JBBox aabb, EChild child, out JBBox result)
         {
-            JVector.Subtract(ref aabb.Max, ref aabb.Min, out var dims);
-            JVector.Multiply(ref dims, 0.5f, out dims);
+            JVector.Subtract(aabb.Max, aabb.Min, out var dims);
+            JVector.Multiply(dims, 0.5f, out dims);
 
             var offset = JVector.Zero;
 
@@ -192,19 +201,18 @@ namespace Jitter.Collision
                     break;
             }
 
-            result = new JBBox
-            {
-                Min = new JVector(offset.X * dims.X, offset.Y * dims.Y, offset.Z * dims.Z)
-            };
-            JVector.Add(ref result.Min, ref aabb.Min, out result.Min);
+            var min = new JVector(offset.X * dims.X, offset.Y * dims.Y, offset.Z * dims.Z);
 
-            JVector.Add(ref result.Min, ref dims, out result.Max);
+            JVector.Add(min, aabb.Min, out min);
+            JVector.Add(min, dims, out var max);
 
             const float extra = 0.00001f;
 
-            JVector.Multiply(ref dims, extra, out var temp);
-            JVector.Subtract(ref result.Min, ref temp, out result.Min);
-            JVector.Add(ref result.Max, ref temp, out result.Max);
+            JVector.Multiply(dims, extra, out var temp);
+            JVector.Subtract(min, temp, out min);
+            JVector.Add(max, temp, out max);
+
+            result = new JBBox(min, max);
         }
 
         private void GatherTriangles(int nodeIndex, ref List<int> tris)
@@ -219,7 +227,7 @@ namespace Jitter.Collision
             }
         }
 
-        public int GetTrianglesIntersectingtAABox(List<int> triangles, ref JBBox testBox)
+        public int GetTrianglesIntersectingtAABox(List<int> triangles, in JBBox testBox)
         {
             if (nodes.Length == 0)
             {
@@ -239,11 +247,11 @@ namespace Jitter.Collision
             {
                 var nodeIndex = nodeStack[curStackIndex];
                 curStackIndex++;
-                if (nodes[nodeIndex].box.Contains(ref testBox) != JBBox.ContainmentType.Disjoint)
+                if (nodes[nodeIndex].box.Contains(testBox) != JBBox.ContainmentType.Disjoint)
                 {
                     for (var i = 0; i < nodes[nodeIndex].triIndices.Length; ++i)
                     {
-                        if (triBoxes[nodes[nodeIndex].triIndices[i]].Contains(ref testBox) != JBBox.ContainmentType.Disjoint)
+                        if (triBoxes[nodes[nodeIndex].triIndices[i]].Contains(testBox) != JBBox.ContainmentType.Disjoint)
                         {
                             triangles.Add(nodes[nodeIndex].triIndices[i]);
                             triCount++;
@@ -284,11 +292,11 @@ namespace Jitter.Collision
             {
                 var nodeIndex = nodeStack[curStackIndex];
                 curStackIndex++;
-                if (nodes[nodeIndex].box.SegmentIntersect(ref rayOrigin, ref rayDelta))
+                if (nodes[nodeIndex].box.SegmentIntersect(rayOrigin, rayDelta))
                 {
                     for (var i = 0; i < nodes[nodeIndex].triIndices.Length; ++i)
                     {
-                        if (triBoxes[nodes[nodeIndex].triIndices[i]].SegmentIntersect(ref rayOrigin, ref rayDelta))
+                        if (triBoxes[nodes[nodeIndex].triIndices[i]].SegmentIntersect(rayOrigin, rayDelta))
                         {
                             triangles.Add(nodes[nodeIndex].triIndices[i]);
                             triCount++;

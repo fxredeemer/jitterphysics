@@ -151,7 +151,7 @@ namespace Jitter.Collision
         {
             fraction = float.MaxValue; normal = JVector.Zero;
 
-            if (!body.BoundingBox.RayIntersect(ref rayOrigin, ref rayDirection))
+            if (!body.BoundingBox.RayIntersect(rayOrigin, rayDirection))
             {
                 return false;
             }
@@ -162,11 +162,11 @@ namespace Jitter.Collision
 
                 var multiShapeCollides = false;
 
-                JVector.Subtract(ref rayOrigin, ref body.position, out var transformedOrigin);
-                JVector.Transform(ref transformedOrigin, ref body.invOrientation, out transformedOrigin);
-                JVector.Transform(ref rayDirection, ref body.invOrientation, out var transformedDirection);
+                JVector.Subtract(rayOrigin, body.position, out var transformedOrigin);
+                JVector.Transform(transformedOrigin, body.invOrientation, out transformedOrigin);
+                JVector.Transform(rayDirection, body.invOrientation, out var transformedDirection);
 
-                var msLength = multishape.Prepare(ref transformedOrigin, ref transformedDirection);
+                var msLength = multishape.Prepare(transformedOrigin, transformedDirection);
 
                 for (var i = 0; i < msLength; i++)
                 {
@@ -174,11 +174,11 @@ namespace Jitter.Collision
 
                     if (GJKCollide.Raycast(
                             multishape,
-                            ref body.orientation,
-                            ref body.invOrientation,
-                            ref body.position,
-                            ref rayOrigin,
-                            ref rayDirection,
+                            body.orientation,
+                            body.invOrientation,
+                            body.position,
+                            rayOrigin,
+                            rayDirection,
                             out var tempFraction,
                             out var tempNormal)
                         && tempFraction < fraction)
@@ -186,13 +186,13 @@ namespace Jitter.Collision
                         if (useTerrainNormal && multishape is TerrainShape terrainShape)
                         {
                             terrainShape.CollisionNormal(out tempNormal);
-                            JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
+                            JVector.Transform(tempNormal, body.orientation, out tempNormal);
                             tempNormal = JVector.Negate(tempNormal);
                         }
                         else if (useTriangleMeshNormal && multishape is TriangleMeshShape triangleMeshShape)
                         {
                             triangleMeshShape.CollisionNormal(out tempNormal);
-                            JVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
+                            JVector.Transform(tempNormal, body.orientation, out tempNormal);
                             tempNormal = JVector.Negate(tempNormal);
                         }
 
@@ -209,11 +209,11 @@ namespace Jitter.Collision
             {
                 return GJKCollide.Raycast(
                     body.Shape,
-                    ref body.orientation,
-                    ref body.invOrientation,
-                    ref body.position,
-                    ref rayOrigin,
-                    ref rayDirection,
+                    body.orientation,
+                    body.invOrientation,
+                    body.position,
+                    rayOrigin,
+                    rayDirection,
                     out fraction,
                     out normal);
             }

@@ -11,11 +11,11 @@ namespace Jitter.Dynamics.Constraints
 
         public PointOnPoint(RigidBody body1, RigidBody body2, JVector anchor) : base(body1, body2)
         {
-            JVector.Subtract(ref anchor, ref body1.position, out localAnchor1);
-            JVector.Subtract(ref anchor, ref body2.position, out localAnchor2);
+            JVector.Subtract(anchor, body1.position, out localAnchor1);
+            JVector.Subtract(anchor, body2.position, out localAnchor2);
 
-            JVector.Transform(ref localAnchor1, ref body1.invOrientation, out localAnchor1);
-            JVector.Transform(ref localAnchor2, ref body2.invOrientation, out localAnchor2);
+            JVector.Transform(localAnchor1, body1.invOrientation, out localAnchor1);
+            JVector.Transform(localAnchor2, body2.invOrientation, out localAnchor2);
         }
 
         public float AppliedImpulse { get; private set; }
@@ -31,13 +31,13 @@ namespace Jitter.Dynamics.Constraints
 
         public override void PrepareForIteration(float timestep)
         {
-            JVector.Transform(ref localAnchor1, ref body1.orientation, out r1);
-            JVector.Transform(ref localAnchor2, ref body2.orientation, out r2);
+            JVector.Transform(localAnchor1, body1.orientation, out r1);
+            JVector.Transform(localAnchor2, body2.orientation, out r2);
 
-            JVector.Add(ref body1.position, ref r1, out var p1);
-            JVector.Add(ref body2.position, ref r2, out var p2);
+            JVector.Add(body1.position, r1, out var p1);
+            JVector.Add(body2.position, r2, out var p2);
 
-            JVector.Subtract(ref p2, ref p1, out var dp);
+            JVector.Subtract(p2, p1, out var dp);
 
             var deltaLength = dp.Length();
 

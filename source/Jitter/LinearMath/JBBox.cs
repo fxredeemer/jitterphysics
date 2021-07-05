@@ -9,8 +9,8 @@
             Intersects
         }
 
-        public readonly JVector Min;
-        public readonly JVector Max;
+        public JVector Min { get; }
+        public JVector Max { get; }
 
         public static readonly JBBox LargeBox = new JBBox(
             new JVector(float.MinValue),
@@ -188,7 +188,7 @@
             return new JBBox(vector3, vector2);
         }
 
-        public ContainmentType Contains(ref JBBox box)
+        public ContainmentType Contains(in JBBox box)
         {
             var result = ContainmentType.Disjoint;
             if ((Max.X >= box.Min.X) && (Min.X <= box.Max.X) && (Max.Y >= box.Min.Y) && (Min.Y <= box.Max.Y) && (Max.Z >= box.Min.Z) && (Min.Z <= box.Max.Z))

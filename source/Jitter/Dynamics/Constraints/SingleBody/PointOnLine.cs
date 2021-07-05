@@ -48,10 +48,10 @@ namespace Jitter.Dynamics.Constraints.SingleBody
 
         public override void PrepareForIteration(float timestep)
         {
-            JVector.Transform(ref localAnchor1, ref body1.orientation, out r1);
+            JVector.Transform(localAnchor1, body1.orientation, out r1);
 
-            JVector.Add(ref body1.position, ref r1, out var p1);
-            JVector.Subtract(ref p1, ref anchor, out _);
+            JVector.Add(body1.position, r1, out var p1);
+            JVector.Subtract(p1, anchor, out _);
 
             var l = lineNormal;
 

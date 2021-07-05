@@ -4,26 +4,17 @@ namespace Jitter.LinearMath
 {
     public readonly struct JMatrix
     {
-        public readonly float M11;
-        public readonly float M12;
-        public readonly float M13;
-        public readonly float M21;
-        public readonly float M22;
-        public readonly float M23;
-        public readonly float M31;
-        public readonly float M32;
-        public readonly float M33;
+        public float M11 { get; }
+        public float M12 { get; }
+        public float M13 { get; }
+        public float M21 { get; }
+        public float M22 { get; }
+        public float M23 { get; }
+        public float M31 { get; }
+        public float M32 { get; }
+        public float M33 { get; }
 
-        internal static JMatrix InternalIdentity;
-
-        public static readonly JMatrix Identity;
-        public static readonly JMatrix Zero;
-
-        static JMatrix()
-        {
-            Zero = new JMatrix();
-
-            Identity = new JMatrix(
+        public static readonly JMatrix Identity = new JMatrix(
                 m11: 1.0f,
                 m12: 0f,
                 m13: 0f,
@@ -34,8 +25,7 @@ namespace Jitter.LinearMath
                 m32: 0f,
                 m33: 1.0f);
 
-            InternalIdentity = Identity;
-        }
+        public static readonly JMatrix Zero = new JMatrix();
 
         public static JMatrix CreateFromYawPitchRoll(float yaw, float pitch, float roll)
         {
@@ -46,7 +36,6 @@ namespace Jitter.LinearMath
 
         public static JMatrix CreateRotationX(float radians)
         {
-            JMatrix matrix;
             var num2 = (float)Math.Cos(radians);
             var num = (float)Math.Sin(radians);
 
@@ -156,6 +145,19 @@ namespace Jitter.LinearMath
             M31 = m31;
             M32 = m32;
             M33 = m33;
+        }
+
+        public JMatrix(float m11, float m22, float m33)
+        {
+            M11 = m11;
+            M12 = 0f;
+            M13 = 0f;
+            M22 = m22;
+            M21 = 0f;
+            M23 = 0f;
+            M33 = m33;
+            M31 = 0f;
+            M32 = 0f;
         }
 
         public static JMatrix Multiply(JMatrix matrix1, JMatrix matrix2)

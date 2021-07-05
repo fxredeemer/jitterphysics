@@ -16,9 +16,17 @@ namespace Jitter.Collision.Shapes
 
         public event ShapeUpdatedHandler ShapeUpdated;
 
-        public JMatrix Inertia { get => inertia; protected set => inertia = value; }
+        public JMatrix Inertia
+        {
+            get => inertia;
+            protected set => inertia = value;
+        }
 
-        public float Mass { get => mass; protected set => mass = value; }
+        public float Mass
+        {
+            get => mass;
+            protected set => mass = value;
+        }
 
         protected void RaiseShapeUpdated()
         {
@@ -37,7 +45,7 @@ namespace Jitter.Collision.Shapes
             public int generation;
         };
 
-        public virtual void MakeHull(ref List<JVector> triangleList, int generationThreshold)
+        public virtual void MakeHull(List<JVector> triangleList, int generationThreshold)
         {
             const float distanceThreshold = 0.0f;
 
@@ -86,9 +94,9 @@ namespace Jitter.Collision.Shapes
             {
                 var tri = activeTriList.Pop();
 
-                SupportMapping(ref tri.n1, out var p1);
-                SupportMapping(ref tri.n2, out var p2);
-                SupportMapping(ref tri.n3, out var p3);
+                SupportMapping(tri.n1, out var p1);
+                SupportMapping(tri.n2, out var p2);
+                SupportMapping(tri.n3, out var p3);
 
                 var d1 = (p2 - p1).LengthSquared();
                 var d2 = (p3 - p2).LengthSquared();
@@ -148,30 +156,30 @@ namespace Jitter.Collision.Shapes
             }
         }
 
-        public virtual void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public virtual void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
             var vec = new JVector(orientation.M11, orientation.M21, orientation.M31);
-            SupportMapping(ref vec, out vec);
+            SupportMapping(vec, out vec);
             var maxX = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
 
             vec = new JVector(orientation.M12, orientation.M22, orientation.M32);
-            SupportMapping(ref vec, out vec);
+            SupportMapping(vec, out vec);
             var maxY = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
 
             vec = new JVector(orientation.M13, orientation.M23, orientation.M33);
-            SupportMapping(ref vec, out vec);
+            SupportMapping(vec, out vec);
             var maxZ = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
 
             vec = new JVector(-orientation.M11, -orientation.M21, -orientation.M31);
-            SupportMapping(ref vec, out vec);
+            SupportMapping(vec, out vec);
             var minX = (orientation.M11 * vec.X) + (orientation.M21 * vec.Y) + (orientation.M31 * vec.Z);
 
             vec = new JVector(-orientation.M12, -orientation.M22, -orientation.M32);
-            SupportMapping(ref vec, out vec);
+            SupportMapping(vec, out vec);
             var minY = (orientation.M12 * vec.X) + (orientation.M22 * vec.Y) + (orientation.M32 * vec.Z);
 
             vec = new JVector(-orientation.M13, -orientation.M23, -orientation.M33);
-            SupportMapping(ref vec, out vec);
+            SupportMapping(vec, out vec);
             var minZ = (orientation.M13 * vec.X) + (orientation.M23 * vec.Y) + (orientation.M33 * vec.Z);
 
             box = new JBBox(
@@ -181,7 +189,7 @@ namespace Jitter.Collision.Shapes
 
         public virtual void UpdateShape()
         {
-            GetBoundingBox(ref JMatrix.InternalIdentity, out boundingBox);
+            GetBoundingBox(JMatrix.Identity, out boundingBox);
 
             CalculateMassInertia();
             RaiseShapeUpdated();
@@ -199,7 +207,7 @@ namespace Jitter.Collision.Shapes
             }
 
             var hullTriangles = new List<JVector>();
-            shape.MakeHull(ref hullTriangles, 3);
+            shape.MakeHull(hullTriangles, 3);
 
             const float a = 1.0f / 60.0f, b = 1.0f / 120.0f;
             var C = new JMatrix(a, b, b, b, a, b, b, b, a);
@@ -238,7 +246,7 @@ namespace Jitter.Collision.Shapes
                 mass * y * x, -mass * ((z * z) + (x * x)), mass * y * z,
                 mass * z * x, mass * z * y, -mass * ((x * x) + (y * y)));
 
-            JMatrix.Add(ref inertia, ref t, out inertia);
+            JMatrix.Add(inertia, t, out inertia);
 
             return mass;
         }
@@ -248,7 +256,7 @@ namespace Jitter.Collision.Shapes
             mass = CalculateMassInertia(this, out geomCen, out inertia);
         }
 
-        public abstract void SupportMapping(ref JVector direction, out JVector result);
+        public abstract void SupportMapping(in JVector direction, out JVector result);
 
         public void SupportCenter(out JVector geomCenter)
         {

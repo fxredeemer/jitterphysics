@@ -36,11 +36,12 @@ namespace Jitter.Collision.Shapes
             base.UpdateShape();
         }
 
-        public override void GetBoundingBox(ref JMatrix orientation, out JBBox box)
+        public override void GetBoundingBox(in JMatrix orientation, out JBBox box)
         {
-            JMath.Absolute(ref orientation, out var abs);
-            box.Max = JVector.Transform(halfSize, abs);
-            box.Min = JVector.Negate(box.Max);
+            JMath.Absolute(orientation, out var abs);
+            var max = JVector.Transform(halfSize, abs);
+            var min = JVector.Negate(max);
+            box = new JBBox(min, max);
         }
 
         public override void CalculateMassInertia()
@@ -48,14 +49,16 @@ namespace Jitter.Collision.Shapes
             mass = size.X * size.Y * size.Z;
 
             inertia = JMatrix.Identity;
-            inertia.M11 = 1.0f / 12.0f * mass * ((size.Y * size.Y) + (size.Z * size.Z));
-            inertia.M22 = 1.0f / 12.0f * mass * ((size.X * size.X) + (size.Z * size.Z));
-            inertia.M33 = 1.0f / 12.0f * mass * ((size.X * size.X) + (size.Y * size.Y));
+
+            inertia = new JMatrix(
+                m11: 1.0f / 12.0f * mass * ((size.Y * size.Y) + (size.Z * size.Z)),
+                m22: 1.0f / 12.0f * mass * ((size.X * size.X) + (size.Z * size.Z)),
+                m33: 1.0f / 12.0f * mass * ((size.X * size.X) + (size.Y * size.Y)));
 
             geomCen = JVector.Zero;
         }
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
             result = new JVector(
                 Math.Sign(direction.X) * halfSize.X,

@@ -2,19 +2,18 @@
 {
     public readonly struct JVector
     {
-        public static readonly JVector Zero = new JVector(0, 0, 0);
-        public static readonly JVector Left = new JVector(1, 0, 0);
-        public static readonly JVector Right = new JVector(-1, 0, 0);
-        public static readonly JVector Up = new JVector(0, 1, 0);
-        public static readonly JVector Down = new JVector(0, -1, 0);
-        public static readonly JVector Backward = new JVector(0, 0, 1);
-        public static readonly JVector Forward = new JVector(0, 0, -1);
-        public static readonly JVector One = new JVector(1, 1, 1);
-        public static readonly JVector MinValue = new JVector(float.MinValue);
-        public static readonly JVector MaxValue = new JVector(float.MaxValue);
+        public static JVector Zero { get; } = new JVector(0, 0, 0);
+        public static JVector Left { get; } = new JVector(1, 0, 0);
+        public static JVector Right { get; } = new JVector(-1, 0, 0);
+        public static JVector Up { get; } = new JVector(0, 1, 0);
+        public static JVector Down { get; } = new JVector(0, -1, 0);
+        public static JVector Backward { get; } = new JVector(0, 0, 1);
+        public static JVector Forward { get; } = new JVector(0, 0, -1);
+        public static JVector One { get; } = new JVector(1, 1, 1);
+        public static JVector MinValue { get; } = new JVector(float.MinValue);
+        public static JVector MaxValue { get; } = new JVector(float.MaxValue);
 
-        internal static JVector InternalZero = new JVector(0, 0, 0);
-        internal static JVector Arbitrary = new JVector(1, 1, 1);
+        internal static JVector Arbitrary { get; } = new JVector(1, 1, 1);
 
         private const float ZeroEpsilonSq = JMath.Epsilon * JMath.Epsilon;
 

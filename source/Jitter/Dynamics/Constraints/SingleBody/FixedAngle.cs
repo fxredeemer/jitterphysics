@@ -33,7 +33,7 @@ namespace Jitter.Dynamics.Constraints.SingleBody
             effectiveMass.M22 += softnessOverDt;
             effectiveMass.M33 += softnessOverDt;
 
-            JMatrix.Inverse(ref effectiveMass, out effectiveMass);
+            JMatrix.Inverse(effectiveMass, out effectiveMass);
 
             var q = JMatrix.Transpose(orientation) * body1.orientation;
             JVector axis;

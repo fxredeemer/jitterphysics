@@ -8,14 +8,14 @@ namespace Jitter.Collision
 
         private static readonly ResourcePool<VoronoiSimplexSolver> simplexSolverPool = new ResourcePool<VoronoiSimplexSolver>();
 
-        private static void SupportMapTransformed(ISupportMappable support, ref JMatrix orientation, ref JVector position, ref JVector direction, out JVector result)
+        private static void SupportMapTransformed(ISupportMappable support, JMatrix orientation, JVector position, JVector direction, out JVector result)
         {
             result = new JVector(
                 (direction.X * orientation.M11) + (direction.Y * orientation.M12) + (direction.Z * orientation.M13),
                 (direction.X * orientation.M21) + (direction.Y * orientation.M22) + (direction.Z * orientation.M23),
                 (direction.X * orientation.M31) + (direction.Y * orientation.M32) + (direction.Z * orientation.M33));
 
-            support.SupportMapping(ref result, out result);
+            support.SupportMapping(result, out result);
 
             var x = (result.X * orientation.M11) + (result.Y * orientation.M21) + (result.Z * orientation.M31);
             var y = (result.X * orientation.M12) + (result.Y * orientation.M22) + (result.Z * orientation.M32);
@@ -27,20 +27,20 @@ namespace Jitter.Collision
                 position.Z + z);
         }
 
-        public static bool Pointcast(ISupportMappable support, ref JMatrix orientation, ref JVector position, ref JVector point)
+        public static bool Pointcast(ISupportMappable support, JMatrix orientation, JVector position, JVector point)
         {
-            SupportMapTransformed(support, ref orientation, ref position, ref point, out var arbitraryPoint);
-            JVector.Subtract(ref point, ref arbitraryPoint, out arbitraryPoint);
+            SupportMapTransformed(support, orientation, position, point, out var arbitraryPoint);
+            JVector.Subtract(point, arbitraryPoint, out arbitraryPoint);
 
             support.SupportCenter(out var r);
-            JVector.Transform(ref r, ref orientation, out r);
-            JVector.Add(ref position, ref r, out r);
-            JVector.Subtract(ref point, ref r, out r);
+            JVector.Transform(r, orientation, out r);
+            JVector.Add(position, r, out r);
+            JVector.Subtract(point, r, out r);
 
             var x = point;
             float VdotR;
 
-            JVector.Subtract(ref x, ref arbitraryPoint, out var v);
+            JVector.Subtract(x, arbitraryPoint, out var v);
             var dist = v.LengthSquared();
             const float epsilon = 0.0001f;
 
@@ -52,14 +52,14 @@ namespace Jitter.Collision
 
             while ((dist > epsilon) && (maxIter-- != 0))
             {
-                SupportMapTransformed(support, ref orientation, ref position, ref v, out var p);
-                JVector.Subtract(ref x, ref p, out var w);
+                SupportMapTransformed(support, orientation, position, v, out var p);
+                JVector.Subtract(x, p, out var w);
 
-                var VdotW = JVector.Dot(ref v, ref w);
+                var VdotW = JVector.Dot(v, w);
 
                 if (VdotW > 0.0f)
                 {
-                    VdotR = JVector.Dot(ref v, ref r);
+                    VdotR = JVector.Dot(v, r);
 
                     if (VdotR >= -(JMath.Epsilon * JMath.Epsilon)) { simplexSolverPool.GiveBack(simplexSolver); return false; }
                     else
@@ -89,10 +89,10 @@ namespace Jitter.Collision
         public static bool ClosestPoints(
             ISupportMappable support1,
             ISupportMappable support2,
-            ref JMatrix orientation1,
-            ref JMatrix orientation2,
-            ref JVector position1,
-            ref JVector position2,
+            JMatrix orientation1,
+            JMatrix orientation2,
+            JVector position1,
+            JVector position2,
             out JVector p1,
             out JVector p2,
             out JVector normal)
@@ -107,9 +107,9 @@ namespace Jitter.Collision
 
             rn = JVector.Negate(r);
 
-            SupportMapTransformed(support1, ref orientation1, ref position1, ref rn, out var supVertexA);
+            SupportMapTransformed(support1, orientation1, position1, rn, out var supVertexA);
 
-            SupportMapTransformed(support2, ref orientation2, ref position2, ref r, out var supVertexB);
+            SupportMapTransformed(support2, orientation2, position2, r, out var supVertexB);
 
             v = supVertexA - supVertexB;
 
@@ -123,8 +123,8 @@ namespace Jitter.Collision
             while ((distSq > epsilon) && (maxIter-- != 0))
             {
                 vn = JVector.Negate(v);
-                SupportMapTransformed(support1, ref orientation1, ref position1, ref vn, out supVertexA);
-                SupportMapTransformed(support2, ref orientation2, ref position2, ref v, out supVertexB);
+                SupportMapTransformed(support1, orientation1, position1, vn, out supVertexA);
+                SupportMapTransformed(support2, orientation2, position2, v, out supVertexB);
                 w = supVertexA - supVertexB;
 
                 if (!simplexSolver.InSimplex(w))
@@ -157,11 +157,11 @@ namespace Jitter.Collision
 
         public static bool Raycast(
             ISupportMappable support,
-            ref JMatrix orientation,
-            ref JMatrix invOrientation,
-            ref JVector position,
-            ref JVector origin,
-            ref JVector direction,
+            JMatrix orientation,
+            JMatrix invOrientation,
+            JVector position,
+            JVector origin,
+            JVector direction,
             out float fraction,
             out JVector normal)
         {
@@ -176,8 +176,8 @@ namespace Jitter.Collision
             var r = direction;
             var x = origin;
 
-            SupportMapTransformed(support, ref orientation, ref position, ref r, out var arbitraryPoint);
-            JVector.Subtract(ref x, ref arbitraryPoint, out var v);
+            SupportMapTransformed(support, orientation, position, r, out var arbitraryPoint);
+            JVector.Subtract(x, arbitraryPoint, out var v);
 
             var maxIter = MaxIterations;
 
@@ -188,14 +188,14 @@ namespace Jitter.Collision
 
             while ((distSq > epsilon) && (maxIter-- != 0))
             {
-                SupportMapTransformed(support, ref orientation, ref position, ref v, out var p);
-                JVector.Subtract(ref x, ref p, out var w);
+                SupportMapTransformed(support, orientation, position, v, out var p);
+                JVector.Subtract(x, p, out var w);
 
-                var VdotW = JVector.Dot(ref v, ref w);
+                var VdotW = JVector.Dot(v, w);
 
                 if (VdotW > 0.0f)
                 {
-                    VdotR = JVector.Dot(ref v, ref r);
+                    VdotR = JVector.Dot(v, r);
 
                     if (VdotR >= -JMath.Epsilon)
                     {
@@ -205,9 +205,9 @@ namespace Jitter.Collision
                     else
                     {
                         lambda -= (VdotW / VdotR);
-                        JVector.Multiply(ref r, lambda, out x);
-                        JVector.Add(ref origin, ref x, out x);
-                        JVector.Subtract(ref x, ref p, out w);
+                        JVector.Multiply(r, lambda, out x);
+                        JVector.Add(origin, x, out x);
+                        JVector.Subtract(x, p, out w);
                         normal = v;
                     }
                 }
@@ -500,7 +500,7 @@ namespace Jitter.Collision
                             b = _simplexVectorW[1];
                             c = _simplexVectorW[2];
 
-                            ClosestPtPointTriangle(p, a, b, c, ref _cachedBC);
+                            ClosestPtPointTriangle(p, a, b, c, _cachedBC);
                             _cachedPA = (_simplexPointsP[0] * _cachedBC.BarycentricCoords[0])
                                             + (_simplexPointsP[1] * _cachedBC.BarycentricCoords[1])
                                             + (_simplexPointsP[2] * _cachedBC.BarycentricCoords[2])
@@ -523,7 +523,7 @@ namespace Jitter.Collision
                             c = _simplexVectorW[2];
                             d = _simplexVectorW[3];
 
-                            var hasSeperation = ClosestPtPointTetrahedron(p, a, b, c, d, ref _cachedBC);
+                            var hasSeperation = ClosestPtPointTetrahedron(p, a, b, c, d, _cachedBC);
 
                             if (hasSeperation)
                             {
@@ -567,7 +567,7 @@ namespace Jitter.Collision
             }
 
             public bool ClosestPtPointTriangle(JVector p, JVector a, JVector b, JVector c,
-                ref SubSimplexClosestResult result)
+                SubSimplexClosestResult result)
             {
                 result.UsedVertices.Reset();
 
@@ -671,7 +671,7 @@ namespace Jitter.Collision
             }
 
             public bool ClosestPtPointTetrahedron(JVector p, JVector a, JVector b, JVector c, JVector d,
-                ref SubSimplexClosestResult finalResult)
+                SubSimplexClosestResult finalResult)
             {
                 tempResult.Reset();
 
@@ -701,7 +701,7 @@ namespace Jitter.Collision
                 var bestSqDist = float.MaxValue;
                 if (pointOutsideABC != 0)
                 {
-                    ClosestPtPointTriangle(p, a, b, c, ref tempResult);
+                    ClosestPtPointTriangle(p, a, b, c, tempResult);
                     var q = tempResult.ClosestPointOnSimplex;
 
                     var sqDist = (q - p).LengthSquared();
@@ -723,7 +723,7 @@ namespace Jitter.Collision
 
                 if (pointOutsideACD != 0)
                 {
-                    ClosestPtPointTriangle(p, a, c, d, ref tempResult);
+                    ClosestPtPointTriangle(p, a, c, d, tempResult);
                     var q = tempResult.ClosestPointOnSimplex;
 
                     var sqDist = (q - p).LengthSquared();
@@ -745,7 +745,7 @@ namespace Jitter.Collision
 
                 if (pointOutsideADB != 0)
                 {
-                    ClosestPtPointTriangle(p, a, d, b, ref tempResult);
+                    ClosestPtPointTriangle(p, a, d, b, tempResult);
                     var q = tempResult.ClosestPointOnSimplex;
 
                     var sqDist = (q - p).LengthSquared();
@@ -767,7 +767,7 @@ namespace Jitter.Collision
 
                 if (pointOutsideBDC != 0)
                 {
-                    ClosestPtPointTriangle(p, b, d, c, ref tempResult);
+                    ClosestPtPointTriangle(p, b, d, c, tempResult);
                     var q = tempResult.ClosestPointOnSimplex;
                     var sqDist = (q - p).LengthSquared();
                     if (sqDist < bestSqDist)

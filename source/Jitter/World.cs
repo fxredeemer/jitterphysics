@@ -713,11 +713,11 @@ namespace Jitter
                 }
 
                 var dorn = new JQuaternion(axis.X, axis.Y, axis.Z, (float)Math.Cos(angle * timestep * 0.5f));
-                JQuaternion.CreateFromMatrix(ref body.orientation, out var ornA);
+                JQuaternion.CreateFromMatrix(body.orientation, out var ornA);
 
-                JQuaternion.Multiply(ref dorn, ref ornA, out dorn);
+                JQuaternion.Multiply(dorn, ornA, out dorn);
 
-                dorn.Normalize(); JMatrix.CreateFromQuaternion(ref dorn, out body.orientation);
+                dorn.Normalize(); JMatrix.CreateFromQuaternion(dorn, out body.orientation);
             }
 
             if ((body.Damping & RigidBody.DampingType.Linear) != 0)
