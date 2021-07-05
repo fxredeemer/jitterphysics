@@ -550,8 +550,8 @@ namespace Jitter
                 }
                 else
                 {
-                    JVector.Subtract(ref c.p1, ref c.p2, out var diff);
-                    var distance = JVector.Dot(ref diff, ref c.normal);
+                    JVector.Subtract(c.p1, c.p2, out var diff);
+                    var distance = JVector.Dot(diff, c.normal);
 
                     diff -= (distance * c.normal);
                     distance = diff.LengthSquared();
@@ -669,20 +669,20 @@ namespace Jitter
             {
                 if (!body.isStatic && body.IsActive)
                 {
-                    JVector.Multiply(ref body.force, body.inverseMass * timestep, out var temp);
-                    JVector.Add(ref temp, ref body.linearVelocity, out body.linearVelocity);
+                    JVector.Multiply(body.force, body.inverseMass * timestep, out var temp);
+                    JVector.Add(temp, body.linearVelocity, out body.linearVelocity);
 
                     if (!body.isParticle)
                     {
-                        JVector.Multiply(ref body.torque, timestep, out temp);
-                        JVector.Transform(ref temp, ref body.invInertiaWorld, out temp);
-                        JVector.Add(ref temp, ref body.angularVelocity, out body.angularVelocity);
+                        JVector.Multiply(body.torque, timestep, out temp);
+                        JVector.Transform(temp, body.invInertiaWorld, out temp);
+                        JVector.Add(temp, body.angularVelocity, out body.angularVelocity);
                     }
 
                     if (body.affectedByGravity)
                     {
-                        JVector.Multiply(ref gravity, timestep, out temp);
-                        JVector.Add(ref body.linearVelocity, ref temp, out body.linearVelocity);
+                        JVector.Multiply(gravity, timestep, out temp);
+                        JVector.Add(body.linearVelocity, temp, out body.linearVelocity);
                     }
                 }
 
@@ -695,8 +695,8 @@ namespace Jitter
         {
             var body = obj as RigidBody;
 
-            JVector.Multiply(ref body.linearVelocity, timestep, out var temp);
-            JVector.Add(ref temp, ref body.position, out body.position);
+            JVector.Multiply(body.linearVelocity, timestep, out var temp);
+            JVector.Add(temp, body.position, out body.position);
 
             if (!body.isParticle)
             {
@@ -705,11 +705,11 @@ namespace Jitter
 
                 if (angle < 0.001f)
                 {
-                    JVector.Multiply(ref body.angularVelocity, (0.5f * timestep) - (timestep * timestep * timestep * 0.020833333333f * angle * angle), out axis);
+                    JVector.Multiply(body.angularVelocity, (0.5f * timestep) - (timestep * timestep * timestep * 0.020833333333f * angle * angle), out axis);
                 }
                 else
                 {
-                    JVector.Multiply(ref body.angularVelocity, (float)Math.Sin(0.5f * angle * timestep) / angle, out axis);
+                    JVector.Multiply(body.angularVelocity, (float)Math.Sin(0.5f * angle * timestep) / angle, out axis);
                 }
 
                 var dorn = new JQuaternion(axis.X, axis.Y, axis.Z, (float)Math.Cos(angle * timestep * 0.5f));
@@ -722,12 +722,12 @@ namespace Jitter
 
             if ((body.Damping & RigidBody.DampingType.Linear) != 0)
             {
-                JVector.Multiply(ref body.linearVelocity, currentLinearDampFactor, out body.linearVelocity);
+                JVector.Multiply(body.linearVelocity, currentLinearDampFactor, out body.linearVelocity);
             }
 
             if ((body.Damping & RigidBody.DampingType.Angular) != 0)
             {
-                JVector.Multiply(ref body.angularVelocity, currentAngularDampFactor, out body.angularVelocity);
+                JVector.Multiply(body.angularVelocity, currentAngularDampFactor, out body.angularVelocity);
             }
 
             body.Update();
@@ -790,7 +790,7 @@ namespace Jitter
             Contact contact;
             if (arbiter.body1 == body1)
             {
-                JVector.Negate(ref normal, out normal);
+                JVector.Negate(normal, out normal);
                 contact = arbiter.AddContact(point1, point2, normal, penetration, ContactSettings);
             }
             else

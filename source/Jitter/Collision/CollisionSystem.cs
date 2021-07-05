@@ -293,12 +293,12 @@ namespace Jitter.Collision
                         if (useTerrainNormal && multiShape is TerrainShape terrainShape)
                         {
                             terrainShape.CollisionNormal(out normal);
-                            JVector.Transform(ref normal, ref b1.orientation, out normal);
+                            JVector.Transform(normal, b1.orientation, out normal);
                         }
                         else if (useTriangleMeshNormal && multiShape is TriangleMeshShape triangleMeshShape)
                         {
                             triangleMeshShape.CollisionNormal(out normal);
-                            JVector.Transform(ref normal, ref b1.orientation, out normal);
+                            JVector.Transform(normal, b1.orientation, out normal);
                         }
 
                         RaiseCollisionDetected(b1, b2, ref point1, ref point2, ref normal, penetration);
@@ -427,17 +427,17 @@ namespace Jitter.Collision
         {
             var triangle = softBody.dynamicTree.GetUserData(id);
             var p = softBody.VertexBodies[triangle.indices.I0].position;
-            JVector.Subtract(ref p, ref point, out p);
+            JVector.Subtract(p, point, out p);
 
             var length0 = p.LengthSquared();
 
             p = softBody.VertexBodies[triangle.indices.I1].position;
-            JVector.Subtract(ref p, ref point, out p);
+            JVector.Subtract(p, point, out p);
 
             var length1 = p.LengthSquared();
 
             p = softBody.VertexBodies[triangle.indices.I2].position;
-            JVector.Subtract(ref p, ref point, out p);
+            JVector.Subtract(p, point, out p);
 
             var length2 = p.LengthSquared();
 
@@ -475,30 +475,30 @@ namespace Jitter.Collision
             out JVector point1,
             out JVector point2)
         {
-            JVector.Negate(ref normal, out var mn);
+            JVector.Negate(normal, out var mn);
 
             SupportMapping(body1, shape1, ref mn, out var sA);
             SupportMapping(body2, shape2, ref normal, out var sB);
 
-            JVector.Subtract(ref sA, ref point, out sA);
-            JVector.Subtract(ref sB, ref point, out sB);
+            JVector.Subtract(sA, point, out sA);
+            JVector.Subtract(sB, point, out sB);
 
-            var dot1 = JVector.Dot(ref sA, ref normal);
-            var dot2 = JVector.Dot(ref sB, ref normal);
+            var dot1 = JVector.Dot(sA, normal);
+            var dot2 = JVector.Dot(sB, normal);
 
-            JVector.Multiply(ref normal, dot1, out sA);
-            JVector.Multiply(ref normal, dot2, out sB);
+            JVector.Multiply( normal, dot1, out sA);
+            JVector.Multiply( normal, dot2, out sB);
 
-            JVector.Add(ref point, ref sA, out point1);
-            JVector.Add(ref point, ref sB, out point2);
+            JVector.Add(point, sA, out point1);
+            JVector.Add(point, sB, out point2);
         }
 
         private void SupportMapping(RigidBody body, Shape workingShape, ref JVector direction, out JVector result)
         {
-            JVector.Transform(ref direction, ref body.invOrientation, out result);
+            JVector.Transform(direction, body.invOrientation, out result);
             workingShape.SupportMapping(ref result, out result);
-            JVector.Transform(ref result, ref body.orientation, out result);
-            JVector.Add(ref result, ref body.position, out result);
+            JVector.Transform(result, body.orientation, out result);
+            JVector.Add(result, body.position, out result);
         }
 
         public abstract bool Raycast(JVector rayOrigin, JVector rayDirection, RaycastCallback raycast, out RigidBody body, out JVector normal, out float fraction);

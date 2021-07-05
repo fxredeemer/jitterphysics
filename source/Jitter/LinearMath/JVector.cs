@@ -53,14 +53,14 @@
                 && (Z == other.Z);
         }
 
-        public static bool operator ==(JVector value1, JVector value2)
+        public static bool operator ==(in JVector value1, in JVector value2)
         {
             return (value1.X == value2.X)
                 && (value1.Y == value2.Y)
                 && (value1.Z == value2.Z);
         }
 
-        public static bool operator !=(JVector value1, JVector value2)
+        public static bool operator !=(in JVector value1, in JVector value2)
         {
             if ((value1.X == value2.X) && (value1.Y == value2.Y))
             {
@@ -69,7 +69,7 @@
             return true;
         }
 
-        public static JVector Min(JVector value1, JVector value2)
+        public static JVector Min(in JVector value1, in JVector value2)
         {
             Min(in value1, in value2, out var result);
             return result;
@@ -83,7 +83,7 @@
                 JMath.Min(value1.Z, value2.Z));
         }
 
-        public static JVector Max(JVector value1, JVector value2)
+        public static JVector Max(in JVector value1, in JVector value2)
         {
             Max(in value1, in value2, out var result);
             return result;
@@ -107,7 +107,7 @@
             return LengthSquared() < ZeroEpsilonSq;
         }
 
-        public static JVector Transform(JVector position, JMatrix matrix)
+        public static JVector Transform(in JVector position, JMatrix matrix)
         {
             Transform(in position, in matrix, out var result);
             return result;
@@ -131,17 +131,12 @@
             result = new JVector(num0, num1, num2);
         }
 
-        public static float Dot(JVector vector1, JVector vector2)
-        {
-            return Dot(in vector1, in vector2);
-        }
-
         public static float Dot(in JVector vector1, in JVector vector2)
         {
             return (vector1.X * vector2.X) + (vector1.Y * vector2.Y) + (vector1.Z * vector2.Z);
         }
 
-        public static JVector Add(JVector value1, JVector value2)
+        public static JVector Add(in JVector value1, in JVector value2)
         {
             Add(in value1, in value2, out var result);
             return result;
@@ -156,7 +151,7 @@
             result = new JVector(num0, num1, num2);
         }
 
-        public static JVector Subtract(JVector value1, JVector value2)
+        public static JVector Subtract(in JVector value1, in JVector value2)
         {
             Subtract(in value1, in value2, out var result);
             return result;
@@ -171,7 +166,7 @@
             result = new JVector(num0, num1, num2);
         }
 
-        public static JVector Cross(JVector vector1, JVector vector2)
+        public static JVector Cross(in JVector vector1, in JVector vector2)
         {
             Cross(in vector1, in vector2, out var result);
             return result;
@@ -191,7 +186,7 @@
             return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
         }
 
-        public static JVector Negate(JVector value)
+        public static JVector Negate(in JVector value)
         {
             Negate(in value, out var result);
             return result;
@@ -206,7 +201,7 @@
             result = new JVector(num0, num1, num2);
         }
 
-        public static JVector Normalize(JVector value)
+        public static JVector Normalize(in JVector value)
         {
             Normalize(in value, out var result);
             return result;
@@ -241,7 +236,7 @@
             vector2 = tempVector;
         }
 
-        public static JVector Multiply(JVector value1, float scaleFactor)
+        public static JVector Multiply(in JVector value1, float scaleFactor)
         {
             Multiply(in value1, scaleFactor, out var result);
             return result;
@@ -255,36 +250,36 @@
                 value1.Z * scaleFactor);
         }
 
-        public static JVector operator %(JVector value1, JVector value2)
+        public static JVector operator %(in JVector value1, in JVector value2)
         {
             Cross(in value1, in value2, out var result);
             return result;
         }
 
-        public static float operator *(JVector value1, JVector value2)
+        public static float operator *(in JVector value1, in JVector value2)
         {
             return Dot(in value1, in value2);
         }
 
-        public static JVector operator *(JVector value1, float value2)
+        public static JVector operator *(in JVector value1, float value2)
         {
             Multiply(in value1, value2, out var result);
             return result;
         }
 
-        public static JVector operator *(float value1, JVector value2)
+        public static JVector operator *(float value1, in JVector value2)
         {
             Multiply(in value2, value1, out var result);
             return result;
         }
 
-        public static JVector operator -(JVector value1, JVector value2)
+        public static JVector operator -(in JVector value1, in JVector value2)
         {
             Subtract(in value1, in value2, out var result);
             return result;
         }
 
-        public static JVector operator +(JVector value1, JVector value2)
+        public static JVector operator +(in JVector value1, in JVector value2)
         {
             Add(in value1, in value2, out var result);
             return result;

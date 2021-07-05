@@ -28,22 +28,22 @@
 
         internal void InverseTransform(ref JVector position, ref JMatrix orientation)
         {
-            JVector.Subtract(ref Max, ref position, out Max);
-            JVector.Subtract(ref Min, ref position, out Min);
+            JVector.Subtract(Max, position, out Max);
+            JVector.Subtract(Min, position, out Min);
 
-            JVector.Add(ref Max, ref Min, out var center);
+            JVector.Add(Max, Min, out var center);
             center *= 0.5f;
 
-            JVector.Subtract(ref Max, ref Min, out var halfExtents);
+            JVector.Subtract(Max, Min, out var halfExtents);
             halfExtents *= 0.5f;
 
-            JVector.TransposedTransform(ref center, ref orientation, out center);
+            JVector.TransposedTransform(center, orientation, out center);
 
             JMath.Absolute(ref orientation, out var abs);
-            JVector.TransposedTransform(ref halfExtents, ref abs, out halfExtents);
+            JVector.TransposedTransform(halfExtents, abs, out halfExtents);
 
-            JVector.Add(ref center, ref halfExtents, out Max);
-            JVector.Subtract(ref center, ref halfExtents, out Min);
+            JVector.Add(center, halfExtents, out Max);
+            JVector.Subtract(center, halfExtents, out Min);
         }
 
         public void Transform(ref JMatrix orientation)
@@ -51,10 +51,10 @@
             var halfExtents = 0.5f * (Max - Min);
             var center = 0.5f * (Max + Min);
 
-            JVector.Transform(ref center, ref orientation, out center);
+            JVector.Transform(center, orientation, out center);
 
             JMath.Absolute(ref orientation, out var abs);
-            JVector.Transform(ref halfExtents, ref abs, out halfExtents);
+            JVector.Transform(halfExtents, abs, out halfExtents);
 
             Max = center + halfExtents;
             Min = center - halfExtents;
@@ -176,8 +176,8 @@
 
         public void AddPoint(ref JVector point)
         {
-            JVector.Max(ref Max, ref point, out Max);
-            JVector.Min(ref Min, ref point, out Min);
+            JVector.Max(Max, point, out Max);
+            JVector.Min(Min, point, out Min);
         }
 
         public static JBBox CreateFromPoints(JVector[] points)
@@ -187,8 +187,8 @@
 
             for (var i = 0; i < points.Length; i++)
             {
-                JVector.Min(ref vector3, ref points[i], out vector3);
-                JVector.Max(ref vector2, ref points[i], out vector2);
+                JVector.Min(vector3, points[i], out vector3);
+                JVector.Max(vector2, points[i], out vector2);
             }
             return new JBBox(vector3, vector2);
         }
@@ -217,8 +217,8 @@
 
         public static void CreateMerged(ref JBBox original, ref JBBox additional, out JBBox result)
         {
-            JVector.Min(ref original.Min, ref additional.Min, out var vector2);
-            JVector.Max(ref original.Max, ref additional.Max, out var vector);
+            JVector.Min(original.Min, additional.Min, out var vector2);
+            JVector.Max(original.Max, additional.Max, out var vector);
             result.Min = vector2;
             result.Max = vector;
         }
