@@ -196,8 +196,11 @@ namespace Jitter.Dynamics
                 boundingBox.AddPoint(Owner.points[indices.I1].position);
                 boundingBox.AddPoint(Owner.points[indices.I2].position);
 
-                boundingBox.Min -= new JVector(Owner.triangleExpansion);
-                boundingBox.Max += new JVector(Owner.triangleExpansion);
+                var expansion = new JVector(Owner.triangleExpansion);
+
+                boundingBox = new JBBox(
+                    boundingBox.Min - expansion,
+                    boundingBox.Max + expansion);
             }
 
             public float CalculateArea()
@@ -612,8 +615,9 @@ namespace Jitter.Dynamics
                 box.AddPoint(point.position);
             }
 
-            box.Min -= new JVector(TriangleExpansion);
-            box.Max += new JVector(TriangleExpansion);
+            var expansion = new JVector(TriangleExpansion);
+
+            box = new JBBox(box.Min - expansion, box.Max + expansion);
 
             foreach (var t in triangles)
             {

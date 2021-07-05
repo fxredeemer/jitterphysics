@@ -442,8 +442,10 @@ namespace Jitter.Dynamics
                 invInertia = invInertiaWorld = JMatrix.Zero;
                 invOrientation = orientation = JMatrix.Identity;
                 boundingBox = shape.boundingBox;
-                JVector.Add(boundingBox.Min, position, out boundingBox.Min);
-                JVector.Add(boundingBox.Max, position, out boundingBox.Max);
+                JVector.Add(boundingBox.Min, position, out var min);
+                JVector.Add(boundingBox.Max, position, out var max);
+
+                boundingBox = new JBBox(min, max);
 
                 angularVelocity = new JVector();
             }
@@ -451,8 +453,10 @@ namespace Jitter.Dynamics
             {
                 JMatrix.Transpose(orientation, out invOrientation);
                 Shape.GetBoundingBox(orientation, out boundingBox);
-                JVector.Add(boundingBox.Min, position, out boundingBox.Min);
-                JVector.Add(boundingBox.Max, position, out boundingBox.Max);
+                JVector.Add(boundingBox.Min, position, out var min);
+                JVector.Add(boundingBox.Max, position, out var max);
+
+                boundingBox = new JBBox(min, max);
 
                 if (!isStatic)
                 {

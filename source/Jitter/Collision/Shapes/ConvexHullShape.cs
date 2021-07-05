@@ -21,7 +21,7 @@ namespace Jitter.Collision.Shapes
             mass = CalculateMassInertia(this, out shifted, out inertia);
         }
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
             var maxDotProduct = float.MinValue;
             var maxIndex = 0;

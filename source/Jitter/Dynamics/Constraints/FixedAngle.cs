@@ -44,9 +44,10 @@ namespace Jitter.Dynamics.Constraints
 
             softnessOverDt = Softness / timestep;
 
-            effectiveMass.M11 += softnessOverDt;
-            effectiveMass.M22 += softnessOverDt;
-            effectiveMass.M33 += softnessOverDt;
+            effectiveMass = new JMatrix(
+                m11: effectiveMass.M11 + softnessOverDt,
+                m22: effectiveMass.M22 + softnessOverDt,
+                m33: effectiveMass.M33 + softnessOverDt);
 
             JMatrix.Inverse(effectiveMass, out effectiveMass);
 
@@ -68,7 +69,7 @@ namespace Jitter.Dynamics.Constraints
 
             if (r != 0.0f)
             {
-                axis = axis * (1.0f / r);
+                axis *= (1.0f / r);
             }
 
             bias = axis * BiasFactor * (-1.0f / timestep);

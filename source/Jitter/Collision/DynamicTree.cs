@@ -47,8 +47,11 @@ namespace Jitter.Collision
             Nodes[proxyId].MinorRandomExtension = (float)rnd.NextDouble() * settingsRndExtension;
 
             var r = new JVector(Nodes[proxyId].MinorRandomExtension);
-            Nodes[proxyId].AABB.Min = aabb.Min - r;
-            Nodes[proxyId].AABB.Max = aabb.Max + r;
+
+            Nodes[proxyId].AABB = new JBBox(
+                aabb.Min - r,
+                aabb.Max + r);
+
             Nodes[proxyId].UserData = userData;
             Nodes[proxyId].LeafCount = 1;
 
@@ -78,7 +81,7 @@ namespace Jitter.Collision
             }
 
             RemoveLeaf(proxyId);
-            
+
             var r = new JVector(Nodes[proxyId].MinorRandomExtension);
             var boxMin = aabb.Min - r;
             var boxMax = aabb.Min + r;

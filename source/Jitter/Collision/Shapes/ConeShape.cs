@@ -46,15 +46,15 @@ namespace Jitter.Collision.Shapes
         {
             mass = 1.0f / 3.0f * JMath.Pi * radius * radius * height;
 
-            inertia = JMatrix.Identity;
-            inertia.M11 = 3.0f / 80.0f * mass * ((radius * radius) + (4 * height * height));
-            inertia.M22 = 3.0f / 10.0f * mass * radius * radius;
-            inertia.M33 = 3.0f / 80.0f * mass * ((radius * radius) + (4 * height * height));
+            inertia = new JMatrix(
+                m11: 3.0f / 80.0f * mass * ((radius * radius) + (4 * height * height)),
+                m22: 3.0f / 10.0f * mass * radius * radius,
+                m33: 3.0f / 80.0f * mass * ((radius * radius) + (4 * height * height)));
 
             geomCen = JVector.Zero;
         }
 
-        public override void SupportMapping(ref JVector direction, out JVector result)
+        public override void SupportMapping(in JVector direction, out JVector result)
         {
             var sigma = JMath.Sqrt((direction.X * direction.X) + (direction.Z * direction.Z));
 
