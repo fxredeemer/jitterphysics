@@ -38,23 +38,24 @@ namespace Jitter.LinearMath
             return value;
         }
 
-        public static JMatrix Absolute(ref JMatrix matrix)
+        public static JMatrix Absolute(JMatrix matrix)
         {
-            Absolute(ref matrix, out var absolute);
+            Absolute(matrix, out var absolute);
             return absolute;
         }
 
-        public static void Absolute(ref JMatrix matrix, out JMatrix result)
+        public static void Absolute(in JMatrix matrix, out JMatrix result)
         {
-            result.M11 = Math.Abs(matrix.M11);
-            result.M12 = Math.Abs(matrix.M12);
-            result.M13 = Math.Abs(matrix.M13);
-            result.M21 = Math.Abs(matrix.M21);
-            result.M22 = Math.Abs(matrix.M22);
-            result.M23 = Math.Abs(matrix.M23);
-            result.M31 = Math.Abs(matrix.M31);
-            result.M32 = Math.Abs(matrix.M32);
-            result.M33 = Math.Abs(matrix.M33);
+            result = new JMatrix(
+                m11: Math.Abs(matrix.M11),
+                m12: Math.Abs(matrix.M12),
+                m13: Math.Abs(matrix.M13),
+                m21: Math.Abs(matrix.M21),
+                m22: Math.Abs(matrix.M22),
+                m23: Math.Abs(matrix.M23),
+                m31: Math.Abs(matrix.M31),
+                m32: Math.Abs(matrix.M32),
+                m33: Math.Abs(matrix.M33));
         }
     }
 }

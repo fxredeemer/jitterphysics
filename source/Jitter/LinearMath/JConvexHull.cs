@@ -59,18 +59,19 @@ namespace Jitter.LinearMath
             return allIndices.ToArray();
         }
 
-        private static int FindExtremePoint(List<JVector> points, ref JVector dir)
+        private static int FindExtremePoint(List<JVector> points, in JVector dir)
         {
             var index = 0;
             var current = float.MinValue;
 
-            JVector point; float value;
+            JVector point; 
+            float value;
 
             for (var i = 1; i < points.Count; i++)
             {
                 point = points[i];
 
-                value = JVector.Dot(ref point, ref dir);
+                value = JVector.Dot(point, dir);
                 if (value > current)
                 {
                     current = value; index = i;

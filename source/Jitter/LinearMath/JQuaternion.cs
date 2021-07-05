@@ -2,12 +2,12 @@
 
 namespace Jitter.LinearMath
 {
-    public struct JQuaternion
+    public readonly struct JQuaternion
     {
-        public float X;
-        public float Y;
-        public float Z;
-        public float W;
+        public readonly float X;
+        public readonly float Y;
+        public readonly float Z;
+        public readonly float W;
 
         public JQuaternion(float x, float y, float z, float w)
         {
@@ -17,9 +17,9 @@ namespace Jitter.LinearMath
             W = w;
         }
 
-        public static JQuaternion Add(JQuaternion quaternion1, JQuaternion quaternion2)
+        public static JQuaternion Add(in JQuaternion quaternion1, in JQuaternion quaternion2)
         {
-            Add(ref quaternion1, ref quaternion2, out var result);
+            Add(quaternion1, quaternion2, out var result);
             return result;
         }
 
@@ -34,51 +34,54 @@ namespace Jitter.LinearMath
             var num7 = yaw * 0.5f;
             var num2 = (float)Math.Sin(num7);
             var num = (float)Math.Cos(num7);
-            result.X = (num * num4 * num5) + (num2 * num3 * num6);
-            result.Y = (num2 * num3 * num5) - (num * num4 * num6);
-            result.Z = (num * num3 * num6) - (num2 * num4 * num5);
-            result.W = (num * num3 * num5) + (num2 * num4 * num6);
+
+            result = new JQuaternion(
+                x: (num * num4 * num5) + (num2 * num3 * num6),
+                y: (num2 * num3 * num5) - (num * num4 * num6),
+                z: (num * num3 * num6) - (num2 * num4 * num5),
+                w: (num * num3 * num5) + (num2 * num4 * num6));
         }
 
-        public static void Add(ref JQuaternion quaternion1, ref JQuaternion quaternion2, out JQuaternion result)
+        public static void Add(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
         {
-            result.X = quaternion1.X + quaternion2.X;
-            result.Y = quaternion1.Y + quaternion2.Y;
-            result.Z = quaternion1.Z + quaternion2.Z;
-            result.W = quaternion1.W + quaternion2.W;
+            result = new JQuaternion(
+                x: quaternion1.X + quaternion2.X,
+                y: quaternion1.Y + quaternion2.Y,
+                z: quaternion1.Z + quaternion2.Z,
+                w: quaternion1.W + quaternion2.W);
         }
 
-        public static JQuaternion Conjugate(JQuaternion value)
+        public static JQuaternion Conjugate(in JQuaternion value)
         {
-            JQuaternion quaternion;
-            quaternion.X = -value.X;
-            quaternion.Y = -value.Y;
-            quaternion.Z = -value.Z;
-            quaternion.W = value.W;
-            return quaternion;
+            return new JQuaternion(
+                x: -value.X,
+                y: -value.Y,
+                z: -value.Z,
+                w: value.W);
         }
 
-        public static JQuaternion Subtract(JQuaternion quaternion1, JQuaternion quaternion2)
+        public static JQuaternion Subtract(in JQuaternion quaternion1, in JQuaternion quaternion2)
         {
-            Subtract(ref quaternion1, ref quaternion2, out var result);
+            Subtract(quaternion1, quaternion2, out var result);
             return result;
         }
 
-        public static void Subtract(ref JQuaternion quaternion1, ref JQuaternion quaternion2, out JQuaternion result)
+        public static void Subtract(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
         {
-            result.X = quaternion1.X - quaternion2.X;
-            result.Y = quaternion1.Y - quaternion2.Y;
-            result.Z = quaternion1.Z - quaternion2.Z;
-            result.W = quaternion1.W - quaternion2.W;
+            result = new JQuaternion(
+                x: quaternion1.X - quaternion2.X,
+                y: quaternion1.Y - quaternion2.Y,
+                z: quaternion1.Z - quaternion2.Z,
+                w: quaternion1.W - quaternion2.W);
         }
 
-        public static JQuaternion Multiply(JQuaternion quaternion1, JQuaternion quaternion2)
+        public static JQuaternion Multiply(in JQuaternion quaternion1, in JQuaternion quaternion2)
         {
-            Multiply(ref quaternion1, ref quaternion2, out var result);
+            Multiply(quaternion1, quaternion2, out var result);
             return result;
         }
 
-        public static void Multiply(ref JQuaternion quaternion1, ref JQuaternion quaternion2, out JQuaternion result)
+        public static void Multiply(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
         {
             var x = quaternion1.X;
             var y = quaternion1.Y;
@@ -92,98 +95,108 @@ namespace Jitter.LinearMath
             var num11 = (z * num4) - (x * num2);
             var num10 = (x * num3) - (y * num4);
             var num9 = (x * num4) + (y * num3) + (z * num2);
-            result.X = (x * num) + (num4 * w) + num12;
-            result.Y = (y * num) + (num3 * w) + num11;
-            result.Z = (z * num) + (num2 * w) + num10;
-            result.W = (w * num) - num9;
+
+            result = new JQuaternion(
+                x: (x * num) + (num4 * w) + num12,
+                y: (y * num) + (num3 * w) + num11,
+                z: (z * num) + (num2 * w) + num10,
+                w: (w * num) - num9);
         }
 
-        public static JQuaternion Multiply(JQuaternion quaternion1, float scaleFactor)
+        public static JQuaternion Multiply(in JQuaternion quaternion1, float scaleFactor)
         {
-            Multiply(ref quaternion1, scaleFactor, out var result);
+            Multiply(quaternion1, scaleFactor, out var result);
             return result;
         }
 
-        public static void Multiply(ref JQuaternion quaternion1, float scaleFactor, out JQuaternion result)
+        public static void Multiply(in JQuaternion quaternion1, float scaleFactor, out JQuaternion result)
         {
-            result.X = quaternion1.X * scaleFactor;
-            result.Y = quaternion1.Y * scaleFactor;
-            result.Z = quaternion1.Z * scaleFactor;
-            result.W = quaternion1.W * scaleFactor;
+            result = new JQuaternion(
+                x: quaternion1.X * scaleFactor,
+                y: quaternion1.Y * scaleFactor,
+                z: quaternion1.Z * scaleFactor,
+                w: quaternion1.W * scaleFactor);
         }
 
-        public void Normalize()
+        public JQuaternion Normalize()
         {
             var num2 = (X * X) + (Y * Y) + (Z * Z) + (W * W);
             var num = 1f / (JMath.Sqrt(num2));
-            X *= num;
-            Y *= num;
-            Z *= num;
-            W *= num;
+
+            return new JQuaternion(
+                x: X * num,
+                y: X * num,
+                z: X * num,
+                w: X * num);
         }
 
-        public static JQuaternion CreateFromMatrix(JMatrix matrix)
+        public static JQuaternion CreateFromMatrix(in JMatrix matrix)
         {
-            CreateFromMatrix(ref matrix, out var result);
+            CreateFromMatrix(matrix, out var result);
             return result;
         }
 
-        public static void CreateFromMatrix(ref JMatrix matrix, out JQuaternion result)
+        public static void CreateFromMatrix(in JMatrix matrix, out JQuaternion result)
         {
             var num8 = matrix.M11 + matrix.M22 + matrix.M33;
+
+            float x, y, z, w;
+
             if (num8 > 0f)
             {
                 var num = JMath.Sqrt(num8 + 1f);
-                result.W = num * 0.5f;
+                w = num * 0.5f;
                 num = 0.5f / num;
-                result.X = (matrix.M23 - matrix.M32) * num;
-                result.Y = (matrix.M31 - matrix.M13) * num;
-                result.Z = (matrix.M12 - matrix.M21) * num;
+                x = (matrix.M23 - matrix.M32) * num;
+                y = (matrix.M31 - matrix.M13) * num;
+                z = (matrix.M12 - matrix.M21) * num;
             }
             else if ((matrix.M11 >= matrix.M22) && (matrix.M11 >= matrix.M33))
             {
                 var num7 = JMath.Sqrt(1f + matrix.M11 - matrix.M22 - matrix.M33);
                 var num4 = 0.5f / num7;
-                result.X = 0.5f * num7;
-                result.Y = (matrix.M12 + matrix.M21) * num4;
-                result.Z = (matrix.M13 + matrix.M31) * num4;
-                result.W = (matrix.M23 - matrix.M32) * num4;
+                x = 0.5f * num7;
+                y = (matrix.M12 + matrix.M21) * num4;
+                z = (matrix.M13 + matrix.M31) * num4;
+                w = (matrix.M23 - matrix.M32) * num4;
             }
             else if (matrix.M22 > matrix.M33)
             {
                 var num6 = JMath.Sqrt(1f + matrix.M22 - matrix.M11 - matrix.M33);
                 var num3 = 0.5f / num6;
-                result.X = (matrix.M21 + matrix.M12) * num3;
-                result.Y = 0.5f * num6;
-                result.Z = (matrix.M32 + matrix.M23) * num3;
-                result.W = (matrix.M31 - matrix.M13) * num3;
+                x = (matrix.M21 + matrix.M12) * num3;
+                y = 0.5f * num6;
+                z = (matrix.M32 + matrix.M23) * num3;
+                w = (matrix.M31 - matrix.M13) * num3;
             }
             else
             {
                 var num5 = JMath.Sqrt(1f + matrix.M33 - matrix.M11 - matrix.M22);
                 var num2 = 0.5f / num5;
-                result.X = (matrix.M31 + matrix.M13) * num2;
-                result.Y = (matrix.M32 + matrix.M23) * num2;
-                result.Z = 0.5f * num5;
-                result.W = (matrix.M12 - matrix.M21) * num2;
+                x = (matrix.M31 + matrix.M13) * num2;
+                y = (matrix.M32 + matrix.M23) * num2;
+                z = 0.5f * num5;
+                w = (matrix.M12 - matrix.M21) * num2;
             }
+
+            result = new JQuaternion(x, y, z, w);
         }
 
-        public static JQuaternion operator *(JQuaternion value1, JQuaternion value2)
+        public static JQuaternion operator *(in JQuaternion value1, in JQuaternion value2)
         {
-            Multiply(ref value1, ref value2, out var result);
+            Multiply(value1, value2, out var result);
             return result;
         }
 
-        public static JQuaternion operator +(JQuaternion value1, JQuaternion value2)
+        public static JQuaternion operator +(in JQuaternion value1, in JQuaternion value2)
         {
-            Add(ref value1, ref value2, out var result);
+            Add(value1, value2, out var result);
             return result;
         }
 
-        public static JQuaternion operator -(JQuaternion value1, JQuaternion value2)
+        public static JQuaternion operator -(in JQuaternion value1, in JQuaternion value2)
         {
-            Subtract(ref value1, ref value2, out var result);
+            Subtract(value1, value2, out var result);
             return result;
         }
     }
